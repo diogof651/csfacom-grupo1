@@ -17,7 +17,7 @@
   <li>Onde os usuários podem encontrar ajuda sobre seu projeto;</li>
   <li>Autores do projeto.</li>
     <ul>
-      <li>DIOGO FELIPE DE ALMEIDA SOUSA</li>
+      <li>DIOGO FELIPE</li>
       <li>CAMILA VITÓRIA</li>
       <li>LUCCA D'AMICO</li>
       <li>CELSO DE OLIVEIRA</li>
