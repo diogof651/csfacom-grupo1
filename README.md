@@ -14,6 +14,22 @@
       </p>
   <li>Funcionalidades;</li>
   <li>Como os usuários podem utilizá-lo;</li>
+    <p>Para Inicializar aplicação será necessário Clonar repositório do Github</p>
+    <p>**React**</p>
+      <ul>
+        <li>Entrar na pasta front-end: `cd front-end`</li>
+        <li>Instalar dependências do projeto com o comando: `npm install`</li>
+        <li>Para rodar a aplicação rodar o comando: `npm run dev`</li>
+        <li>A aplicação ficará disponível em: http://127.0.0.1:5173/</li>
+      </ul>
+    <p>**Java**</p>
+      <ul>
+        <li>Voltar para a pasta raiz do repositório: `cd ..`</li>
+        <li>Entrar na pasta back-end: `cd back-end`</li>
+        <li>Instalar dependências do projeto com o comando: `mvn install`</li>
+        <li>Para rodar a aplicação rodar o comando: `mvn spring-boot:run`</li>
+        <li>A aplicação ficará disponível em: http://127.0.0.1:8080/</li>
+      </ul>
   <li>Onde os usuários podem encontrar ajuda sobre seu projeto;</li>
   <li>Autores do projeto.</li>
     <ul>
