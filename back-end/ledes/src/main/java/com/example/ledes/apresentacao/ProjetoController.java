@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.AdicionarProjetoServico;
+import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
+import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

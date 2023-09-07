@@ -1,6 +1,7 @@
 package com.example.ledes.dominio;
 
-import javax.persistence.Column;
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,17 +14,28 @@ import lombok.NoArgsConstructor;
 @Data // getters e setters
 @NoArgsConstructor
 public class Projeto {
-    // nome, descrição, período (início e término), e status do
-    // projeto (Em andamento, Concluído, Descontinuado).
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
     private String nome;
 
-    public Projeto(String nome) {
+    private String descricao;
+
+    private Date inicio;
+
+    private Date termino;
+
+    private String status;
+
+    private String tipo;
+
+    public Projeto(String nome, String descricao, Date inicio, Date termino, String status, String tipo) {
         this.nome = nome;
+        this.descricao = descricao;
+        this.inicio = inicio;
+        this.termino = termino;
+        this.status = status;
+        this.tipo = tipo;
     }
 }
