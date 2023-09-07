@@ -21,7 +21,10 @@
   .container {
     background-color: white;
     color: black;
-  }
+    height: 1080px; /* Defina a altura fixa desejada para o contêiner */
+    overflow-y: auto; /* Adicione uma barra de rolagem vertical quando necessário */
+    }
+  
 
   .inter-bold {
     font-family: 'Inter', sans-serif; 

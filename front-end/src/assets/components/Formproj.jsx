@@ -22,12 +22,12 @@ export function Formproj(props) {
   };
 
   return (
-    <Container className="d-flex justify-content-center" style={{ height: "100%" }}>
-      <Form
-        className="d-flex justify-content-center flex-column"
-        style={{ height: "100%", width: "45vw" }}
-        onSubmit={handleSubmit(onSubmit)}
-      >
+    <Container className={`${styles.container} d-flex justify-content-center`} style={{ height: "100%" }}>
+  <Form
+    className={`d-flex justify-content-center flex-column form-container`}
+    style={{ width: "45vw" }}
+    onSubmit={handleSubmit(onSubmit)}
+  >
         <div className="mb-3">
         <h1 style={{ fontFamily: 'Inter', fontWeight: 'bold' }}>Sobre</h1>
         <br></br>
