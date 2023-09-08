@@ -1,13 +1,13 @@
-import { ListagemProjetos } from "./components/ListagemProjetos/ListagemProjetos";
+import "bootstrap/dist/css/bootstrap.css";
 import { Header } from "./components/Header/Header";
 import "./global.css";
-import "bootstrap/dist/css/bootstrap.css";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
       <Header />
-      <ListagemProjetos />
+      <Outlet />
     </>
   );
 }

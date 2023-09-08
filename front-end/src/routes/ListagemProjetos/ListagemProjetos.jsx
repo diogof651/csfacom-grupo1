@@ -4,8 +4,9 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { BsPuzzle } from "react-icons/bs";
-import { BarraDePesquisa } from "../BarraDePesquisa/BarraDePesquisa";
-import { Select } from "../Select/Select";
+import { BarraDePesquisa } from "../../components/BarraDePesquisa/BarraDePesquisa";
+import { Select } from "../../components/Select/Select";
+import { Link } from "react-router-dom";
 
 export function ListagemProjetos() {
   const [selectedOption1, setSelectedOption1] = useState("");
@@ -28,6 +29,7 @@ export function ListagemProjetos() {
   function generateFixedCards() {
     return [
       {
+        id: 0,
         type: "Atividade orientadas de ensino",
         state: "Em andamento",
         text: "Soluções inovadoras para tornar as cidades mais verdes e eficientes em termos de recursos.",
@@ -35,6 +37,7 @@ export function ListagemProjetos() {
         endDate: "31/12/2023",
       },
       {
+        id: 1,
         type: "TCC",
         state: "Concluído",
         text: "Plataforma de ensino à distância que revoluciona a maneira como as pessoas aprendem.",
@@ -42,6 +45,7 @@ export function ListagemProjetos() {
         endDate: "30/11/2022",
       },
       {
+        id: 2,
         type: "Mestrado",
         state: "Em andamento",
         text: "Aplicativo que monitora a saúde e o bem-estar dos usuários, incentivando um estilo de vida ativo.",
@@ -49,6 +53,7 @@ export function ListagemProjetos() {
         endDate: "05/12/2023",
       },
       {
+        id: 3,
         type: "Doutorado",
         state: "Descontinuado",
         text: " Sistemas de energia solar e eólica em comunidades remotas, promovendo a independência energética.",
@@ -56,6 +61,7 @@ export function ListagemProjetos() {
         endDate: "10/09/2021",
       },
       {
+        id: 4,
         type: "Atividade orientadas de ensino",
         state: "Em andamento",
         text: "Soluções inovadoras para tornar as cidades mais verdes e eficientes em termos de recursos.",
@@ -63,6 +69,7 @@ export function ListagemProjetos() {
         endDate: "31/12/2023",
       },
       {
+        id: 5,
         type: "TCC",
         state: "Concluído",
         text: "Plataforma de ensino à distância que revoluciona a maneira como as pessoas aprendem.",
@@ -70,6 +77,7 @@ export function ListagemProjetos() {
         endDate: "30/11/2022",
       },
       {
+        id: 6,
         type: "Mestrado",
         state: "Em andamento",
         text: "Aplicativo que monitora a saúde e o bem-estar dos usuários, incentivando um estilo de vida ativo.",
@@ -77,6 +85,7 @@ export function ListagemProjetos() {
         endDate: "05/12/2023",
       },
       {
+        id: 7,
         type: "Doutorado",
         state: "Descontinuado",
         text: " Sistemas de energia solar e eólica em comunidades remotas, promovendo a independência energética.",
@@ -196,26 +205,31 @@ export function ListagemProjetos() {
               style={{ fontSize: "2em", marginLeft: "8px", marginTop: "8px" }}
             />{" "}
             {/* Aumente o tamanho do ícone */}
-            <Card.Body>
-              <Card.Title>{card.text}</Card.Title>
-              <div className="d-flex flex-column">
-                <span style={{ fontSize: "10px" }}>
-                  {` ${card.startDate} - ${card.endDate}`}
-                </span>
-                <span>{card.type}</span>
-                <span>
-                  {card.state === "Em andamento" && (
-                    <Badge bg="primary">Em andamento</Badge>
-                  )}
-                  {card.state === "Concluído" && (
-                    <Badge bg="success">Concluído</Badge>
-                  )}
-                  {card.state === "Descontinuado" && (
-                    <Badge bg="danger">Descontinuado</Badge>
-                  )}
-                </span>
-              </div>
-            </Card.Body>
+            <Link
+              to={`/projeto/${card.id}`}
+              style={{ color: "var(--black)", textDecoration: "none" }}
+            >
+              <Card.Body>
+                <Card.Title>{card.text}</Card.Title>
+                <div className="d-flex flex-column">
+                  <span style={{ fontSize: "10px" }}>
+                    {` ${card.startDate} - ${card.endDate}`}
+                  </span>
+                  <span>{card.type}</span>
+                  <span>
+                    {card.state === "Em andamento" && (
+                      <Badge bg="primary">Em andamento</Badge>
+                    )}
+                    {card.state === "Concluído" && (
+                      <Badge bg="success">Concluído</Badge>
+                    )}
+                    {card.state === "Descontinuado" && (
+                      <Badge bg="danger">Descontinuado</Badge>
+                    )}
+                  </span>
+                </div>
+              </Card.Body>
+            </Link>
           </Card>
         ))}
       </div>
