@@ -14,7 +14,7 @@
 	<name>ledes</name>
 	<description>Projeto desenvolvido para CS para o LEDES</description>
 	<properties>
-		<java.version>16</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
