@@ -6,7 +6,7 @@ export function Select({ options, selectedOption, handleOptionChange }) {
     <Form.Select
       value={selectedOption}
       onChange={handleOptionChange}
-      style={{ width: "150px", marginRight: "10px", width: "100%" }}
+      style={{marginRight: "10px", width: "100%" }}
     >
       {options.map((option, index) => (
         <option value="{option}" key={index}>
