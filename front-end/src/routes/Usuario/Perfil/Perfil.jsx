@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-quill/dist/quill.snow.css";
-import { Input } from "../../components/Input/Input";
+import { Input } from "../../../components/Input/Input";
+import { FotoPerfil } from "../../../components/FotoPerfil/FotoPerfil";
 
-export function CadastroUsuario() {
+export function Perfil() {
+  const iconStyle = {
+    width: "24px", // Defina o tamanho desejado
+    height: "24px", // Defina a altura desejada (opcional)
+  };
+
   return (
     <>
       <Container
@@ -16,17 +22,21 @@ export function CadastroUsuario() {
         <h1
           style={{
             borderBottom: "1px solid #ccc",
-            marginBottom: "10px", 
+            marginBottom: "10px",
             fontWeight: "bold",
-            paddingBottom: "5px"
+            paddingBottom: "5px",
           }}
         >
-          Dados Pessoais
+          Perfil
         </h1>
         <Form
           className={`d-flex justify-content-center flex-column form-container w-100`}
-        //   onSubmit="" 
+          //   onSubmit=""
         >
+          <div className="mx-auto mt-2 mb-2">
+            <FotoPerfil></FotoPerfil>
+          </div>
+
           <Input
             label={"Nome"}
             required={true}
@@ -39,12 +49,12 @@ export function CadastroUsuario() {
             placeholder={"Digite seu email"}
             tipo={"email"}
           ></Input>
-          <Form.Check
-            className="mt-3"
-            type="checkbox"
-            id="ativoCheckbox"
-            label="Ativo"
-          />
+          <Input
+            label={"Link"}
+            placeholder={"Digite um link (exemplo: linkedin, github, etc...)"}
+            tipo={"email"}
+          ></Input>
+
           <div className="d-flex justify-content-end gap-2">
             <Button
               style={{

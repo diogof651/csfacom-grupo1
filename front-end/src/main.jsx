@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
 import { ListagemProjetos } from "./routes/ListagemProjetos/ListagemProjetos.jsx";
 import { PaginaProjeto } from "./routes/PaginaProjeto/PaginaProjeto.jsx";
-import App from "./App.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { CadastroUsuario } from "./routes/CadastroUsuario/CadastroUsuario.jsx";
+import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
+import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,10 @@ const router = createBrowserRouter([
         path: "/cadastroUsuario",
         element: <CadastroUsuario />,
       },
-
+      {
+        path: "/perfil",
+        element: <Perfil />,
+      },
     ],
   },
 ]);
