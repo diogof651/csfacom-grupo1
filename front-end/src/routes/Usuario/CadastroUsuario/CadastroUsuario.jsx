@@ -5,6 +5,8 @@ import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-quill/dist/quill.snow.css";
 import { Input } from "../../../components/Input/Input";
+import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
+import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 
 export function CadastroUsuario() {
   return (
@@ -45,25 +47,9 @@ export function CadastroUsuario() {
             id="ativoCheckbox"
             label="Ativo"
           />
-          <div className="d-flex justify-content-end gap-2">
-            <Button
-              style={{
-                backgroundColor: "transparent",
-                borderColor: "var(--blue)",
-                color: "var(--blue)",
-              }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              style={{
-                backgroundColor: "var(--blue)",
-                borderColor: "var(--blue)",
-              }}
-            >
-              Cadastrar
-            </Button>
+          <div className="d-flex justify-content-end gap-2 mt-4">
+            <BotaoOutline color="var(--blue)">Cancelar</BotaoOutline>
+            <BotaoComFundo color="var(--blue)">Cadastrar</BotaoComFundo>
           </div>
         </Form>
       </Container>

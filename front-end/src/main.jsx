@@ -15,6 +15,10 @@ const router = createBrowserRouter([
     //errorElement: </> -> para colocar uma pagina de erro caso nao encontre a rota
     children: [
       {
+        path: "/projetos",
+        element: <ListagemProjetos />,
+      },
+      {
         path: "/",
         element: <ListagemProjetos />,
       },

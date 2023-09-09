@@ -1,11 +1,11 @@
 import Container from "react-bootstrap/Container";
-import { BsPencilSquare } from "react-icons/bs";
+import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import Badge from "react-bootstrap/Badge"; // Importe o componente Badge
+import { BotaoComIcone } from "../../components/Botoes/BotaoComIcone";
 export function PaginaProjeto() {
   const iconStyle = {
-    width: "24px", // Defina o tamanho desejado
-    height: "24px", // Defina a altura desejada (opcional)
-    marginRight: "10px", // Espaçamento à direita (opcional)
+    width: "18px", // Defina o tamanho desejado
+    height: "18px", // Defina a altura desejada (opcional)
   };
   return (
     <Container
@@ -13,7 +13,7 @@ export function PaginaProjeto() {
       style={{ height: "100vh", marginTop: "40px" }}
     >
       <div
-        className="d-flex justify-content-between align-items-start"
+        className="d-flex justify-content-between align-items-start flex-wrap gap-2"
         style={{
           width: "100%",
           marginBottom: "10px",
@@ -35,15 +35,14 @@ export function PaginaProjeto() {
             <Badge bg="danger">Descontinuado</Badge>
           </div>
         </div>
-        <button
-          type="button"
-          className="btn inter-bold"
-          style={{
-            backgroundColor: "none",
-          }}
-        >
-          <BsPencilSquare style={iconStyle} />
-        </button>
+        <div className="d-flex gap-2">
+          <BotaoComIcone color="var(--black)">
+            <BsPencilSquare style={iconStyle} /> Editar
+          </BotaoComIcone>
+          <BotaoComIcone color="var(--black)">
+            <BsTrash  style={iconStyle} /> Remover
+          </BotaoComIcone>
+        </div>
       </div>
       <p>
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facere magnam

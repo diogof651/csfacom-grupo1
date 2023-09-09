@@ -7,6 +7,7 @@ import { BsPuzzle } from "react-icons/bs";
 import { BarraDePesquisa } from "../../components/BarraDePesquisa/BarraDePesquisa";
 import { Select } from "../../components/Select/Select";
 import { Link } from "react-router-dom";
+import { BotaoOutline } from "../../components/Botoes/BotaoOutline";
 
 export function ListagemProjetos() {
   const [selectedOption1, setSelectedOption1] = useState("");
@@ -150,17 +151,7 @@ export function ListagemProjetos() {
         >
           Projetos
         </h1>
-        <button
-          type="button"
-          className="btn inter-bold"
-          style={{
-            backgroundColor: "white",
-            color: "#2788B7",
-            border: "1px solid #2788B7",
-          }}
-        >
-          Novo Projeto
-        </button>
+        <BotaoOutline color="var(--blue)">Novo Projeto</BotaoOutline>
       </div>
       <Form className="mt-2">
         <div className="row">
