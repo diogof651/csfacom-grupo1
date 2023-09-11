@@ -1,9 +1,13 @@
 package com.example.ledes.apresentacao;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,8 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ledes.aplicacao.AdicionarProjetoServico;
 import com.example.ledes.aplicacao.AtualizarProjetoServico;
 import com.example.ledes.aplicacao.DesativarProjetoServico;
+import com.example.ledes.aplicacao.ListagemProjetoServico;
+import com.example.ledes.dominio.Projeto;
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
+
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,6 +37,10 @@ public class ProjetoController {
     private AtualizarProjetoServico atualizarProjetoServico;
     @Autowired
     private DesativarProjetoServico desativarProjetoServico;
+    @Autowired
+    private ListagemProjetoServico ListagemProjetoServico;
+    
+
 
     @Operation(summary = "Criar um novo projeto")
     @ApiResponse(responseCode = "201")
@@ -65,7 +76,65 @@ public class ProjetoController {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
+            }
         }
+        
+        
+        
+        
+        // @Operation(summary = "Listar um Projeto")
+        // @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
+        // @GetMapping("/listagem")
+        // public ResponseEntity<List<ProjetoResponseDTO>> obterListagemProjetos() {
+        //     Iterable<Projeto> projetosIterable = projetoRepositorio.findAll();
+        //     List<Projeto> projetosList = new ArrayList<>();
+
+        //     projetosIterable.forEach(projetosList::add);
+
+        //     List<ProjetoResponseDTO> projetoListagemDTOs = projetosList.stream()
+        //             .map(this::converterParaDTO)
+        //             .collect(Collectors.toList());
+
+        //     return ResponseEntity.ok(projetoListagemDTOs);
+        // }
+
+        // private ProjetoResponseDTO converterParaDTO(Projeto projeto) {
+        //     return new ProjetoResponseDTO(
+        //             projeto.getId(),
+        //             projeto.getNome(),
+        //             projeto.getDescricao(),
+        //             projeto.getInicio(),
+        //             projeto.getTermino(),
+        //             projeto.getStatus(),
+        //             projeto.getTipo(),
+        //             projeto.getAtivo()
+        //     );
+        // }
+    @Operation(summary = "Listar Projetos")
+    @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
+    @GetMapping("/listagem")
+    public ResponseEntity<List<ProjetoResponseDTO>> obterListagemProjetos() {
+        List<Projeto> projetos = ListagemProjetoServico.listarProjetos();
+        List<ProjetoResponseDTO> projetoListagemDTOs = projetos.stream()
+                .map(this::converterParaDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(projetoListagemDTOs);
+    }
+
+    private ProjetoResponseDTO converterParaDTO(Projeto projeto) {
+        return new ProjetoResponseDTO(
+                projeto.getId(),
+                projeto.getNome(),
+                projeto.getDescricao(),
+                projeto.getInicio(),
+                projeto.getTermino(),
+                projeto.getStatus(),
+                projeto.getTipo(),
+                projeto.getAtivo()
+        );
+    }
+
 }
     
-}
+
