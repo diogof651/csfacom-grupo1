@@ -7,6 +7,7 @@ import { PaginaProjeto } from "./routes/PaginaProjeto/PaginaProjeto.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
 import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
+import { CadastroMembro } from "./routes/Projeto/CadastroMembro.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/projeto/:id",
         element: <PaginaProjeto />,
+      },
+      {
+        path: "/cadastroMembro",
+        element: <CadastroMembro />,
       },
       {
         path: "/cadastroUsuario",
