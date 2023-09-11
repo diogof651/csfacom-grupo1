@@ -78,38 +78,7 @@ public class ProjetoController {
             return ResponseEntity.notFound().build();
             }
         }
-        
-        
-        
-        
-        // @Operation(summary = "Listar um Projeto")
-        // @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
-        // @GetMapping("/listagem")
-        // public ResponseEntity<List<ProjetoResponseDTO>> obterListagemProjetos() {
-        //     Iterable<Projeto> projetosIterable = projetoRepositorio.findAll();
-        //     List<Projeto> projetosList = new ArrayList<>();
-
-        //     projetosIterable.forEach(projetosList::add);
-
-        //     List<ProjetoResponseDTO> projetoListagemDTOs = projetosList.stream()
-        //             .map(this::converterParaDTO)
-        //             .collect(Collectors.toList());
-
-        //     return ResponseEntity.ok(projetoListagemDTOs);
-        // }
-
-        // private ProjetoResponseDTO converterParaDTO(Projeto projeto) {
-        //     return new ProjetoResponseDTO(
-        //             projeto.getId(),
-        //             projeto.getNome(),
-        //             projeto.getDescricao(),
-        //             projeto.getInicio(),
-        //             projeto.getTermino(),
-        //             projeto.getStatus(),
-        //             projeto.getTipo(),
-        //             projeto.getAtivo()
-        //     );
-        // }
+       
     @Operation(summary = "Listar Projetos")
     @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
     @GetMapping("/listagem")
