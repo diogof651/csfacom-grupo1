@@ -1,7 +1,7 @@
 package com.example.ledes.apresentacao;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import com.example.ledes.aplicacao.AdicionarProjetoServico;
 import com.example.ledes.aplicacao.AtualizarProjetoServico;
 import com.example.ledes.aplicacao.DesativarProjetoServico;
 import com.example.ledes.aplicacao.ListagemProjetoServico;
-import com.example.ledes.dominio.Projeto;
+
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 
@@ -83,25 +83,8 @@ public class ProjetoController {
     @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
     @GetMapping("/listagem")
     public ResponseEntity<List<ProjetoResponseDTO>> obterListagemProjetos() {
-        List<Projeto> projetos = ListagemProjetoServico.listarProjetos();
-        List<ProjetoResponseDTO> projetoListagemDTOs = projetos.stream()
-                .map(this::converterParaDTO)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(projetoListagemDTOs);
-    }
-
-    private ProjetoResponseDTO converterParaDTO(Projeto projeto) {
-        return new ProjetoResponseDTO(
-                projeto.getId(),
-                projeto.getNome(),
-                projeto.getDescricao(),
-                projeto.getInicio(),
-                projeto.getTermino(),
-                projeto.getStatus(),
-                projeto.getTipo(),
-                projeto.getAtivo()
-        );
+        List<ProjetoResponseDTO> projetos = ListagemProjetoServico.listarProjetos();
+        return ResponseEntity.ok(projetos);
     }
 
 }
