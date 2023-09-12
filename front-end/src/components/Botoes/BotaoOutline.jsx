@@ -8,6 +8,8 @@ export function BotaoOutline(props) {
           backgroundColor: "transparent",
           color: `${props.color}`,
           border: `1px solid ${props.color}`,
+          padding:"5px",
+          height: "40px"
         }}
       >
         {props.children}
