@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ledes.aplicacao.AdicionarProjetoServico;
 import com.example.ledes.aplicacao.AtualizarProjetoServico;
 import com.example.ledes.aplicacao.DesativarProjetoServico;
+import com.example.ledes.aplicacao.ListagemProjetoIdServico;
 import com.example.ledes.aplicacao.ListagemProjetoServico;
 
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
@@ -39,6 +40,8 @@ public class ProjetoController {
     private DesativarProjetoServico desativarProjetoServico;
     @Autowired
     private ListagemProjetoServico ListagemProjetoServico;
+    @Autowired
+    private ListagemProjetoIdServico ListagemProjetoIdServico;
     
 
 
@@ -85,6 +88,21 @@ public class ProjetoController {
     public ResponseEntity<List<ProjetoResponseDTO>> obterListagemProjetos() {
         List<ProjetoResponseDTO> projetos = ListagemProjetoServico.listarProjetos();
         return ResponseEntity.ok(projetos);
+    }
+
+
+    @Operation(summary = "Listar projeto por ID")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto referente ao ID")
+    @ApiResponse(responseCode = "404", description = "Id não encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjetoResponseDTO> obterProjetoId(@PathVariable Long id){
+        ProjetoResponseDTO projetoEncontrado = ListagemProjetoIdServico.buscarPorId(id);
+
+        if (projetoEncontrado != null) {
+            return ResponseEntity.ok(projetoEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
