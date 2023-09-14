@@ -26,7 +26,7 @@ public class AtualizarProjetoServico {
             projeto.setTermino(projetoRequest.getTermino());
             projeto.setStatus(projetoRequest.getStatus());
             projeto.setTipo(projetoRequest.getTipo());
-
+            projeto.setAtivo(projetoRequest.getAtivo());
             projetoRepositorio.save(projeto);
 
             // Retornar o projeto atualizado como ProjetoResponseDTO

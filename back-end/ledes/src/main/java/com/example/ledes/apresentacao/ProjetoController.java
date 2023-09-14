@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.AdicionarProjetoServico;
 import com.example.ledes.aplicacao.AtualizarProjetoServico;
 import com.example.ledes.aplicacao.DesativarProjetoServico;
 import com.example.ledes.aplicacao.ListagemProjetoServico;
+import com.example.ledes.aplicacao.BuscaProjetoPorParametroServico;
 
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
@@ -39,6 +41,8 @@ public class ProjetoController {
     private DesativarProjetoServico desativarProjetoServico;
     @Autowired
     private ListagemProjetoServico ListagemProjetoServico;
+    @Autowired
+    private ListagemProjetoServico BuscaProjetoPorParametroServico;
     
 
 
@@ -69,11 +73,11 @@ public class ProjetoController {
         @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto desativado")
         @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
         @PostMapping(path = "/{id}/desativar", consumes = "application/json")
-        public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@PathVariable Long id) {
-        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id);
+        public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id) {
+        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id, projetoRequestDTO);
 
         if (projetoDesativado != null) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(projetoDesativado);
         } else {
             return ResponseEntity.notFound().build();
             }
@@ -85,6 +89,21 @@ public class ProjetoController {
     public ResponseEntity<List<ProjetoResponseDTO>> obterListagemProjetos() {
         List<ProjetoResponseDTO> projetos = ListagemProjetoServico.listarProjetos();
         return ResponseEntity.ok(projetos);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ProjetoResponseDTO>> buscarProjetosPorParametros(
+        @RequestParam(name = "tipo", required = false) String tipo,
+        @RequestParam(name = "status", required = false) String status,
+        @RequestParam(name = "nome", required = false) String nome) {
+
+        List<ProjetoResponseDTO> projetosEncontrados = BuscaProjetoPorParametroServico.buscarProjetosPorParametros(tipo, status, nome);
+
+        if (projetosEncontrados.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(projetosEncontrados);
+        }
     }
 
 }
