@@ -1,4 +1,4 @@
-CREATE TABLE projeto (
+CREATE TABLE IF NOT EXISTS projeto (
     id INT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     descricao TEXT NOT NULL,

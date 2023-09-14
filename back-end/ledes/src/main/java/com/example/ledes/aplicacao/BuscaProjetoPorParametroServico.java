@@ -17,22 +17,10 @@ public class BuscaProjetoPorParametroServico  {
     @Autowired
     private ProjetoRepositorio projetoRepositorio;
 
-    public List<ProjetoResponseDTO> buscarProjetosPorParametros(String tipo, String status, String nome) {
-        List<Projeto> projetos = (List<Projeto>) projetoRepositorio.findAll();
+    public List<ProjetoResponseDTO> buscarProjetosPorParametros(String tipo, Boolean status, String nome) {
+        List<Projeto> projetos = (List<Projeto>) projetoRepositorio.buscarProjetosPorParametros(tipo, status, nome);
         
         Stream<Projeto> projetoStream = projetos.stream();
-
-        if (tipo != null) {
-            projetoStream = projetoStream.filter(projeto -> projeto.getTipo().equals(tipo));
-        }
-
-        if (status != null) {
-            projetoStream = projetoStream.filter(projeto -> projeto.getStatus().equals(status));
-        }
-
-        if (nome != null) {
-            projetoStream = projetoStream.filter(projeto -> projeto.getNome().contains(nome));
-        }
 
         List<ProjetoResponseDTO> projetosFiltrados = projetoStream
                 .map(this::converterParaDTO)
