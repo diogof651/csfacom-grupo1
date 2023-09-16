@@ -1,6 +1,7 @@
 import Badge from "react-bootstrap/Badge"; // Importe o componente Badge
 import Container from "react-bootstrap/Container";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import AbasRadio from "../../components/AbasRadio/AbasRadio.jsx";
 import { BotaoComIcone } from "../../components/Botoes/BotaoComIcone";
 import { BotaoOutline } from "../../components/Botoes/BotaoOutline";
@@ -46,9 +47,11 @@ export function PaginaProjeto() {
           </div>
         </div>
         <div className="d-flex gap-2">
-          <BotaoComIcone color="var(--black)">
-            <BsPencilSquare style={iconStyle} /> Editar
-          </BotaoComIcone>
+          <Link to="/projetos" className="text-decoration-none">
+            <BotaoComIcone color="var(--black)">
+              <BsPencilSquare style={iconStyle} /> Editar
+            </BotaoComIcone>
+          </Link>
           <BotaoComIcone color="var(--black)">
             <BsTrash style={iconStyle} /> Remover
           </BotaoComIcone>
@@ -67,6 +70,7 @@ export function PaginaProjeto() {
           fontWeight: "bold",
           marginRight: "10px",
           paddingBottom: "5px",
+          marginTop: "40px",
         }}
       >
         Membros
@@ -75,12 +79,13 @@ export function PaginaProjeto() {
         className="d-flex justify-content-between"
         style={{
           width: "100%",
-          marginTop: "40px",
           borderBottom: "1px solid #ccc",
         }}
       >
         <AbasRadio opcoes={opcoes}></AbasRadio>
-        <BotaoOutline color="var(--blue)"> Novo Membro </BotaoOutline>
+        <Link to="/cadastroMembro" className="text-decoration-none">
+          <BotaoOutline color="var(--blue)"> Novo Membro </BotaoOutline>
+        </Link>
       </div>
       <Membro nome="João" papeis={["Designer", "Desenvolvedor Front-end"]} />
       <Membro nome="Maria" papeis={["Desenvolvedor Back-end"]} />
