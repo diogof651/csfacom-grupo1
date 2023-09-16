@@ -1,8 +1,6 @@
 package com.example.ledes.apresentacao;
 
 import java.util.List;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.ledes.aplicacao.AdicionarProjetoServico;
-import com.example.ledes.aplicacao.AtualizarProjetoServico;
-import com.example.ledes.aplicacao.DesativarProjetoServico;
-import com.example.ledes.aplicacao.ListagemProjetoIdServico;
-import com.example.ledes.aplicacao.ListagemProjetoServico;
-
+import com.example.ledes.aplicacao.projeto.AdicionarProjetoServico;
+import com.example.ledes.aplicacao.projeto.AtualizarProjetoServico;
+import com.example.ledes.aplicacao.projeto.DesativarProjetoServico;
+import com.example.ledes.aplicacao.projeto.ListagemProjetoIdServico;
+import com.example.ledes.aplicacao.projeto.ListagemProjetoServico;
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
-
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
