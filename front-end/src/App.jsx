@@ -1,17 +1,15 @@
-import { Formproj } from "./assets/components/Formproj";
-import { Header } from "./assets/components/header";
+import "bootstrap/dist/css/bootstrap.css";
+import { Header } from "./components/Header";
+import { CadastroProjeto } from "./components/CadastroProjeto";
 import "./global.css";
-import 'bootstrap/dist/css/bootstrap.css';
-
 
 function App() {
-
   return (
-    <div style={{height: '75%'}}>
-      <Header/>
-      <Formproj/>
-      </div>
-  )
+    <div style={{ height: "75%" }}>
+      <Header />
+      <CadastroProjeto />
+    </div>
+  );
 }
 
-export default App
+export default App;
