@@ -31,7 +31,6 @@ export function CadastroProjeto(props) {
     })
       .then((resposta) => console.log(resposta))
       .catch((erro) => console.log(erro));
-    console.log(data);
   };
 
   return (
@@ -70,14 +69,13 @@ export function CadastroProjeto(props) {
                 className="inter-bold"
               >
                 <option>selecione o tipo do projeto</option>
-                <option value="1">Projeto de extensão</option>
-                <option value="2">TCC</option>
-                <option value="3">Mestrado</option>
-                <option value="4">Doutorado</option>
-                <option value="5">IC</option>
-                <option value="6">Atividade Orientada de Ensino</option>
-                <option value="7">Estágio</option>
-                <option value="8">Outros</option>
+                <option value="Projeto de extensão">Projeto de extensão</option>
+                <option value="TCC">TCC</option>
+                <option value="Mestrado">Mestrado</option>
+                <option value="Doutorado">Doutorado</option>
+                <option value="IC">IC</option>
+                <option value="Atividade Orientada de Ensino">Atividade Orientada de Ensino</option>
+                <option value="Estágio">Estágio</option>
               </Form.Select>
             )}
           />
@@ -95,9 +93,9 @@ export function CadastroProjeto(props) {
                 className="inter-bold"
               >
                 <option>selecione o estado do projeto</option>
-                <option value="1">Em andamento</option>
-                <option value="2">Concluído</option>
-                <option value="3">Descontinuado</option>
+                <option value="Em andamento">Em andamento</option>
+                <option value="Concluído">Concluído</option>
+                <option value="Descontinuado">Descontinuado</option>
               </Form.Select>
             )}
           />

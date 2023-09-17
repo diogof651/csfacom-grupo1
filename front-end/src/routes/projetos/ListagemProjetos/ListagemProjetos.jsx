@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Badge from "react-bootstrap/Badge"; // Importe o componente Badge
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
@@ -13,7 +13,7 @@ export function ListagemProjetos() {
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [cards, setCards] = useState(generateFixedCards());
+  const [cards, setCards] = useState([]);
 
   const optionsTipoProjeto = [
     "Projeto de extensão",
@@ -27,74 +27,23 @@ export function ListagemProjetos() {
 
   const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
 
-  function generateFixedCards() {
-    return [
-      {
-        id: 0,
-        type: "Atividade orientadas de ensino",
-        state: "Em andamento",
-        text: "Soluções inovadoras para tornar as cidades mais verdes e eficientes em termos de recursos.",
-        startDate: "01/01/2023",
-        endDate: "31/12/2023",
+  useEffect(() => {
+    obterProjetos();
+  }, []);
+
+  function obterProjetos() {
+    fetch("http://localhost:8080/api/v1/projetos/listagem", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
       },
-      {
-        id: 1,
-        type: "TCC",
-        state: "Concluído",
-        text: "Plataforma de ensino à distância que revoluciona a maneira como as pessoas aprendem.",
-        startDate: "15/02/2022",
-        endDate: "30/11/2022",
-      },
-      {
-        id: 2,
-        type: "Mestrado",
-        state: "Em andamento",
-        text: "Aplicativo que monitora a saúde e o bem-estar dos usuários, incentivando um estilo de vida ativo.",
-        startDate: "10/05/2023",
-        endDate: "05/12/2023",
-      },
-      {
-        id: 3,
-        type: "Doutorado",
-        state: "Descontinuado",
-        text: " Sistemas de energia solar e eólica em comunidades remotas, promovendo a independência energética.",
-        startDate: "20/03/2021",
-        endDate: "10/09/2021",
-      },
-      {
-        id: 4,
-        type: "Atividade orientadas de ensino",
-        state: "Em andamento",
-        text: "Soluções inovadoras para tornar as cidades mais verdes e eficientes em termos de recursos.",
-        startDate: "01/01/2023",
-        endDate: "31/12/2023",
-      },
-      {
-        id: 5,
-        type: "TCC",
-        state: "Concluído",
-        text: "Plataforma de ensino à distância que revoluciona a maneira como as pessoas aprendem.",
-        startDate: "15/02/2022",
-        endDate: "30/11/2022",
-      },
-      {
-        id: 6,
-        type: "Mestrado",
-        state: "Em andamento",
-        text: "Aplicativo que monitora a saúde e o bem-estar dos usuários, incentivando um estilo de vida ativo.",
-        startDate: "10/05/2023",
-        endDate: "05/12/2023",
-      },
-      {
-        id: 7,
-        type: "Doutorado",
-        state: "Descontinuado",
-        text: " Sistemas de energia solar e eólica em comunidades remotas, promovendo a independência energética.",
-        startDate: "20/03/2021",
-        endDate: "10/09/2021",
-      },
-      // Adicione mais cartões conforme necessário
-    ];
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        console.log(data);
+        setCards(data);
+      })
+      .catch((erro) => console.log(erro));
   }
 
   const handleOptionChange1 = (e) => {
@@ -204,20 +153,24 @@ export function ListagemProjetos() {
               style={{ color: "var(--black)", textDecoration: "none" }}
             >
               <Card.Body>
-                <Card.Title>{card.text}</Card.Title>
+                <Card.Title>{card.nome}</Card.Title>
                 <div className="d-flex flex-column">
                   <span style={{ fontSize: "10px" }}>
-                    {` ${card.startDate} - ${card.endDate}`}
+                    {`${new Date(
+                      card.inicio
+                    ).toLocaleDateString()} - ${new Date(
+                      card.termino
+                    ).toLocaleDateString()}`}
                   </span>
-                  <span>{card.type}</span>
+                  <span>{card.tipo}</span>
                   <span>
-                    {card.state === "Em andamento" && (
+                    {card.status === "Em andamento" && (
                       <Badge bg="primary">Em andamento</Badge>
                     )}
-                    {card.state === "Concluído" && (
+                    {card.status === "Concluído" && (
                       <Badge bg="success">Concluído</Badge>
                     )}
-                    {card.state === "Descontinuado" && (
+                    {card.status === "Descontinuado" && (
                       <Badge bg="danger">Descontinuado</Badge>
                     )}
                   </span>

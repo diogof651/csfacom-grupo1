@@ -18,6 +18,4 @@ public class ProjetoRequestDTO {
     private String status;
 
     private String tipo;
-
-    private Boolean ativo;
 }
