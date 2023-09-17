@@ -9,7 +9,7 @@ import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 
 @Service
 public class ListagemProjetoIdServico {
-     @Autowired
+    @Autowired
     private ProjetoRepositorio projetoRepositorio;
 
     public ProjetoResponseDTO buscarPorId(Long id) {
@@ -23,5 +23,5 @@ public class ListagemProjetoIdServico {
             return null;
         }
     }
-    
+
 }

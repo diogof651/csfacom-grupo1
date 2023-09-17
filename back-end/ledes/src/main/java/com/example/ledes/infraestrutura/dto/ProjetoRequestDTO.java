@@ -16,7 +16,7 @@ public class ProjetoRequestDTO {
     private Date termino;
 
     private String status;
-    
+
     private String tipo;
 
     private Boolean ativo;

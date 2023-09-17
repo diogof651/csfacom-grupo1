@@ -37,8 +37,6 @@ public class ProjetoController {
     private ListagemProjetoServico ListagemProjetoServico;
     @Autowired
     private ListagemProjetoIdServico ListagemProjetoIdServico;
-    
-
 
     @Operation(summary = "Criar um novo projeto")
     @ApiResponse(responseCode = "201")
@@ -52,31 +50,32 @@ public class ProjetoController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<ProjetoResponseDTO> atualizarProjeto(
-        @RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id){
-            ProjetoResponseDTO projetoAtualizado = atualizarProjetoServico.atualizar(id, projetoRequestDTO);
+    public ResponseEntity<ProjetoResponseDTO> atualizarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO,
+            @PathVariable Long id) {
+        ProjetoResponseDTO projetoAtualizado = atualizarProjetoServico.atualizar(id, projetoRequestDTO);
 
-            if (projetoAtualizado != null) {
-                return ResponseEntity.ok(projetoAtualizado);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+        if (projetoAtualizado != null) {
+            return ResponseEntity.ok(projetoAtualizado);
+        } else {
+            return ResponseEntity.notFound().build();
         }
+    }
 
-        @Operation(summary = "Desativar um projeto")
-        @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto desativado")
-        @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
-        @PostMapping(path = "/{id}/desativar", consumes = "application/json")
-        public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id) {
-        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id,projetoRequestDTO);
+    @Operation(summary = "Desativar um projeto")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto desativado")
+    @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
+    @PostMapping(path = "/{id}/desativar", consumes = "application/json")
+    public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO,
+            @PathVariable Long id) {
+        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id, projetoRequestDTO);
 
         if (projetoDesativado != null) {
             return ResponseEntity.ok(projetoDesativado);
         } else {
             return ResponseEntity.notFound().build();
-            }
         }
-       
+    }
+
     @Operation(summary = "Listar Projetos")
     @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
     @GetMapping("/listagem")
@@ -85,12 +84,11 @@ public class ProjetoController {
         return ResponseEntity.ok(projetos);
     }
 
-
     @Operation(summary = "Listar projeto por ID")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto referente ao ID")
     @ApiResponse(responseCode = "404", description = "Id não encontrado")
     @GetMapping("/{id}")
-    public ResponseEntity<ProjetoResponseDTO> obterProjetoId(@PathVariable Long id){
+    public ResponseEntity<ProjetoResponseDTO> obterProjetoId(@PathVariable Long id) {
         ProjetoResponseDTO projetoEncontrado = ListagemProjetoIdServico.buscarPorId(id);
 
         if (projetoEncontrado != null) {
@@ -101,5 +99,3 @@ public class ProjetoController {
     }
 
 }
-    
-

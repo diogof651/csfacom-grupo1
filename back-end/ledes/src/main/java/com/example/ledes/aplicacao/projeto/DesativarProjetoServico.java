@@ -19,11 +19,12 @@ public class DesativarProjetoServico {
         Projeto projeto = projetoRepositorio.findById(id).orElse(null);
 
         if (projeto != null) {
-           
+
             projeto.setAtivo(false);
             projetoRepositorio.save(projeto);
 
-            return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getInicio(),
+            return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(),
+                    projeto.getInicio(),
                     projeto.getTermino(), projeto.getStatus(), projeto.getTipo(), projeto.getAtivo());
         } else {
             return null;

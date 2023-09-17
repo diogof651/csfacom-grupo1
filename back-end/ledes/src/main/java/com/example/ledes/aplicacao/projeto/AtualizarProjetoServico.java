@@ -14,7 +14,7 @@ public class AtualizarProjetoServico {
     @Autowired
     private ProjetoRepositorio projetoRepositorio;
 
-    @Transactional 
+    @Transactional
     public ProjetoResponseDTO atualizar(Long id, ProjetoRequestDTO projetoRequest) {
         // Verificar se o projeto com o ID especificado existe
         Projeto projeto = projetoRepositorio.findById(id).orElse(null);
@@ -31,7 +31,8 @@ public class AtualizarProjetoServico {
             projetoRepositorio.save(projeto);
 
             // Retornar o projeto atualizado como ProjetoResponseDTO
-            return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getInicio(),
+            return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(),
+                    projeto.getInicio(),
                     projeto.getTermino(), projeto.getStatus(), projeto.getTipo(), projeto.getAtivo());
         } else {
             return null;

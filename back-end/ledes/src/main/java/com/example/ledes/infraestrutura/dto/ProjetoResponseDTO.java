@@ -15,5 +15,5 @@ public class ProjetoResponseDTO {
     private Date termino; // Data de término do projeto
     private String status; // Status do projeto (Em andamento, Concluído, Descontinuado)
     private String tipo; // Tipo de projeto
-    private Boolean ativo; //se o projeto está ativo ou não
+    private Boolean ativo; // se o projeto está ativo ou não
 }
