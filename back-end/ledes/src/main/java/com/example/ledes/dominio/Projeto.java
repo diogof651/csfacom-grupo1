@@ -30,12 +30,15 @@ public class Projeto {
 
     private String tipo;
 
-    public Projeto(String nome, String descricao, Date inicio, Date termino, String status, String tipo) {
+    private Boolean ativo;
+
+    public Projeto(String nome, String descricao, Date inicio, Date termino, String status, String tipo, Boolean ativo) {
         this.nome = nome;
         this.descricao = descricao;
         this.inicio = inicio;
         this.termino = termino;
         this.status = status;
         this.tipo = tipo;
+        this.ativo = ativo;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ledes.aplicacao;
+package com.example.ledes.aplicacao.projeto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +16,9 @@ public class AdicionarProjetoServico {
     public ProjetoResponseDTO adicionar(ProjetoRequestDTO projetoRequest) {
         Projeto projeto = new Projeto(projetoRequest.getNome(), projetoRequest.getDescricao(),
                 projetoRequest.getInicio(), projetoRequest.getTermino(), projetoRequest.getStatus(),
-                projetoRequest.getTipo());
+                projetoRequest.getTipo(), projetoRequest.getAtivo());
         projetoRepositorio.save(projeto);
         return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getInicio(),
-                projeto.getTermino(), projeto.getStatus(), projeto.getTipo());
+                projeto.getTermino(), projeto.getStatus(), projeto.getTipo(), projeto.getAtivo());
     }
 }
