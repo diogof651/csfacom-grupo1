@@ -18,7 +18,15 @@ const router = createBrowserRouter([
         //errorElement: </> -> para colocar uma pagina de erro caso nao encontre a rota
       },
       {
+        path: "/projetos",
+        element: <ListagemProjetos />,
+      },
+      {
         path: "/cadastroProjeto",
+        element: <CadastroProjeto />,
+      },
+      {
+        path: "/editarProjeto/:id",
         element: <CadastroProjeto />,
       },
       {

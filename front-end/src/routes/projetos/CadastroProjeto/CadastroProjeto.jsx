@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import DatePicker from "react-datepicker";
@@ -13,24 +13,56 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./CadastroProjeto.module.css";
 
 // Importe a classe 'inter-bold' do arquivo de estilo
+import { useNavigate, useParams } from "react-router";
 import "./CadastroProjeto.module.css";
 
 export function CadastroProjeto(props) {
-  const { handleSubmit, control } = useForm();
+  const { id } = useParams();
+  const { handleSubmit, control, setValue } = useForm();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (id) {
+      fetch(`http://localhost:8080/api/v1/projetos/${id}`)
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          console.log(data);
+          // Use setValue para definir os valores iniciais dos campos
+          setValue("nome", data.nome);
+          setValue("tipo", data.tipo);
+          setValue("status", data.status);
+          setValue("inicio", new Date(data.inicio));
+          setValue("termino", new Date(data.termino));
+          setValue("descricao", data.descricao);
+        })
+        .catch((erro) => console.log(erro));
+    }
+  }, [id, setValue]);
+
   const onSubmit = (data) => {
-    console.log(data);
     data.inicio = data.inicio.toISOString().split("T")[0]; // Formata a data no formato 'YYYY-MM-DD'
     data.termino = data.termino.toISOString().split("T")[0]; // Formata a data no formato 'YYYY-MM-DD'
-
-    fetch("http://localhost:8080/api/v1/projetos", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((resposta) => console.log(resposta))
-      .catch((erro) => console.log(erro));
+    if (id) {
+      fetch(`http://localhost:8080/api/v1/projetos/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((resposta) => navigate('/'))
+        .catch((erro) => console.log(erro));
+    } else {
+      fetch("http://localhost:8080/api/v1/projetos", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((resposta) => navigate('/'))
+        .catch((erro) => console.log(erro));
+    }
   };
 
   return (
@@ -74,7 +106,9 @@ export function CadastroProjeto(props) {
                 <option value="Mestrado">Mestrado</option>
                 <option value="Doutorado">Doutorado</option>
                 <option value="IC">IC</option>
-                <option value="Atividade Orientada de Ensino">Atividade Orientada de Ensino</option>
+                <option value="Atividade Orientada de Ensino">
+                  Atividade Orientada de Ensino
+                </option>
                 <option value="Estágio">Estágio</option>
               </Form.Select>
             )}
