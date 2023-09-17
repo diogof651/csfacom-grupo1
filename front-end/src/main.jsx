@@ -1,10 +1,36 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import { ListagemProjetos } from "./routes/projetos/ListagemProjetos/ListagemProjetos.jsx";
+import { PaginaProjeto } from "./routes/projetos/PaginaProjeto/PaginaProjeto.jsx";
+import { CadastroProjeto } from "./routes/projetos/CadastroProjeto/CadastroProjeto.jsx";
 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <ListagemProjetos />,
+        //errorElement: </> -> para colocar uma pagina de erro caso nao encontre a rota
+      },
+      {
+        path: "/cadastroProjeto",
+        element: <CadastroProjeto />,
+      },
+      {
+        path: "/projeto/:id",
+        element: <PaginaProjeto />,
+      },
+    ],
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);

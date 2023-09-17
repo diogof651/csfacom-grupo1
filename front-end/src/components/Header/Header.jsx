@@ -1,18 +1,19 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
+import styles from "./Header.module.css";
+import ledesLogo from "../../assets/ledes-logo.svg";
+
 import {
   BsFillPuzzleFill,
   BsMegaphoneFill,
-  BsPersonCircle,
+  BsBoxArrowInRight,
 } from "react-icons/bs";
-import ledesLogo from "../assets/ledes-logo.svg";
-import styles from "./Header.module.css";
 
 export function Header() {
   const iconStyle = {
     width: "24px", // Defina o tamanho desejado
     height: "24px", // Defina a altura desejada (opcional)
-    marginRight: "5px", // Espaçamento à direita (opcional)
+    marginRight: "10px", // Espaçamento à direita (opcional)
   };
 
   return (
@@ -36,11 +37,11 @@ export function Header() {
           </Nav.Item>
         </Nav>
       </div>
-      <Nav.Item as="lu" className="ml-auto ml-2">
+      <Nav.Item as="lu" className="ml-auto ml-5">
         {" "}
         {/* Adicione ml-auto e ml-2 para empurrar 'Entrar' para a direita */}
         <Nav.Link href="/entrar" className="font-weight-bold text-white">
-          <BsPersonCircle style={iconStyle} />
+          <BsBoxArrowInRight style={iconStyle} />
         </Nav.Link>
       </Nav.Item>
     </header>

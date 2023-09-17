@@ -19,8 +19,8 @@ export function CadastroProjeto(props) {
   const { handleSubmit, control } = useForm();
   const onSubmit = (data) => {
     console.log(data);
-    data.inicio = data.inicio.toISOString().split('T')[0]; // Formata a data no formato 'YYYY-MM-DD'
-    data.termino = data.termino.toISOString().split('T')[0]; // Formata a data no formato 'YYYY-MM-DD'
+    data.inicio = data.inicio.toISOString().split("T")[0]; // Formata a data no formato 'YYYY-MM-DD'
+    data.termino = data.termino.toISOString().split("T")[0]; // Formata a data no formato 'YYYY-MM-DD'
 
     fetch("http://localhost:8080/api/v1/projetos", {
       method: "POST",

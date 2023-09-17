@@ -26,6 +26,7 @@
     "react-hook-form": "^7.45.4",
     "react-icons": "^4.11.0",
     "react-quill": "^2.0.0",
+    "react-router-dom": "^6.16.0",
     "reactstrap": "^9.2.0"
   },
   "devDependencies": {

@@ -1,14 +1,14 @@
 import "bootstrap/dist/css/bootstrap.css";
-import { Header } from "./components/Header";
-import { CadastroProjeto } from "./components/CadastroProjeto";
+import { Header } from "./components/Header/Header";
 import "./global.css";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <div style={{ height: "75%" }}>
+    <>
       <Header />
-      <CadastroProjeto />
-    </div>
+      <Outlet />
+    </>
   );
 }
 
