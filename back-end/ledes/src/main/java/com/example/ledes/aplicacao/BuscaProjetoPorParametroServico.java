@@ -17,7 +17,7 @@ public class BuscaProjetoPorParametroServico  {
     @Autowired
     private ProjetoRepositorio projetoRepositorio;
 
-    public List<ProjetoResponseDTO> buscarProjetosPorParametros(String tipo, Boolean status, String nome) {
+    public List<ProjetoResponseDTO> buscarProjetosPorParametros(String tipo, String status, String nome) {
         List<Projeto> projetos = (List<Projeto>) projetoRepositorio.buscarProjetosPorParametros(tipo, status, nome);
         
         Stream<Projeto> projetoStream = projetos.stream();

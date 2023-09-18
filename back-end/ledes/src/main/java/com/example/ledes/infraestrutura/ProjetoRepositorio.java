@@ -13,11 +13,11 @@ public interface ProjetoRepositorio extends CrudRepository<Projeto, Long> {
 
         @Query("SELECT p FROM Projeto p WHERE "
         + "(:tipo IS NULL OR p.tipo = :tipo) AND "
-        + "(:ativo IS NULL OR p.ativo = :ativo) AND "
+        + "(:status IS NULL OR p.status = :status) AND "
         + "(:nome IS NULL OR p.nome = :nome)")
         List<Projeto> buscarProjetosPorParametros(
                 @Param("tipo") String tipo,
-                @Param("ativo") Boolean ativo,
+                @Param("status") String status,
                 @Param("nome") String nome);
 
 }

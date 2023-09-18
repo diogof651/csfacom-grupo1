@@ -94,10 +94,10 @@ public class ProjetoController {
     @GetMapping("/buscar")
     public ResponseEntity<List<ProjetoResponseDTO>> buscarProjetosPorParametros(
         @RequestParam(name = "tipo", required = false) String tipo,
-        @RequestParam(name = "ativo", required = false) Boolean ativo,
+        @RequestParam(name = "status", required = false) String status,
         @RequestParam(name = "nome", required = false) String nome) {
 
-        List<ProjetoResponseDTO> projetosEncontrados = BuscaProjetoPorParametroServico.buscarProjetosPorParametros(tipo, ativo, nome);
+        List<ProjetoResponseDTO> projetosEncontrados = BuscaProjetoPorParametroServico.buscarProjetosPorParametros(tipo, status, nome);
         
         if(projetosEncontrados != null){
             if (projetosEncontrados.isEmpty()) {
