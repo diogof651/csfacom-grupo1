@@ -1,20 +1,20 @@
 package com.example.ledes.infraestrutura.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+
 @Data
+@AllArgsConstructor
+
 public class UsuarioResponseDTO {
     private Long id;
     private String nome;
+    private String senha;
     private String email;
     private boolean ativo;
+    private String fotoPerfil;
+    private String link;
 
-    public UsuarioResponseDTO(Long id, String nome, String email, boolean ativo) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.ativo = ativo;
-    }
 
-    // Getters e setters (você pode gerar automaticamente se estiver usando uma IDE)
 }

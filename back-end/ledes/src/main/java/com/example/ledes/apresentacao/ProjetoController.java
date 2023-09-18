@@ -63,19 +63,19 @@ public class ProjetoController {
             }
         }
 
-        @Operation(summary = "Desativar um projeto")
-        @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto desativado")
-        @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
-        @PostMapping(path = "/{id}/desativar", consumes = "application/json")
-        public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id) {
-        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id,projetoRequestDTO);
+    @Operation(summary = "Desativar um projeto")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto desativado")
+    @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
+    @PostMapping(path = "/{id}/desativar", consumes = "application/json")
+    public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id) {
+    ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id,projetoRequestDTO);
 
-        if (projetoDesativado != null) {
-            return ResponseEntity.ok(projetoDesativado);
-        } else {
-            return ResponseEntity.notFound().build();
-            }
+    if (projetoDesativado != null) {
+        return ResponseEntity.ok(projetoDesativado);
+    } else {
+        return ResponseEntity.notFound().build();
         }
+    }
        
     @Operation(summary = "Listar Projetos")
     @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
