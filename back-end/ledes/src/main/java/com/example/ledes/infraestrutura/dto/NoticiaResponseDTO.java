@@ -14,8 +14,10 @@ public class NoticiaResponseDTO {
     private String descricao;
     private String autor;
     private Date data;
+    private String conteudo;
     private String estado;
-    private String thumbnail; // Opcional
+    private byte[] thumbnail; // Opcional
     private Date dataPublicacao; // Opcional
     private byte[] anexos; // Opcional
+    private Boolean emDestaque; //Opcional
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.noticia.AdicionarNoticiaServico;
+import com.example.ledes.aplicacao.noticia.ArquivarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.EditarNoticiaServico;
 import com.example.ledes.infraestrutura.dto.NoticiaRequestDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaResponseDTO;
@@ -25,6 +26,8 @@ public class NoticiaController {
     private AdicionarNoticiaServico adicionarNoticia;
     @Autowired
     private EditarNoticiaServico editarNoticia;
+    @Autowired
+    private ArquivarNoticiaServico arquivarNoticia;
 
     @Operation(summary = "Adicionar uma Notícia")
     @ApiResponse(responseCode = "201")
@@ -42,6 +45,16 @@ public class NoticiaController {
         @PathVariable Long id, @RequestBody NoticiaRequestDTO atualiacapDTO){
             NoticiaResponseDTO noticiaEditada = editarNoticia.editar(id, atualiacapDTO);
             return ResponseEntity.ok(noticiaEditada);
+        }
+    
+    @Operation(summary = "Arquivar uma noticia")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
+    @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
+    @PutMapping(path = "/{id}", consumes = "application/json")
+    public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(
+        @PathVariable Long id, @RequestBody NoticiaRequestDTO atualiacapDTO){
+            NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id, atualiacapDTO);
+            return ResponseEntity.ok(noticiaArquivada);
         }
 
 }
