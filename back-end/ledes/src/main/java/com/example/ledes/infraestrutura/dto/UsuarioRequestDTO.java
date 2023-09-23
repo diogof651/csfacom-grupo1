@@ -9,6 +9,6 @@ public class UsuarioRequestDTO {
     private String senha;
     private boolean ativo;
     private String fotoPerfil;
-    private String link;
-    
+    private String linkedin;
+    private String github;
 }

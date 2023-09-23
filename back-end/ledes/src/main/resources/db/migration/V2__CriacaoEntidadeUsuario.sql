@@ -6,7 +6,7 @@ Begin
         nome VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         senha VARCHAR(255) NOT NULL,
-        ativo BOOLEAN,
+        ativo BOOLEAN NOT NULL,
         fotoPerfil text,
         gitHub VARCHAR(255),
         linkedin VARCHAR(255)

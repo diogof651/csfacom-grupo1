@@ -1,0 +1,22 @@
+/* Header.module.css */
+.header {
+  background: var(--blue);
+  display: flex;
+  align-items: flex-start;
+  padding: 1.25rem 0;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Defina a altura do cabeçalho */
+.header img {
+  height: 4rem;
+  max-width: 100%;
+  margin-left: 15px;
+}
+
+/* Adicione um espaço para o formulário abaixo do cabeçalho */
+.content {
+  margin-top: 5rem; /* Altura do cabeçalho + espaço extra */
+  padding: 2rem;
+}

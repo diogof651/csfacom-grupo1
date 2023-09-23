@@ -17,7 +17,7 @@ public class AdicionarUsuarioServico {
         // adicionar verificação se o email já existe na base de dados
         Usuario usuario = new Usuario(usuarioRequest.getNome(), usuarioRequest.getEmail());
         usuarioRepositorio.save(usuario);
-        return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getSenha(),
-                usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin());
+        return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
+                usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub());
     }
 }

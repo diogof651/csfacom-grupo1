@@ -21,17 +21,15 @@ public class AtualizarUsuarioServico {
 
         if (usuario != null) {
             usuario.setNome(usuarioRequestDTO.getNome());
-
-            if (usuarioRequestDTO.getEmail() != null) {
-                usuario.setEmail(usuarioRequestDTO.getEmail());
-            }
-            if (usuarioRequestDTO.isAtivo() != usuario.isAtivo()) {
-                usuario.setAtivo(usuarioRequestDTO.isAtivo());
-            }
+            usuario.setEmail(usuarioRequestDTO.getEmail());
+            usuario.setAtivo(usuarioRequestDTO.isAtivo());
+            usuario.setFotoPerfil(usuarioRequestDTO.getFotoPerfil());
+            usuario.setGithub(usuarioRequestDTO.getGithub());
+            usuario.setLinkedin(usuarioRequestDTO.getLinkedin());
 
             usuarioRepositorio.save(usuario);
-            return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getSenha(),
-                    usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin());
+            return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
+                    usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub());
         } else {
             return null;
         }
