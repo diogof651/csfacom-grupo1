@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -23,9 +25,9 @@ public class Noticia {
 
     private String titulo;
 
-    private String descricao;
-
-    private String autor;
+    @OneToOne
+    @JoinColumn(name = "autor_id", nullable = false)
+    private Usuario autor;
 
     private String conteudo;
 
@@ -37,12 +39,23 @@ public class Noticia {
 
     private Boolean emDestaque;
 
-    public Noticia(String titulo, String descricao, String autor, String conteudo, String estado, Boolean emDestaque) {
+    public Noticia(String titulo, Usuario autor, String conteudo, String estado, Boolean emDestaque,
+            Date dataPublicacao) {
         this.titulo = titulo;
-        this.descricao = descricao;
         this.autor = autor;
         this.conteudo = conteudo;
         this.estado = estado;
         this.emDestaque = emDestaque;
+        definirDataDePublicacao(estado, dataPublicacao);
+    }
+
+    public void definirDataDePublicacao(String estado, Date dataPublicacao) {
+        if ("publicacao_imediata".equals(estado)) {
+            setDataPublicacao(new Date());
+        } else if ("agendada".equals(estado)) {
+            setDataPublicacao(dataPublicacao);
+        } else if("rascunho".equals(estado)){
+            setDataPublicacao(null);
+        }
     }
 }

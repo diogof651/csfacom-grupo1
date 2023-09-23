@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
+import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
@@ -31,7 +32,7 @@ public class UsuarioController {
     @Operation(summary = "Criar um novo usuário")
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioRequestDTO usuarioDTO) {
+    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         UsuarioResponseDTO novoUsuario = usuarioServico.adicionar(usuarioDTO);
         return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
     }

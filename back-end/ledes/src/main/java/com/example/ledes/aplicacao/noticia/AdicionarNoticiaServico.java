@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.ledes.dominio.Anexo;
 import com.example.ledes.dominio.Noticia;
+import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.AnexoRepositorio;
 import com.example.ledes.infraestrutura.NoticiaRepositorio;
+import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.AnexoDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaRequestDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaResponseDTO;
@@ -22,14 +24,18 @@ public class AdicionarNoticiaServico {
 
     @Autowired
     private AnexoRepositorio anexoRepositorio;
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
 
     public NoticiaResponseDTO adicionar(NoticiaRequestDTO noticiaRequest) {
 
         definirDataDePublicacao(noticiaRequest);
+        Usuario autor = usuarioRepositorio.findById(noticiaRequest.getAutor_id()).get();
 
-        Noticia noticia = new Noticia(noticiaRequest.getTitulo(), noticiaRequest.getDescricao(),
-                noticiaRequest.getAutor(),
-                noticiaRequest.getConteudo(), noticiaRequest.getEstado(), noticiaRequest.getEmDestaque());
+        Noticia noticia = new Noticia(noticiaRequest.getTitulo(),
+                autor,
+                noticiaRequest.getConteudo(), noticiaRequest.getEstado(), noticiaRequest.getEmDestaque(),
+                noticiaRequest.getDataPublicacao());
         if (noticiaRequest.getThumbnail() != null) {
             noticia.setThumbnail(noticiaRequest.getThumbnail());
         }
@@ -44,7 +50,7 @@ public class AdicionarNoticiaServico {
             anexosDto.add(new AnexoDTO(anexo.getId(), anexo.getTitulo(), anexo.getConteudo()));
         }
 
-        return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(), noticia.getDescricao(), noticia.getAutor(),
+        return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(), noticia.getAutor(),
                 noticia.getConteudo(), noticia.getEstado(), noticia.getThumbnail(), noticia.getDataPublicacao(),
                 noticia.getEmDestaque(), anexosDto);
     }

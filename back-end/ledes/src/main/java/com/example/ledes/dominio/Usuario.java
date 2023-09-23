@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.example.ledes.utils.SenhaUtils;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,12 +30,21 @@ public class Usuario {
     private String linkedin;
     private String github;
 
-    public Usuario(String nome, String email, String senha, boolean ativo, String fotoPerfil, String link) {
+    public Usuario(String nome, String email, String senha, boolean ativo, String fotoPerfil, String linkedin,
+            String github) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.ativo = ativo;
         this.fotoPerfil = fotoPerfil;
-        this.linkedin = link;
+        this.linkedin = linkedin;
+        this.github = github;
+    }
+
+    public Usuario(String nome, String email) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = SenhaUtils.gerarSenhaCriptografada("123456");
+        this.ativo = true;
     }
 }

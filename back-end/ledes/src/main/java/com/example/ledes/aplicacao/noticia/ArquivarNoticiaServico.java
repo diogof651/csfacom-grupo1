@@ -36,7 +36,7 @@ public class ArquivarNoticiaServico {
                 anexosDto.add(new AnexoDTO(anexo.getId(), anexo.getTitulo(), anexo.getConteudo()));
             }
 
-            return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(), noticia.getDescricao(),
+            return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(),
                     noticia.getAutor(),
                     noticia.getConteudo(), noticia.getEstado(), noticia.getThumbnail(), noticia.getDataPublicacao(),
                     noticia.getEmDestaque(), anexosDto);

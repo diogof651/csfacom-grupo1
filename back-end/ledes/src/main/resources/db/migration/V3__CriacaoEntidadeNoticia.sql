@@ -5,12 +5,13 @@ Begin
             id INT PRIMARY KEY,
             titulo VARCHAR(255) NOT NULL,
             descricao TEXT NOT NULL,
-            autor VARCHAR(255) NOT NULL,
+            autor_id  BIGINT NOT NULL,
             conteudo TEXT NOT NULL,
             estado VARCHAR(50) NOT NULL,
             thumbnail TEXT,  -- Campo para armazenar uma imagem ou outro arquivo binário
             data_publicacao DATE,
-            em_destaque BOOLEAN
+            em_destaque BOOLEAN,
+            FOREIGN KEY (autor_id) REFERENCES usuario(id)
         );
     END IF;
 END $$;

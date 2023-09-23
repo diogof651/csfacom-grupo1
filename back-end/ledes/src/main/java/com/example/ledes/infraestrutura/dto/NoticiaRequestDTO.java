@@ -8,8 +8,7 @@ import lombok.Data;
 @Data
 public class NoticiaRequestDTO {
     private String titulo;
-    private String descricao;
-    private String autor;
+    private Long autor_id;
     private String conteudo;
     private String estado;
     private String thumbnail; // Opcional
