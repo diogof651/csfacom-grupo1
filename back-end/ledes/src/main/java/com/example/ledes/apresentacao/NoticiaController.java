@@ -44,17 +44,26 @@ public class NoticiaController {
     public ResponseEntity<NoticiaResponseDTO> editarNoticia(
         @PathVariable Long id, @RequestBody NoticiaRequestDTO atualiacapDTO){
             NoticiaResponseDTO noticiaEditada = editarNoticia.editar(id, atualiacapDTO);
-            return ResponseEntity.ok(noticiaEditada);
+            
+            if (noticiaEditada != null) {
+                return ResponseEntity.ok(noticiaEditada);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         }
     
     @Operation(summary = "Arquivar uma noticia")
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(
-        @PathVariable Long id, @RequestBody NoticiaRequestDTO atualiacapDTO){
-            NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id, atualiacapDTO);
-            return ResponseEntity.ok(noticiaArquivada);
+    @PutMapping(path = "/{id}/arquivar", consumes = "application/json")
+    public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(@PathVariable Long id){
+            NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id);
+
+            if (noticiaArquivada != null) {
+                return ResponseEntity.ok(noticiaArquivada);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         }
 
 }

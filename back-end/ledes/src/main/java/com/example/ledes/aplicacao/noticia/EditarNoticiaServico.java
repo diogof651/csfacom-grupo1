@@ -25,10 +25,10 @@ public class EditarNoticiaServico {
             noticia.setAutor(noticiaRequest.getAutor());
             if ("publicacao_imediata".equals(noticiaRequest.getEstado())) {
                 // Caso de publicação imediata, definir a data atual
-                noticia.setData(new Date());
+                noticia.setDataPublicacao(new Date());
             } else if ("rascunho".equals(noticiaRequest.getEstado())) {
                 // Caso de rascunho, a data deve ser nula
-                noticia.setData(null);
+                noticia.setDataPublicacao(null);
             } else if ("agendada".equals(noticiaRequest.getEstado())) {
                 // Caso de notícia agendada, verificar a data de agendamento
                 Date dataAgendamento = noticiaRequest.getDataPublicacao();
@@ -36,23 +36,26 @@ public class EditarNoticiaServico {
 
                 if (dataAgendamento != null && dataAgendamento.after(dataAtual)) {
                     // A data agendada é válida
-                    noticia.setData(dataAgendamento);
+                    noticia.setDataPublicacao(dataAgendamento);
                 } else {
                     // A data agendada não é válida
                     throw new IllegalArgumentException("A data de agendamento deve estar no futuro.");
                 }
             }
-            noticia.setData(noticiaRequest.getData());
             noticia.setConteudo(noticiaRequest.getConteudo());
             //aqui também vai ser possivel arquivar uma noticia?
             noticia.setEstado(noticiaRequest.getEstado());
-            noticia.setThumbnail(noticiaRequest.getThumbnail());
+            // Converte o campo 'thumbnail' para um array de bytes
+            byte[] thumbnailBytes = noticiaRequest.getThumbnail();
+            noticia.setThumbnail(thumbnailBytes);
             noticia.setDataPublicacao(noticiaRequest.getDataPublicacao());
-            noticia.setAnexosPdf(noticiaRequest.getAnexos());
+            // Converte o campo 'anexos' para um array de bytes
+            byte[] anexosBytes = noticiaRequest.getAnexos();
+            noticia.setAnexosPdf(anexosBytes);
 
             noticiaRepositorio.save(noticia);
 
-            return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(), noticia.getDescricao(), noticia.getAutor(), noticia.getData(),
+            return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(), noticia.getDescricao(), noticia.getAutor(),
             noticia.getConteudo(), noticia.getEstado(), noticia.getThumbnail(), noticia.getDataPublicacao(), noticia.getAnexosPdf(), noticia.getEmDestaque());
         } else{
             return null;

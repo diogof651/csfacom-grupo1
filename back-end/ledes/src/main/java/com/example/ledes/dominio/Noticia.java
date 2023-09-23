@@ -2,7 +2,6 @@ package com.example.ledes.dominio;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,12 +21,11 @@ public class Noticia {
 
     
 
-    public Noticia(String titulo, String descricao, String autor, Date data, String conteudo, String estado, byte[] thumbnail,
+    public Noticia(String titulo, String descricao, String autor, String conteudo, String estado, byte[] thumbnail,
             Date dataPublicacao, byte[] anexosPdf, Boolean emDestaque) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.autor = autor;
-        this.data = data;
         this.conteudo = conteudo;
         this.estado = estado;
         this.thumbnail = thumbnail;
@@ -40,22 +38,14 @@ public class Noticia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String titulo;
 
-    @Column(nullable = false)
     private String descricao;
 
-    @Column(nullable = false)
     private String autor;
 
-    @Column(nullable = false)
-    private Date data;
-
-    @Column(nullable = false)
     private String conteudo;
 
-    @Column(nullable = false)
     private String estado;
 
     @Lob

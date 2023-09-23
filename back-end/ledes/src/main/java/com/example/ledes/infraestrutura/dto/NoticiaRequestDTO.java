@@ -9,7 +9,6 @@ public class NoticiaRequestDTO {
     private String titulo;
     private String descricao;
     private String autor;
-    private Date data;
     private String conteudo;
     private String estado;
     private byte[] thumbnail; // Opcional
