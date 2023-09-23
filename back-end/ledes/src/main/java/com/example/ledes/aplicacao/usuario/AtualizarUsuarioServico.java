@@ -11,7 +11,7 @@ import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
 @Service
-public class AtualizarUsuarioServico<UsuarioAtualizacaoDTO> {
+public class AtualizarUsuarioServico{
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
@@ -35,7 +35,7 @@ public class AtualizarUsuarioServico<UsuarioAtualizacaoDTO> {
             
              usuarioRepositorio.save(usuario);
             // Salve o usuário atualizado no banco de dados
-            return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),usuario.getSenha(),usuario.isAtivo(),usuario.getFotoPerfil(),usuario.getLink());
+            return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),usuario.getSenha(),usuario.isAtivo(),usuario.getFotoPerfil(),usuario.getLinkedin());
         } else {
             return null; // Pode retornar uma resposta adequada ou lançar uma exceção se o usuário não for encontrado
         }

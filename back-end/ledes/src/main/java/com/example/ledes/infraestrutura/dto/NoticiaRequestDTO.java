@@ -1,5 +1,6 @@
 package com.example.ledes.infraestrutura.dto;
 
+import java.util.Collection;
 import java.util.Date;
 
 import lombok.Data;
@@ -11,8 +12,8 @@ public class NoticiaRequestDTO {
     private String autor;
     private String conteudo;
     private String estado;
-    private byte[] thumbnail; // Opcional
+    private String thumbnail; // Opcional
     private Date dataPublicacao; // Opcional
-    private byte[] anexos; // Opcional
-    private Boolean emDestaque; //Opcional
+    private Boolean emDestaque; // Opcional
+    private Collection<AnexoDTO> anexos;
 }

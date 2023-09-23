@@ -18,6 +18,6 @@ public class AdicionarUsuarioServico {
     public UsuarioResponseDTO adicionar(UsuarioRequestDTO usuarioRequest) {
         Usuario usuario = new Usuario(usuarioRequest.getNome(), usuarioRequest.getEmail(), null, usuarioRequest.isAtivo(), null, null);
         usuarioRepositorio.save(usuario);        
-        return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getSenha() , usuario.isAtivo(),usuario.getFotoPerfil(),usuario.getLink());
+        return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getSenha() , usuario.isAtivo(),usuario.getFotoPerfil(),usuario.getLinkedin());
     }
 }
