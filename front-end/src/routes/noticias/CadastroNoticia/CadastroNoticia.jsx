@@ -36,12 +36,9 @@ export function CadastroNoticia(props) {
       fetch(`http://localhost:8080/api/v1/noticias/${id}`)
         .then((resposta) => resposta.json())
         .then((data) => {
-          setValue("nome", data.nome);
-          setValue("tipo", data.tipo);
-          setValue("status", data.status);
-          setValue("inicio", new Date(data.inicio));
-          setValue("termino", new Date(data.termino));
-          setValue("descricao", data.descricao);
+          setValue("titulo", data.titulo);
+          setValue("conteudo", data.conteudo);
+          setValue("estado", data.estado);
           setSelectedOption(data.tipo);
           setShowDatePicker(data.tipo === "Agendada");
           setAnexos(data.anexos || []);
