@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ledes.dominio.Projeto;
 import com.example.ledes.infraestrutura.ProjetoRepositorio;
-import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 
 @Service

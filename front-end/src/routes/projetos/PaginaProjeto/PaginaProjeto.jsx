@@ -4,8 +4,10 @@ import Container from "react-bootstrap/Container";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
+import { useNavigate } from "react-router";
 
 export function PaginaProjeto() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const iconStyle = {
     width: "18px", // Defina o tamanho desejado
@@ -40,10 +42,7 @@ export function PaginaProjeto() {
         "Content-type": "application/json",
       },
     })
-      .then((resposta) => resposta.json())
-      .then((data) => {
-        console.log(data);
-      })
+      .then(() => navigate('/'))
       .catch((erro) => console.log(erro));
   }
 

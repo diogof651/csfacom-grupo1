@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Badge from "react-bootstrap/Badge"; // Importe o componente Badge
+import Badge from "react-bootstrap/Badge"; 
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { BsPuzzle } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
-import { Select } from "../../../components/Select/Select";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
+import { Select } from "../../../components/Select/Select";
 
 export function ListagemProjetos() {
-  const [selectedOption1, setSelectedOption1] = useState("");
-  const [selectedOption2, setSelectedOption2] = useState("");
+  const [tipoSelectedOption, setTipoSelectedOption] = useState("");
+  const [estadoSelectedOption, setEstadoSelectedOption] = useState("");
   const [searchText, setSearchText] = useState("");
   const [cards, setCards] = useState([]);
 
@@ -40,18 +40,17 @@ export function ListagemProjetos() {
     })
       .then((resposta) => resposta.json())
       .then((data) => {
-        console.log(data);
         setCards(data);
       })
       .catch((erro) => console.log(erro));
   }
 
-  const handleOptionChange1 = (e) => {
-    setSelectedOption1(e.target.value);
+  const tipoHandleOptionChange = (e) => {
+    setTipoSelectedOption(e.target.value);
   };
 
-  const handleOptionChange2 = (e) => {
-    setSelectedOption2(e.target.value);
+  const estadoHandleOptionChange = (e) => {
+    setEstadoSelectedOption(e.target.value);
   };
 
   const handleSearchChange = (e) => {
@@ -59,23 +58,20 @@ export function ListagemProjetos() {
   };
 
   const handleApplyFilter = () => {
-    // Aplicar os filtros selecionados e atualizar a lista de cartões
-    const filteredCards = generateFixedCards().filter((card) => {
-      if (selectedOption1 && card.type !== selectedOption1) return false;
-      if (selectedOption2 && card.state !== selectedOption2) return false;
-      if (
-        searchText &&
-        !card.type.toLowerCase().includes(searchText.toLowerCase()) &&
-        !card.state.toLowerCase().includes(searchText.toLowerCase()) &&
-        !card.text.toLowerCase().includes(searchText.toLowerCase())
-      ) {
-        return false;
+    fetch(
+      `http://localhost:8080/api/v1/projetos/listagem?tipo=${tipoSelectedOption}&status=${estadoSelectedOption}&nome=${searchText}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
       }
-      return true;
-    });
-
-    // Atualizar a lista de cartões filtrados
-    setCards(filteredCards);
+    )
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        setCards(data);
+      })
+      .catch((erro) => console.log(erro));
   };
 
   return (
@@ -116,16 +112,16 @@ export function ListagemProjetos() {
           <div className="col-md-3 col-6 mb-2">
             <Select
               options={optionsTipoProjeto}
-              handleOptionChange={handleOptionChange1}
-              selectedOption={selectedOption1}
+              handleOptionChange={tipoHandleOptionChange}
+              selectedOption={tipoSelectedOption}
             />
           </div>
 
           <div className="col-md-2 col-6 mb-2">
             <Select
               options={optionsEstado}
-              handleOptionChange={handleOptionChange2}
-              selectedOption={selectedOption2}
+              handleOptionChange={estadoHandleOptionChange}
+              selectedOption={estadoSelectedOption}
             />
           </div>
           <div className="col-md-2 col-12">
@@ -167,7 +163,7 @@ export function ListagemProjetos() {
                     {card.status === "Em andamento" && (
                       <Badge bg="primary">Em andamento</Badge>
                     )}
-                    {card.status === "Concluído" && (
+                    {card.status === "Concluido" && (
                       <Badge bg="success">Concluído</Badge>
                     )}
                     {card.status === "Descontinuado" && (
