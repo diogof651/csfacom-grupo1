@@ -1,4 +1,4 @@
-package com.example.ledes.aplicacao;
+package com.example.ledes.aplicacao.projeto;
 
 import java.util.List;
 import java.util.stream.Collectors;

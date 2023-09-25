@@ -1,4 +1,4 @@
-package com.example.ledes.aplicacao;
+package com.example.ledes.aplicacao.projeto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.example.ledes.dominio.Projeto;
 import com.example.ledes.infraestrutura.ProjetoRepositorio;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
-
 
 @Service
 public class ListagemProjetoServico {
@@ -33,7 +32,6 @@ public class ListagemProjetoServico {
                 projeto.getTermino(),
                 projeto.getStatus(),
                 projeto.getTipo(),
-                projeto.getAtivo()
-        );
+                projeto.getAtivo());
     }
 }

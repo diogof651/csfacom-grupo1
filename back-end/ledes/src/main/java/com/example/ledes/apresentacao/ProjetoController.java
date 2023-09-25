@@ -2,7 +2,6 @@ package com.example.ledes.apresentacao;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,15 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.ledes.aplicacao.AdicionarProjetoServico;
-import com.example.ledes.aplicacao.AtualizarProjetoServico;
-import com.example.ledes.aplicacao.DesativarProjetoServico;
-import com.example.ledes.aplicacao.ListagemProjetoServico;
-import com.example.ledes.aplicacao.BuscaProjetoPorParametroServico;
-
+import com.example.ledes.aplicacao.projeto.AdicionarProjetoServico;
+import com.example.ledes.aplicacao.projeto.AtualizarProjetoServico;
+import com.example.ledes.aplicacao.projeto.BuscaProjetoPorParametroServico;
+import com.example.ledes.aplicacao.projeto.DesativarProjetoServico;
+import com.example.ledes.aplicacao.projeto.ListagemProjetoIdServico;
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
-
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,11 +37,9 @@ public class ProjetoController {
     @Autowired
     private DesativarProjetoServico desativarProjetoServico;
     @Autowired
-    private ListagemProjetoServico ListagemProjetoServico;
+    private BuscaProjetoPorParametroServico buscaProjetoPorParametroServico;
     @Autowired
-    private BuscaProjetoPorParametroServico BuscaProjetoPorParametroServico;
-    
-
+    private ListagemProjetoIdServico listagemProjetoIdServico;
 
     @Operation(summary = "Criar um novo projeto")
     @ApiResponse(responseCode = "201")
@@ -58,58 +53,59 @@ public class ProjetoController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<ProjetoResponseDTO> atualizarProjeto(
-        @RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id){
-            ProjetoResponseDTO projetoAtualizado = atualizarProjetoServico.atualizar(id, projetoRequestDTO);
+    public ResponseEntity<ProjetoResponseDTO> atualizarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO,
+            @PathVariable Long id) {
+        ProjetoResponseDTO projetoAtualizado = atualizarProjetoServico.atualizar(id, projetoRequestDTO);
 
-            if (projetoAtualizado != null) {
-                return ResponseEntity.ok(projetoAtualizado);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+        if (projetoAtualizado != null) {
+            return ResponseEntity.ok(projetoAtualizado);
+        } else {
+            return ResponseEntity.notFound().build();
         }
+    }
 
-        @Operation(summary = "Desativar um projeto")
-        @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto desativado")
-        @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
-        @PostMapping(path = "/{id}/desativar", consumes = "application/json")
-        public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id) {
-        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id, projetoRequestDTO);
+    @Operation(summary = "Desativar um projeto")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto desativado")
+    @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
+    @PostMapping(path = "/{id}/desativar", consumes = "application/json")
+    public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@PathVariable Long id) {
+        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id);
 
         if (projetoDesativado != null) {
             return ResponseEntity.ok(projetoDesativado);
         } else {
             return ResponseEntity.notFound().build();
-            }
         }
-       
+    }
+    
     @Operation(summary = "Listar Projetos")
     @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
     @GetMapping("/listagem")
-    public ResponseEntity<List<ProjetoResponseDTO>> obterListagemProjetos() {
-        List<ProjetoResponseDTO> projetos = ListagemProjetoServico.listarProjetos();
-        return ResponseEntity.ok(projetos);
-    }
-
-    @GetMapping("/buscar")
     public ResponseEntity<List<ProjetoResponseDTO>> buscarProjetosPorParametros(
-        @RequestParam(name = "tipo", required = false) String tipo,
-        @RequestParam(name = "status", required = false) String status,
-        @RequestParam(name = "nome", required = false) String nome) {
+            @RequestParam(name = "tipo", required = false) String tipo,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "nome", required = false) String nome) {
 
-        List<ProjetoResponseDTO> projetosEncontrados = BuscaProjetoPorParametroServico.buscarProjetosPorParametros(tipo, status, nome);
-        
-        if(projetosEncontrados != null){
-            if (projetosEncontrados.isEmpty()) {
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.ok(projetosEncontrados);
-            }
+        List<ProjetoResponseDTO> projetosEncontrados = buscaProjetoPorParametroServico.buscarProjetosPorParametros(tipo,
+                status, nome);
+
+        if (projetosEncontrados != null) {
+            return ResponseEntity.ok(projetosEncontrados);
         }
         return ResponseEntity.notFound().build();
-        
     }
 
-}
-    
+    @Operation(summary = "Buscar projeto por ID")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do projeto referente ao ID")
+    @ApiResponse(responseCode = "404", description = "Id não encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjetoResponseDTO> obterProjetoId(@PathVariable Long id) {
+        ProjetoResponseDTO projetoEncontrado = listagemProjetoIdServico.buscarPorId(id);
 
+        if (projetoEncontrado != null) {
+            return ResponseEntity.ok(projetoEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}
