@@ -4,7 +4,7 @@ public class MembroDataGenerator {
     public static void main(String[] args) {
         Random random = new Random();
 
-        String[] nomes = {"João", "Maria", "Carlos", "Ana", "Pedro", "Mariana", "Lucas", "Laura", "Luiza", "Felipe"};
+        String[] nomes = {"Lucca", "Diogo", "Camila", "Geff", "Junior", "Prof Ricardo"};
         String[] extensoesFoto = {"jpg", "png", "jpeg"};
 
         System.out.println("INSERT INTO Membro (nome, foto, ativo) VALUES");
