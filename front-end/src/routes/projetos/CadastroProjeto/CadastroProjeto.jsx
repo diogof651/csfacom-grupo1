@@ -14,12 +14,26 @@ import styles from "./CadastroProjeto.module.css";
 
 import { useNavigate, useParams } from "react-router";
 import "./CadastroProjeto.module.css";
+import { Select } from "../../../components/Select/Select";
 
 export function CadastroProjeto(props) {
   const { id } = useParams();
   const { handleSubmit, control, setValue } = useForm();
   const navigate = useNavigate();
-  
+
+  const [tipoSelectedOption, setTipoSelectedOption] = useState("");
+  const [estadoSelectedOption, setEstadoSelectedOption] = useState("");
+  const optionsTipoProjeto = [
+    "Projeto de extensão",
+    "TCC",
+    "Mestrado",
+    "Doutorado",
+    "IC",
+    "Atividade Orientada de Ensino",
+    "Estágio",
+  ];
+
+  const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
   useEffect(() => {
     if (id) {
       fetch(`http://localhost:8080/api/v1/projetos/${id}`)
@@ -41,6 +55,9 @@ export function CadastroProjeto(props) {
   const onSubmit = (data) => {
     data.inicio = data.inicio.toISOString().split("T")[0]; // Formata a data no formato 'YYYY-MM-DD'
     data.termino = data.termino.toISOString().split("T")[0]; // Formata a data no formato 'YYYY-MM-DD'
+    data.status = estadoSelectedOption;
+    data.tipo = tipoSelectedOption;
+    console.log(data);
     if (id) {
       fetch(`http://localhost:8080/api/v1/projetos/${id}`, {
         method: "PUT",
@@ -49,7 +66,7 @@ export function CadastroProjeto(props) {
         },
         body: JSON.stringify(data),
       })
-        .then((resposta) => navigate('/'))
+        .then((resposta) => navigate("/"))
         .catch((erro) => console.log(erro));
     } else {
       fetch("http://localhost:8080/api/v1/projetos", {
@@ -59,7 +76,7 @@ export function CadastroProjeto(props) {
         },
         body: JSON.stringify(data),
       })
-        .then((resposta) => navigate('/'))
+        .then((resposta) => navigate("/"))
         .catch((erro) => console.log(erro));
     }
   };
@@ -89,48 +106,22 @@ export function CadastroProjeto(props) {
         </div>
         <div className="mb-3">
           <Form.Label className="inter-bold">Tipo do Projeto</Form.Label>
-          <Controller
-            name="tipo"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Form.Select
-                {...field}
-                aria-label="Default select example"
-                className="inter-bold"
-              >
-                <option>selecione o tipo do projeto</option>
-                <option value="Projeto de extensão">Projeto de extensão</option>
-                <option value="TCC">TCC</option>
-                <option value="Mestrado">Mestrado</option>
-                <option value="Doutorado">Doutorado</option>
-                <option value="IC">IC</option>
-                <option value="Atividade Orientada de Ensino">
-                  Atividade Orientada de Ensino
-                </option>
-                <option value="Estágio">Estágio</option>
-              </Form.Select>
-            )}
+          <Select
+            options={optionsTipoProjeto}
+            handleOptionChange={(e) => {
+              setTipoSelectedOption(e.target.value);
+            }}
+            selectedOption={tipoSelectedOption}
           />
         </div>
         <div className="mb-3">
           <Form.Label className="inter-bold">Estado do Projeto</Form.Label>
-          <Controller
-            name="status"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Form.Select
-                {...field}
-                aria-label="Default select example"
-                className="inter-bold"
-              >
-                <option>selecione o estado do projeto</option>
-                <option value="Em andamento">Em andamento</option>
-                <option value="Concluido">Concluído</option>
-                <option value="Descontinuado">Descontinuado</option>
-              </Form.Select>
-            )}
+          <Select
+            options={optionsEstado}
+            handleOptionChange={(e) => {
+              setEstadoSelectedOption(e.target.value);
+            }}
+            selectedOption={estadoSelectedOption}
           />
         </div>
         <div className="mb-3 d-flex justify-content-between">
