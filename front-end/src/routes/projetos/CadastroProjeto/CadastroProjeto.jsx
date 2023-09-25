@@ -12,7 +12,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import styles from "./CadastroProjeto.module.css";
 
-// Importe a classe 'inter-bold' do arquivo de estilo
 import { useNavigate, useParams } from "react-router";
 import "./CadastroProjeto.module.css";
 
@@ -128,7 +127,7 @@ export function CadastroProjeto(props) {
               >
                 <option>selecione o estado do projeto</option>
                 <option value="Em andamento">Em andamento</option>
-                <option value="Concluído">Concluído</option>
+                <option value="Concluido">Concluído</option>
                 <option value="Descontinuado">Descontinuado</option>
               </Form.Select>
             )}
