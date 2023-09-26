@@ -39,7 +39,6 @@ export function CadastroProjeto(props) {
       fetch(`http://localhost:8080/api/v1/projetos/${id}`)
         .then((resposta) => resposta.json())
         .then((data) => {
-          console.log(data);
           // Use setValue para definir os valores iniciais dos campos
           setValue("nome", data.nome);
           setValue("tipo", data.tipo);
@@ -57,7 +56,6 @@ export function CadastroProjeto(props) {
     data.termino = data.termino.toISOString().split("T")[0]; // Formata a data no formato 'YYYY-MM-DD'
     data.status = estadoSelectedOption;
     data.tipo = tipoSelectedOption;
-    console.log(data);
     if (id) {
       fetch(`http://localhost:8080/api/v1/projetos/${id}`, {
         method: "PUT",

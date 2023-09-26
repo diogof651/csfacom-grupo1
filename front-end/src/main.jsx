@@ -6,16 +6,22 @@ import { PaginaProjeto } from "./routes/projetos/PaginaProjeto/PaginaProjeto.jsx
 import { CadastroProjeto } from "./routes/projetos/CadastroProjeto/CadastroProjeto.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
+import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+    //errorElement: </> -> para colocar uma pagina de erro caso nao encontre a rota
     children: [
+      {
+        path: "/projetos",
+        element: <ListagemProjetos />,
+      },
       {
         path: "/",
         element: <ListagemProjetos />,
-        //errorElement: </> -> para colocar uma pagina de erro caso nao encontre a rota
       },
       {
         path: "/projetos",
@@ -32,6 +38,14 @@ const router = createBrowserRouter([
       {
         path: "/projeto/:id",
         element: <PaginaProjeto />,
+      },
+      {
+        path: "/cadastroUsuario",
+        element: <CadastroUsuario />,
+      },
+      {
+        path: "/perfil",
+        element: <Perfil />,
       },
     ],
   },
