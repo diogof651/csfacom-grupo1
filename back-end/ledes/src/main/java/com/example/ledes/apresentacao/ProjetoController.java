@@ -53,8 +53,8 @@ public class ProjetoController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
     @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<ProjetoResponseDTO> atualizarProjeto(@RequestBody ProjetoRequestDTO projetoRequestDTO,
-            @PathVariable Long id) {
+    public ResponseEntity<ProjetoResponseDTO> atualizarProjeto(
+            @RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id) {
         ProjetoResponseDTO projetoAtualizado = atualizarProjetoServico.atualizar(id, projetoRequestDTO);
 
         if (projetoAtualizado != null) {
@@ -108,4 +108,5 @@ public class ProjetoController {
             return ResponseEntity.notFound().build();
         }
     }
+
 }
