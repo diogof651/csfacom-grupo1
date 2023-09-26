@@ -1,13 +1,12 @@
-import React, { useRef } from "react";
-import Button from "react-bootstrap/Button";
+import React from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-quill/dist/quill.snow.css";
-import { Input } from "../../../components/Input/Input";
-import { FotoPerfil } from "../../../components/FotoPerfil/FotoPerfil";
-import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
+import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
+import { FotoPerfil } from "../../../components/FotoPerfil/FotoPerfil";
+import { Input } from "../../../components/Input/Input";
 
 export function Perfil() {
   const iconStyle = {

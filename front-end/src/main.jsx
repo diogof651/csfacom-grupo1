@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
+import { CadastroProjeto } from "./routes/projetos/CadastroProjeto/CadastroProjeto.jsx";
 import { ListagemProjetos } from "./routes/projetos/ListagemProjetos/ListagemProjetos.jsx";
 import { PaginaProjeto } from "./routes/projetos/PaginaProjeto/PaginaProjeto.jsx";
-import { CadastroProjeto } from "./routes/projetos/CadastroProjeto/CadastroProjeto.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
 import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
+import { CadastroNoticia } from "./routes/noticias/CadastroNoticia/CadastroNoticia.jsx";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/perfil",
         element: <Perfil />,
+      },
+      {
+        path: "/cadastroNoticia",
+        element: <CadastroNoticia />,
       },
     ],
   },
