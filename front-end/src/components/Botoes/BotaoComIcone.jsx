@@ -9,6 +9,7 @@ export function BotaoComIcone(props) {
           color: `${props.color}`,
           border: `1px solid ${props.color}`,
         }}
+        onClick={props.onClick}
       >
         {props.children}
       </button>

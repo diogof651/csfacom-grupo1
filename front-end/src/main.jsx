@@ -1,13 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import { ListagemProjetos } from "./routes/ListagemProjetos/ListagemProjetos.jsx";
-import { PaginaProjeto } from "./routes/PaginaProjeto/PaginaProjeto.jsx";
+import { CadastroProjeto } from "./routes/projetos/CadastroProjeto/CadastroProjeto.jsx";
+import { ListagemProjetos } from "./routes/projetos/ListagemProjetos/ListagemProjetos.jsx";
+import { PaginaProjeto } from "./routes/projetos/PaginaProjeto/PaginaProjeto.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { CadastroNoticia } from "./routes/noticias/CadastroNoticia/CadastroNoticia.jsx";
+import { CadastroMembro } from "./routes/projetos/membro/CadastroMembro.jsx";
 import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
 import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
-import { CadastroMembro } from "./routes/Projeto/CadastroMembro.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,18 @@ const router = createBrowserRouter([
         element: <ListagemProjetos />,
       },
       {
+        path: "/projetos",
+        element: <ListagemProjetos />,
+      },
+      {
+        path: "/cadastroProjeto",
+        element: <CadastroProjeto />,
+      },
+      {
+        path: "/editarProjeto/:id",
+        element: <CadastroProjeto />,
+      },
+      {
         path: "/projeto/:id",
         element: <PaginaProjeto />,
       },
@@ -38,6 +52,14 @@ const router = createBrowserRouter([
       {
         path: "/perfil",
         element: <Perfil />,
+      },
+      {
+        path: "/cadastroNoticia",
+        element: <CadastroNoticia />,
+      },
+      {
+        path: "/editarNoticia/:id",
+        element: <CadastroNoticia />,
       },
     ],
   },
