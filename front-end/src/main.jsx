@@ -52,6 +52,10 @@ const router = createBrowserRouter([
         path: "/cadastroNoticia",
         element: <CadastroNoticia />,
       },
+      {
+        path: "/editarNoticia/:id",
+        element: <CadastroNoticia />,
+      },
     ],
   },
 ]);

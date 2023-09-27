@@ -63,32 +63,33 @@ export function CadastroNoticia(props) {
   };
 
   const onSubmit = (data) => {
+    data.autor_id = 1; // TO-DO: mudar para usuario logado
     data.estado = estadoSelecionado;
     data.emDestaque = emDestaque;
+    data.anexos = anexos ?? null;
+    data.thumbnail = thumbnail ? thumbnail.conteudo : null;
 
-    console.log(data);
-
-    // if (id) {
-    //   fetch(`http://localhost:8080/api/v1/noticias/${id}`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   })
-    //     .then((resposta) => navigate("/"))
-    //     .catch((erro) => console.log(erro));
-    // } else {
-    //   fetch("http://localhost:8080/api/v1/noticias", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   })
-    //     .then((resposta) => navigate("/"))
-    //     .catch((erro) => console.log(erro));
-    // }
+    if (id) {
+      fetch(`http://localhost:8080/api/v1/noticias/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((resposta) => navigate("/"))
+        .catch((erro) => console.log(erro));
+    } else {
+      fetch("http://localhost:8080/api/v1/noticias", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((resposta) => navigate("/"))
+        .catch((erro) => console.log(erro));
+    }
   };
 
   const handleRemoveAnexo = (index) => {
@@ -105,17 +106,34 @@ export function CadastroNoticia(props) {
     setHasSelectedThumbnail(false);
   };
 
+  function converterParaBase64(selectedFile, callback) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const base64String = event.target.result.split(",")[1];
+      callback(base64String);
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+
   const handleFileInputChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     const updatedAnexos = [...anexos];
-    selectedFiles.forEach((file) => {
-      updatedAnexos.push({ nome: file.name });
-    });
-    setAnexos(updatedAnexos);
 
-    if (!hasSelectedAnexo) {
-      setHasSelectedAnexo(true);
-    }
+    const processFile = (file) => {
+      converterParaBase64(file, (conteudoBase64) => {
+        updatedAnexos.push({
+          titulo: file.name,
+          conteudo: conteudoBase64,
+        });
+        setAnexos(updatedAnexos);
+
+        if (!hasSelectedAnexo) {
+          setHasSelectedAnexo(true);
+        }
+      });
+    };
+
+    selectedFiles.forEach(processFile);
   };
 
   const handleThumbnailInputChange = (e) => {
@@ -125,7 +143,13 @@ export function CadastroNoticia(props) {
         selectedFile.type === "image/png" ||
         selectedFile.type === "image/jpeg"
       ) {
-        setThumbnail({ nome: selectedFile.name });
+        const processFile = (file) => {
+          converterParaBase64(file, (conteudoBase64) => {
+            setThumbnail({ titulo: file.name, conteudo: conteudoBase64 });
+          });
+        };
+
+        processFile(selectedFile);
         setHasSelectedThumbnail(true);
       } else {
         alert("Por favor, selecione um arquivo PNG ou JPEG válido.");
@@ -154,7 +178,6 @@ export function CadastroNoticia(props) {
             value={emDestaque}
             onChange={() => setEmDestaque(!emDestaque)}
           />
-          
         </div>
       </div>
       <div className="mb-3">
@@ -279,6 +302,7 @@ export function CadastroNoticia(props) {
             name="anexos"
             multiple
             className="d-none"
+            accept="application/pdf"
             onChange={handleFileInputChange}
           />
         </label>
@@ -300,7 +324,7 @@ export function CadastroNoticia(props) {
               <FontAwesomeIcon icon={faPaperclip} />
             </span>{" "}
             <span style={{ marginRight: "8px" }}></span>
-            <span>{anexo.nome}</span>
+            <span>{anexo.titulo}</span>
             <div className="ms-auto">
               <button
                 type="button"
@@ -371,7 +395,7 @@ export function CadastroNoticia(props) {
               <FontAwesomeIcon icon={faImage} />
             </span>{" "}
             <span style={{ marginRight: "8px" }}></span>
-            <span>{thumbnail.nome}</span>
+            <span>{thumbnail.titulo}</span>
             <div className="ms-auto">
               <button
                 type="button"
