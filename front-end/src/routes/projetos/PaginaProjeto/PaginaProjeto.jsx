@@ -8,10 +8,12 @@ import AbasRadio from "../../../components/AbasRadio/AbasRadio";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import Membro from "../../../components/Membro/Membro.jsx";
+import InformacoesMembroModal from "../membro/InformacoesMembroModal";
 
 export function PaginaProjeto() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [showModal, setShowModal] = useState(false);
   const iconStyle = {
     width: "18px", // Defina o tamanho desejado
     height: "18px", // Defina a altura desejada (opcional)
@@ -22,7 +24,44 @@ export function PaginaProjeto() {
     { name: "Ativo", value: "ativo" },
     { name: "Participações Anteriores", value: "anteriores" },
   ];
-  
+
+  const [membroSelecionado, setMembroSelecionado] = useState(null);
+
+  const membros = [
+    {
+      nome: "Maria",
+      papeis: ["Desenvolvedor Back-end"],
+      vinculos: ["Aluno"],
+      email: "maria@example.com",
+      ingressDate: "01/01/2020",
+      endDate: "31/12/2021",
+      foto: null,
+      linkedin: "https://www.linkedin.com/in/maria",
+      github: "https://github.com/maria",
+    },
+    {
+      nome: "João",
+      papeis: ["Designer", "Desenvolvedor Front-end"],
+      vinculos: ["Coordenador"],
+      email: "joao@example.com",
+      ingressDate: "01/02/2020",
+      endDate: "30/11/2021",
+      foto: null,
+      linkedin: "https://www.linkedin.com/in/joao",
+      github: "https://github.com/joao",
+    },
+  ];
+
+  const handleOpenModal = (user) => {
+    setMembroSelecionado(user);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setMembroSelecionado(null);
+    setShowModal(false);
+  };
+
   useEffect(() => {
     obterProjeto();
   }, []);
@@ -118,8 +157,23 @@ export function PaginaProjeto() {
           <BotaoOutline color="var(--blue)"> Novo Membro </BotaoOutline>
         </Link>
       </div>
-      <Membro nome="João" papeis={["Designer", "Desenvolvedor Front-end"]} />
-      <Membro nome="Maria" papeis={["Desenvolvedor Back-end"]} />
+      {membros.map((membro, index) => (
+        <div
+          key={index}
+          onClick={() => handleOpenModal(membro)}
+          style={{ cursor: "pointer" }}
+        >
+          <Membro membro={membro} />
+        </div>
+      ))}
+
+      {membroSelecionado && (
+        <InformacoesMembroModal
+          membro={membroSelecionado}
+          onClose={handleCloseModal}
+          show={showModal}
+        />
+      )}
     </Container>
   );
 }

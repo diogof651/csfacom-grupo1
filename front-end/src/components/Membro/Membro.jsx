@@ -1,16 +1,17 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { Badge, Container, Image } from "react-bootstrap";
+import { Container, Image } from "react-bootstrap";
 
+import BadgeOutline from "../BadgeOutline/BadgeOutline";
 import { OpcoesMembroDropdown } from "../OpcoesMembroDropdown/OpcoesMembroDropdown";
 
-export default function Membro({ nome, papeis, imagemSrc }) {
+export default function Membro({ membro }) {
   return (
     <Container className="mt-4">
       <div className="d-flex justify-content-between align-items-center w-100 justify-content-between">
         <div className="col-md-1 col-2 mb-2 p-0">
-          {imagemSrc ? (
-            <Image src={imagemSrc} alt="Foto de Perfil" roundedCircle fluid />
+          {membro.foto ? (
+            <Image src={membro.foto} alt="Foto de Perfil" roundedCircle fluid />
           ) : (
             <div
               className="rounded-circle d-flex align-items-center justify-content-end m-0"
@@ -23,17 +24,24 @@ export default function Membro({ nome, papeis, imagemSrc }) {
           )}
         </div>
         <div className="col-md-10 col-8 mb-2 p-0">
-          <strong>{nome}</strong>
+          <strong>{membro.nome}</strong>
           <div className="d-flex gap-1 flex-wrap">
-            {papeis.map((papel, index) => (
-              <Badge key={index} variant="secondary" className="me-2">
+            {membro.papeis.map((papel, index) => (
+              <BadgeOutline
+                key={index}
+                borderColor={"var(--blue)"}
+                textColor={"var(--blue)"}
+              >
                 {papel}
-              </Badge>
+              </BadgeOutline>
             ))}
           </div>
         </div>
         <div className="col-md-1 col-2 mb-2 p-0 text-end">
-          <OpcoesMembroDropdown idProjeto={0} idMembro={0}></OpcoesMembroDropdown>
+          <OpcoesMembroDropdown
+            idProjeto={0}
+            idMembro={0}
+          ></OpcoesMembroDropdown>
         </div>
       </div>
     </Container>
