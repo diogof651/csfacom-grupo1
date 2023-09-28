@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
 import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
 import { CadastroNoticia } from "./routes/noticias/CadastroNoticia/CadastroNoticia.jsx";
+import { PaginaNoticia } from "./routes/noticias/PaginaNoticia/PaginaNoticia.jsx";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/editarNoticia/:id",
         element: <CadastroNoticia />,
+      },
+      {
+        path: "/noticia/:id",
+        element: <PaginaNoticia />,
       },
     ],
   },
