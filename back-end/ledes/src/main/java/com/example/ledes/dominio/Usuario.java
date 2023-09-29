@@ -20,15 +20,21 @@ import lombok.Setter;
 
 public class Usuario {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
-    private String email;
+    public String nome;
+    public String email;
     private String senha;
     private boolean ativo;
     private String fotoPerfil;
     private String linkedin;
     private String github;
+
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
 
     public Usuario(String nome, String email, String senha, boolean ativo, String fotoPerfil, String linkedin,
             String github) {

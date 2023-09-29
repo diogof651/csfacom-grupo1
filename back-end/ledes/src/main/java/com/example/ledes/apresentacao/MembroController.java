@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ledes.aplicacao.membro.AtualizarMembroServico;
 import com.example.ledes.aplicacao.membro.CadastrarMembroServico;
 import com.example.ledes.aplicacao.membro.DesativarMembroServico;
-import com.example.ledes.infraestrutura.dto.MembroDTO;
+import com.example.ledes.aplicacao.membro.RemoverMembroProjetoServico;
 import com.example.ledes.infraestrutura.dto.MembroRequestDTO;
 import com.example.ledes.infraestrutura.dto.MembroResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,13 +32,15 @@ public class MembroController {
     private DesativarMembroServico desativarMembroServico;
     @Autowired
     private AtualizarMembroServico atualizarMembroServico;
+    @Autowired
+    private RemoverMembroProjetoServico removerMembroProjetoServico;
 
 
     @Operation(summary = "Criar um novo membro")
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<MembroResponseDTO> cadastrarMembro(@RequestBody MembroDTO membroDTO) {
-        MembroResponseDTO novoMembro = cadastrarMembroServico.adicionar(membroDTO);
+    public ResponseEntity<MembroResponseDTO> cadastrarMembro(@RequestBody MembroRequestDTO membrorequestDTO) {
+        MembroResponseDTO novoMembro = cadastrarMembroServico.adicionar(membrorequestDTO);
         return new ResponseEntity<>(novoMembro, HttpStatus.CREATED);
     }
 
@@ -51,7 +54,7 @@ public class MembroController {
         return ResponseEntity.ok(membroAtualizado);
     }
 
-    @Operation(summary = "Desativar um membro")
+    @Operation(summary = "Desativar um membro projeto")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro desativado")
     @ApiResponse(responseCode = "404", description = "membro não encontrado")
     @PostMapping(path = "/{id}/desativar", consumes = "application/json")
@@ -65,6 +68,21 @@ public class MembroController {
         }
     }
 
+    @Operation(summary = "Remover um membro de um projeto")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do membro removido")
+    @ApiResponse(responseCode = "404", description = "Membro ou projeto não encontrado")
+    @DeleteMapping("/{membroId}/{projetoId}")
+    public ResponseEntity<MembroResponseDTO> removerMembroProjeto(
+            @PathVariable Long membroId,
+            @PathVariable Long projetoId
+    ) {
+        MembroResponseDTO membroRemovido = removerMembroProjetoServico.desativar(membroId, projetoId);
 
-    
+        if (membroRemovido != null) {
+            return ResponseEntity.ok(membroRemovido);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
+

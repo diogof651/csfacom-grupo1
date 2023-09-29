@@ -11,5 +11,5 @@ public class MembroRequestDTO {
     private String tipoPapel;
     private Date dataIngresso;
     private Date dataTermino;
-    private String password;
+    private boolean ativo;
 }

@@ -23,17 +23,16 @@ public class AtualizarMembroServico {
         Membro membro = membroRepositorio.findById(id).orElse(null);
 
         if (membro != null) {
-            membro.setNome(membroRequestDTO.getNome());
-            membro.setEmail(membroRequestDTO.getEmail());
             membro.setTipoVinculo(TipoVinculo.toEnum(membroRequestDTO.getTipoPapel()));
             membro.setTipoPapel(TipoPapel.toEnum(membroRequestDTO.getTipoPapel())); 
             membro.setDataIngresso(membroRequestDTO.getDataIngresso());
             membro.setDataTermino(membroRequestDTO.getDataTermino());
-
-            
             membroRepositorio.save(membro);
-            return new MembroResponseDTO(membro.getNome(), membro.getEmail(), membro.getTipoVinculo(), membro.getTipoPapel(),
-        membro.getDataIngresso(), membro.getDataTermino(), membro.isAtivo());
+
+            return new MembroResponseDTO(membro.getId(), membro.getUsuario(), membro.getUsuario().getNome(), 
+            membro.getUsuario().getEmail(), membro.getTipoVinculo(), membro.getTipoPapel(),
+            membro.getDataIngresso(), membro.getDataTermino(), membro.isAtivo());
+            
         } else {
             return null;
         }

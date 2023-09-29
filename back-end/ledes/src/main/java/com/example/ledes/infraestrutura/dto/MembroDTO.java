@@ -1,9 +1,11 @@
 package com.example.ledes.infraestrutura.dto;
 
+import com.example.ledes.dominio.Usuario;
+
 import lombok.Getter;
 
 @Getter
 public class MembroDTO {
-    private String nome;
-    private String email;
+    Usuario usuario;
+    
 }
