@@ -45,6 +45,7 @@ public class NoticiaController {
     private DesarquivarNoticiaServico desarquivarNoticia;
     @Autowired
     private ObterNoticiaPorIdServico obterNoticiaPorIdServico;
+    @Autowired
     private ListagemNoticiaServico listagemNoticiaServico;
 
     @Operation(summary = "Adicionar uma Notícia")

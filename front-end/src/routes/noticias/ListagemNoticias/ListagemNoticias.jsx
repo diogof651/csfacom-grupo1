@@ -3,13 +3,12 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { BsArchive, BsNewspaper, BsPen, BsStickies } from "react-icons/bs"; // Importe os ícones aqui
 import { Link } from "react-router-dom";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
-import { Select } from "../../../components/Select/Select";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { BsNewspaper, BsArchive, BsPen, BsStickies } from "react-icons/bs"; // Importe os ícones aqui
 
 export function ListagemNoticias() {
   const [autores, setAutores] = useState([]);
@@ -17,40 +16,37 @@ export function ListagemNoticias() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [cards, setCards] = useState([]);
-  const [originalCards, setOriginalCards] = useState([]);
-  const [activeTab, setActiveTab] = useState("Publicada"); // Aba ativa
+  const [activeTab, setActiveTab] = useState("Imediata"); // Aba ativa
 
-  useEffect(() => {
-    function fetchAutores() {
-      // Substitua isso com uma chamada à API que lista os autores
-      fetch("http://localhost:8080/api/v1/autores", {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      })
-        .then((resposta) => resposta.json())
-        .then((data) => {
-          // A API deve retornar uma lista de autores com um formato semelhante ao seu DTO
-          const autoresData = data.map((autor) => ({
-            id: autor.id,
-            nome: autor.nome,
-          }));
-          setAutores([
-            { id: "", nome: "Selecione o Autor" },
-            ...autoresData,
-          ]);
-        })
-        .catch((erro) => console.log(erro));
-    }
+  // useEffect(() => {
+  //   function fetchAutores() {
+  //     fetch("http://localhost:8080/api/v1/autores", {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-type": "application/json",
+  //       },
+  //     })
+  //       .then((resposta) => resposta.json())
+  //       .then((data) => {
+  //         const autoresData = data.map((autor) => ({
+  //           id: autor.id,
+  //           nome: autor.nome,
+  //         }));
+  //         setAutores([
+  //           { id: "", nome: "Selecione o Autor" },
+  //           ...autoresData,
+  //         ]);
+  //       })
+  //       .catch((erro) => console.log(erro));
+  //   }
 
-    fetchAutores();
-  }, []);
+  //   fetchAutores();
+  // }, []);
 
   useEffect(() => {
     function obterNoticias() {
       // Substitua isso com uma chamada à API que lista as notícias
-      fetch("http://localhost:8080/api/v1/noticias", {
+      fetch(`http://localhost:8080/api/v1/noticias?estado=${activeTab}`, {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -58,16 +54,7 @@ export function ListagemNoticias() {
       })
         .then((resposta) => resposta.json())
         .then((data) => {
-          // A API deve retornar uma lista de notícias com um formato semelhante ao seu DTO
-          const noticiasData = data.map((noticia) => ({
-            id: noticia.id,
-            titulo: noticia.titulo,
-            dataCadastro: noticia.dataPublicacao,
-            autor: noticia.autor.nome,
-            thumbnail: noticia.thumbnail,
-          }));
-          setCards(noticiasData);
-          setOriginalCards(noticiasData);
+          setCards(data);
         })
         .catch((erro) => console.log(erro));
     }
@@ -89,41 +76,28 @@ export function ListagemNoticias() {
 
   const handleApplyFilter = () => {
     // Substitua isso com uma chamada à API para filtrar as notícias com base nos parâmetros selecionados
-    fetch(
-      `http://localhost:8080/api/v1/noticias?autor_id=${selectedAuthor}&dataPublicacao=${selectedDate}&titulo=${searchText}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    )
+    //fetch(
+    // `http://localhost:8080/api/v1/noticias?autor=${selectedAuthor}&dataPublicacao=${selectedDate}&titulo=${searchText}`,
+    fetch(`http://localhost:8080/api/v1/noticias?estado=${activeTab}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
       .then((resposta) => resposta.json())
       .then((data) => {
-        // A API deve retornar uma lista de notícias filtradas com um formato semelhante ao seu DTO
-        const filteredNoticias = data.map((noticia) => ({
-          id: noticia.id,
-          titulo: noticia.titulo,
-          dataCadastro: noticia.dataPublicacao,
-          autor: noticia.autor.nome,
-          thumbnail: noticia.thumbnail,
-        }));
-        setCards(filteredNoticias);
+        setCards(data);
       })
       .catch((erro) => console.log(erro));
   };
 
-  const resetFilters = () => {
-    setSelectedAuthor("");
-    setSelectedDate(null);
-    setSearchText("");
-    setCards(originalCards);
-  };
-
   const handleTabSelect = (selectedTab) => {
-    // Defina a aba ativa com base na seleção do usuário
     setActiveTab(selectedTab);
   };
+
+  useEffect(() => {
+    handleApplyFilter();
+  }, [activeTab]);
 
   return (
     <Container
@@ -160,14 +134,14 @@ export function ListagemNoticias() {
               searchText={searchText}
             />
           </div>
-          <div className="col-md-3 col-6 mb-2">
+          {/* <div className="col-md-3 col-6 mb-2">
             <Select
               options={autores.map((autor) => autor.nome)}
               handleOptionChange={handleAuthorChange}
               selectedOption={selectedAuthor}
               placeholder="Autor"
             />
-          </div>
+          </div> */}
 
           <div className="col-md-2 col-6 mb-2">
             <DatePicker
@@ -191,9 +165,13 @@ export function ListagemNoticias() {
         </div>
       </Form>
 
-      <Nav variant="tabs" defaultActiveKey={activeTab} onSelect={handleTabSelect}>
+      <Nav
+        variant="tabs"
+        defaultActiveKey={activeTab}
+        onSelect={handleTabSelect}
+      >
         <Nav.Item>
-          <Nav.Link eventKey="Publicada" style={{ color: "var(--blue)" }}>
+          <Nav.Link eventKey="Imediata" style={{ color: "var(--blue)" }}>
             <BsNewspaper /> Publicada
           </Nav.Link>
         </Nav.Item>
@@ -215,30 +193,46 @@ export function ListagemNoticias() {
       </Nav>
 
       <div className="d-flex flex-wrap mt-4" style={{ gap: "20px" }}>
-        {cards.map((card, index) => (
-          <Card key={index} style={{ width: "239px", height: "180px" }} className="mb-3">
-            <Link
-              to={`/noticia/${card.id}`}
-              style={{ color: "var(--black)", textDecoration: "none" }}
+        {cards.length === 0 ? (
+          <p>Nenhuma notícia foi encontrada</p>
+        ) : (
+          cards.map((card, index) => (
+            <Card
+              key={index}
+              style={{ width: "239px", height: "180px" }}
+              className="mb-3"
             >
-              <Card.Img
-                variant="top"
-                src={card.thumbnail}
-                style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "cover" }}
-              />
-              <Card.Body>
-                <Card.Title>{card.titulo}</Card.Title>
-                <div className="d-flex flex-column">
-                  <span style={{ fontSize: "10px" }}>
-                    {`Publicada em ${new Date(
-                      card.dataCadastro
-                    ).toLocaleDateString()} por ${card.autor}`}
-                  </span>
-                </div>
-              </Card.Body>
-            </Link>
-          </Card>
-        ))}
+              <Link
+                to={`/noticia/${card.id}`}
+                style={{ color: "var(--black)", textDecoration: "none" }}
+              >
+                <Card.Img
+                  variant="top"
+                  src={
+                    card.thumbnail
+                      ? `data:image/jpeg;base64,${card.thumbnail}`
+                      : "src/assets/thumbnailPadrao.png"
+                  }
+                  style={{
+                    width: "100%",
+                    height: "100px",
+                    objectFit: "cover",
+                  }}
+                />
+                <Card.Body>
+                  <Card.Title>{card.titulo}</Card.Title>
+                  <div className="d-flex flex-column">
+                    <span style={{ fontSize: "10px" }}>
+                      {`Publicada em ${new Date(
+                        card.dataPublicacao
+                      ).toLocaleDateString()} por ${card.autor.nome}`}
+                    </span>
+                  </div>
+                </Card.Body>
+              </Link>
+            </Card>
+          ))
+        )}
       </div>
     </Container>
   );
