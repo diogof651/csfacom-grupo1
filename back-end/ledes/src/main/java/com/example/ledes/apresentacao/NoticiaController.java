@@ -1,5 +1,6 @@
 package com.example.ledes.apresentacao;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -119,8 +120,8 @@ public class NoticiaController {
     public ResponseEntity<List<NoticiaListagemResponseDTO>> listagemNoticia(
             @RequestParam(name = "titulo", required = false) String titulo,
             @RequestParam(name = "usuario", required = false) Usuario usuario,
-            @RequestParam(name = "data", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataPublicacao,
-            @RequestParam(name = "estado", required = false) String estado) {
+            @RequestParam(name = "dataPublicacao", required = false) String dataPublicacao,
+            @RequestParam(name = "estado", required = false) String estado) throws ParseException {
 
         List<NoticiaListagemResponseDTO> noticiasEncontradas = listagemNoticiaServico
                 .buscarNoticiasPorParametros(titulo, usuario, dataPublicacao, estado);

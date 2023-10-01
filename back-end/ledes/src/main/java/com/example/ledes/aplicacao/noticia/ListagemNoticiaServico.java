@@ -1,5 +1,8 @@
 package com.example.ledes.aplicacao.noticia;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,20 +22,63 @@ public class ListagemNoticiaServico {
     @Autowired
     private NoticiaRepositorio noticiaRepositorio;
 
-    public List<NoticiaListagemResponseDTO> buscarNoticiasPorParametros(String titulo,
-            Usuario usuario, Date dataPublicacao, String estado) {
+    public List<NoticiaListagemResponseDTO> buscarNoticiasPorParametros(
+            String titulo, Usuario usuario, String dataPublicacao, String estado) throws ParseException {
+        List<Noticia> noticiasFiltradasPorEstado = obterNoticiasFiltradasPorEstado(estado);
+        List<Noticia> noticiasFiltradasPorDataPublicacao;
+        List<Noticia> noticiasFiltradasPorTitulo;
 
-        List<Noticia> noticias = (List<Noticia>) noticiaRepositorio.buscarNoticiasPorParametros(titulo, usuario, estado);
-        
+        if (titulo != null && !titulo.isEmpty() && !titulo.isBlank()) {
+            noticiasFiltradasPorTitulo = noticiaRepositorio.findByTituloContaining(titulo);
+            noticiasFiltradasPorEstado.retainAll(noticiasFiltradasPorTitulo);
+        }
 
-        Stream<Noticia> noticiaStream = noticias.stream();
+        if (dataPublicacao != null && !dataPublicacao.isEmpty() && !dataPublicacao.isBlank()
+                && !dataPublicacao.equals("null")) {
+            Date dataPublicacaoFormatada = new SimpleDateFormat("yyyy-MM-dd").parse(dataPublicacao);
+            noticiasFiltradasPorDataPublicacao = noticiaRepositorio
+                    .findByDataPublicacao(dataPublicacaoFormatada);
+            noticiasFiltradasPorEstado.retainAll(noticiasFiltradasPorDataPublicacao);
+        }
 
-        List<NoticiaListagemResponseDTO> noticiasFiltradas = noticiaStream
+        Stream<Noticia> noticiaStream = noticiasFiltradasPorEstado.stream();
+
+        List<NoticiaListagemResponseDTO> noticiasListagemResponseDTO = noticiaStream
                 .map(this::converterParaDTO)
                 .collect(Collectors.toList());
 
-        return noticiasFiltradas;
+        return noticiasListagemResponseDTO;
+    }
 
+    private List<Noticia> obterNoticiasFiltradasPorEstado(String estado) {
+        List<Noticia> noticiasFiltradasPorEstado = new ArrayList<Noticia>();
+        Date dataAtual = new Date();
+
+        if (estado != null && !estado.isEmpty() && !estado.isBlank()) {
+            if ("Publicada".equals(estado)) {
+                List<Noticia> noticiasImediatas = noticiaRepositorio.findByEstado("Imediata");
+                noticiasFiltradasPorEstado.addAll(noticiasImediatas);
+                List<Noticia> noticiasAgendadasPublicadas = noticiaRepositorio
+                        .findByEstadoAndDataPublicacaoLessThanEqual("Agendada", dataAtual);
+                noticiasFiltradasPorEstado.addAll(noticiasAgendadasPublicadas);
+            } else if ("Agendada".equals(estado)) {
+                List<Noticia> noticiasAgendadas = noticiaRepositorio
+                        .findByEstadoAndDataPublicacaoGreaterThan("Agendada", dataAtual);
+
+                noticiasFiltradasPorEstado.addAll(noticiasAgendadas);
+            } else if ("Rascunho".equals(estado)) {
+                List<Noticia> noticiasRetornadas = noticiaRepositorio.findByEstado("Rascunho");
+                noticiasFiltradasPorEstado.addAll(noticiasRetornadas);
+
+            } else if ("Arquivada".equals(estado)) {
+                List<Noticia> noticiasRetornadas = noticiaRepositorio.findByEstado("Arquivada");
+                noticiasFiltradasPorEstado.addAll(noticiasRetornadas);
+            } else if ("Destaque".equals(estado)) {
+                List<Noticia> noticiasRetornadas = noticiaRepositorio.findByEmDestaqueTrue();
+                noticiasFiltradasPorEstado.addAll(noticiasRetornadas);
+            }
+        }
+        return noticiasFiltradasPorEstado;
     }
 
     private NoticiaListagemResponseDTO converterParaDTO(Noticia noticia) {

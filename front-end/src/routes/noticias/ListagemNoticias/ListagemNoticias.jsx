@@ -5,7 +5,13 @@ import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { BsArchive, BsNewspaper, BsPen, BsStickies } from "react-icons/bs"; // Importe os ícones aqui
+import {
+  BsArchive,
+  BsClock,
+  BsNewspaper,
+  BsPen,
+  BsStickies,
+} from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
@@ -16,7 +22,7 @@ export function ListagemNoticias() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchText, setSearchText] = useState("");
   const [cards, setCards] = useState([]);
-  const [activeTab, setActiveTab] = useState("Imediata"); // Aba ativa
+  const [activeTab, setActiveTab] = useState("Publicada"); // Aba ativa
 
   // useEffect(() => {
   //   function fetchAutores() {
@@ -75,17 +81,27 @@ export function ListagemNoticias() {
   };
 
   const handleApplyFilter = () => {
-    // Substitua isso com uma chamada à API para filtrar as notícias com base nos parâmetros selecionados
+    const dataPublicacaoFormatada = selectedDate
+      ? new Date(selectedDate).toISOString()
+      : null;
+
     //fetch(
     // `http://localhost:8080/api/v1/noticias?autor=${selectedAuthor}&dataPublicacao=${selectedDate}&titulo=${searchText}`,
-    fetch(`http://localhost:8080/api/v1/noticias?estado=${activeTab}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    })
+    fetch(
+      `http://localhost:8080/api/v1/noticias?&titulo=${searchText}&estado=${activeTab}&dataPublicacao=${dataPublicacaoFormatada}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    )
       .then((resposta) => resposta.json())
       .then((data) => {
+        console.log(
+          `http://localhost:8080/api/v1/noticias?&titulo=${searchText}&estado=${activeTab}&dataPublicacao=${dataPublicacaoFormatada}`
+        );
+        console.log(data);
         setCards(data);
       })
       .catch((erro) => console.log(erro));
@@ -171,8 +187,13 @@ export function ListagemNoticias() {
         onSelect={handleTabSelect}
       >
         <Nav.Item>
-          <Nav.Link eventKey="Imediata" style={{ color: "var(--blue)" }}>
+          <Nav.Link eventKey="Publicada" style={{ color: "var(--blue)" }}>
             <BsNewspaper /> Publicada
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="Agendada" style={{ color: "var(--blue)" }}>
+            <BsClock /> Agendada
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
