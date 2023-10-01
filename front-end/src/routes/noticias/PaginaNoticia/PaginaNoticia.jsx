@@ -1,57 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
-import { BsArchive, BsPaperclip, BsPencilSquare } from "react-icons/bs";
+import {
+  BsArchive,
+  BsPaperclip,
+  BsPencilSquare,
+  BsDownload,
+} from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { Link, useParams } from "react-router-dom";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
+import styles from "./PaginaNoticia.module.css";
 
 export function PaginaNoticia() {
   const navigate = useNavigate();
   const { id } = useParams();
   const iconStyle = {
-    width: "18px", // Defina o tamanho desejado
-    height: "18px", // Defina a altura desejada (opcional)
+    width: "18px",
+    height: "18px",
   };
 
-  const [noticia, setNoticia] = useState({
-    titulo: "Noticia 02 - Agendada",
-    nomeAutor: "Autor",
-    conteudo: "string",
-    estado: "Agendada",
-    dataPublicacao: "2023-09-27",
-    emDestaque: true,
-    anexos: [
-      {
-        id: 0,
-        titulo: "documento.pdf",
-        conteudo: "string",
-      },
-      {
-        id: 0,
-        titulo: "documento.pdf",
-        conteudo: "string",
-      },
-    ],
-  });
+  const [noticia, setNoticia] = useState({});
 
-  //   useEffect(() => {
-  //     obterNoticia();
-  //   }, []);
+  useEffect(() => {
+    obterNoticia();
+  }, []);
 
-  //   function obterNoticia() {
-  //     // fetch(`http://localhost:8080/api/v1/projetos/${id}`, {
-  //     //   method: "GET",
-  //     //   headers: {
-  //     //     "Content-type": "application/json",
-  //     //   },
-  //     // })
-  //     //   .then((resposta) => resposta.json())
-  //     //   .then((data) => {
-  //     //     console.log(data);
-  //     //     setNoticia(data);
-  //     //   })
-  //     //   .catch((erro) => console.log(erro));
-  //   }
+  function obterNoticia() {
+    fetch(`http://localhost:8080/api/v1/noticias/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        console.log(data);
+        setNoticia(data);
+      })
+      .catch((erro) => console.log(erro));
+  }
 
   function arquivar() {
     fetch(`http://localhost:8080/api/v1/projetos/${id}/arquivar`, {
@@ -66,16 +53,23 @@ export function PaginaNoticia() {
 
   return (
     <Container
-      className="d-flex justify-content-between"
-      style={{ height: "100vh", marginTop: "40px" }}
+      className="d-flex justify-content-between gap-5"
+      style={{
+        width: "100vw",
+        marginTop: "40px",
+      }}
     >
-      <section>
+      <section
+        style={{
+          width: "80%",
+          marginBottom: "20px",
+        }}
+      >
         <div
-          className="d-flex justify-content-between align-items-start flex-wrap gap-2"
           style={{
-            width: "100%",
             marginBottom: "10px",
           }}
+          className="d-flex justify-content-between align-items-start flex-wrap gap-2"
         >
           <div className="d-flex flex-column">
             <h1
@@ -90,11 +84,11 @@ export function PaginaNoticia() {
             <p>
               Publicada em{" "}
               {`${new Date(noticia.dataPublicacao).toLocaleDateString()}`} por{" "}
-              {noticia.nomeAutor}
+              {noticia.autor ? noticia.autor.nome : ""}
             </p>
           </div>
           <div className="d-flex gap-2">
-            <Link to={`/editarProjeto/${id}`} className="text-decoration-none">
+            <Link to={`/editarNoticia/${id}`} className="text-decoration-none">
               <BotaoComIcone color="var(--black)">
                 <BsPencilSquare style={iconStyle} /> Editar
               </BotaoComIcone>
@@ -104,24 +98,56 @@ export function PaginaNoticia() {
             </BotaoComIcone>
           </div>
         </div>
-        <div dangerouslySetInnerHTML={{ __html: noticia.conteudo }} />
+        <div
+          className={styles.noticiaConteudo}
+          dangerouslySetInnerHTML={{ __html: noticia.conteudo }}
+        />
 
-        <h5 className="mt-4"> Anexos </h5>
-        <ul className="list-unstyled">
-          {noticia.anexos.map((anexo, index) => (
-            <li key={index} className="d-flex align-items-center mb-2">
-              <span className="file-icon">
-                <BsPaperclip />
-              </span>
-              <span style={{ marginRight: "8px" }}></span>
-              <span>{anexo.titulo}</span>
-            </li>
-          ))}
-        </ul>
+        {noticia && noticia.anexos && noticia.anexos.length > 0 && (
+          <div>
+            <h5 className="mt-4">Anexos</h5>
+            <ul className="list-unstyled">
+              {noticia.anexos.map((anexo, index) => (
+                <li
+                  key={index}
+                  className="d-flex align-items-center mb-2 justify-content-between"
+                  style={{
+                    backgroundColor: "#f2f2f2",
+                    padding: "8px",
+                    borderRadius: "7px",
+                  }}
+                >
+                  <span className="file-icon">
+                    <BsPaperclip />
+                    {anexo.titulo}
+                  </span>
+                  <a
+                    style={{ textDecoration: "none" }}
+                    href={`data:application/octet-stream;base64,${anexo.conteudo}`}
+                    download={anexo.titulo}
+                  >
+                    <BotaoComIcone>
+                      <BsDownload></BsDownload> Baixar
+                    </BotaoComIcone>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
-      <section>
-        <h5 className="mt-4"> Em destaque </h5>
-        {/* Lista de noticias em destaque */}
+      <section
+        style={{
+          width: "20%",
+        }}
+      >
+        <h5> Em destaque </h5>
+        <ul>
+          <li>Noticia</li>
+          <li>Noticia</li>
+          <li>Noticia</li>
+          <li>Noticia</li>
+        </ul>
       </section>
     </Container>
   );

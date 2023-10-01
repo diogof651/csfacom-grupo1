@@ -1,25 +1,25 @@
+import {
+  faCalendar,
+  faImage,
+  faPaperclip,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Quill from "quill";
+import ImageUploader from "quill-image-uploader";
+import "quill/dist/quill.snow.css";
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import FormCheck from "react-bootstrap/FormCheck";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Controller, useForm } from "react-hook-form";
+import { BsTrash3 } from "react-icons/bs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import {
-  faCalendar,
-  faPaperclip,
-  faImage,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { BsTrash3 } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router";
-import Quill from "quill";
-import "quill/dist/quill.snow.css";
-import ImageUploader from "quill-image-uploader";
-import "./CadastroNoticia.module.css";
-import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
+import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
+import "./CadastroNoticia.module.css";
 
 Quill.register("modules/imageUploader", ImageUploader);
 

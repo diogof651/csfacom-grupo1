@@ -26,10 +26,6 @@ const router = createBrowserRouter([
         element: <ListagemProjetos />,
       },
       {
-        path: "/projetos",
-        element: <ListagemProjetos />,
-      },
-      {
         path: "/cadastroProjeto",
         element: <CadastroProjeto />,
       },

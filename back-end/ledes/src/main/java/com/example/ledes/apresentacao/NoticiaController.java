@@ -33,7 +33,7 @@ public class NoticiaController {
     @Autowired
     private ArquivarNoticiaServico arquivarNoticia;
     @Autowired
-    private ObterNoticiaPorIdServico obterNoticiaPorIdServico;    
+    private ObterNoticiaPorIdServico obterNoticiaPorIdServico;
 
     @Operation(summary = "Adicionar uma Notícia")
     @ApiResponse(responseCode = "201")
@@ -71,11 +71,11 @@ public class NoticiaController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @Operation(summary = "Obter Notícia por ID")
     @ApiResponse(responseCode = "200", description = "Retorna os dados.")
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
-    @GetMapping("/api/v1/noticias/{id}/")
+    @GetMapping("/{id}")
     public ResponseEntity<NoticiaResponseDTO> obterNoticiaPorId(@PathVariable Long id) {
         NoticiaResponseDTO noticia = obterNoticiaPorIdServico.obterNoticiaPorId(id);
         if (noticia != null) {
@@ -84,6 +84,4 @@ public class NoticiaController {
             return ResponseEntity.notFound().build();
         }
     }
-    
-
 }
