@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.noticia.AdicionarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.ArquivarNoticiaServico;
+import com.example.ledes.aplicacao.noticia.DesarquivarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.EditarNoticiaServico;
+import com.example.ledes.aplicacao.noticia.ObterNoticiaPorIdServico;
 import com.example.ledes.infraestrutura.dto.NoticiaRequestDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaResponseDTO;
 
@@ -30,6 +33,10 @@ public class NoticiaController {
     private EditarNoticiaServico editarNoticia;
     @Autowired
     private ArquivarNoticiaServico arquivarNoticia;
+    @Autowired
+    private DesarquivarNoticiaServico desarquivarNoticia;
+    @Autowired
+    private ObterNoticiaPorIdServico obterNoticiaPorIdServico;
 
     @Operation(summary = "Adicionar uma Notícia")
     @ApiResponse(responseCode = "201")
@@ -68,4 +75,30 @@ public class NoticiaController {
         }
     }
 
+    @Operation(summary = "Desarquivar uma noticia")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
+    @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
+    @PutMapping(path = "/{id}/desarquivar", consumes = "application/json")
+    public ResponseEntity<NoticiaResponseDTO> desarquivarNoticia(@PathVariable Long id) {
+        NoticiaResponseDTO noticiaArquivada = desarquivarNoticia.desarquivar(id);
+
+        if (noticiaArquivada != null) {
+            return ResponseEntity.ok(noticiaArquivada);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Obter Notícia por ID")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados.")
+    @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
+    @GetMapping("/{id}")
+    public ResponseEntity<NoticiaResponseDTO> obterNoticiaPorId(@PathVariable Long id) {
+        NoticiaResponseDTO noticia = obterNoticiaPorIdServico.obterNoticiaPorId(id);
+        if (noticia != null) {
+            return ResponseEntity.ok(noticia);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
