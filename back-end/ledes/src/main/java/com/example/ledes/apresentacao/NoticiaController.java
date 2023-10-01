@@ -1,11 +1,9 @@
 package com.example.ledes.apresentacao;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +22,6 @@ import com.example.ledes.aplicacao.noticia.DesarquivarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.EditarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.ListagemNoticiaServico;
 import com.example.ledes.aplicacao.noticia.ObterNoticiaPorIdServico;
-import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.dto.NoticiaListagemResponseDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaRequestDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaResponseDTO;
