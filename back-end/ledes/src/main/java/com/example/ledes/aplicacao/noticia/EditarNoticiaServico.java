@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ledes.dominio.Anexo;
 import com.example.ledes.dominio.Noticia;
@@ -61,26 +62,35 @@ public class EditarNoticiaServico {
         }
     }
 
+    @Transactional
     private void vincularAnexos(Noticia noticia, Collection<AnexoDTO> anexos) {
-        Collection<Long> ids = new ArrayList<Long>();
-        Anexo anexo;
+        Collection<Long> ids = new ArrayList<>();
+        Collection<Anexo> anexosVinculados = anexoRepositorio.findByNoticia(noticia);
+
         for (AnexoDTO anexoDTO : anexos) {
-            if (anexoDTO.getId() == null) {
+            Anexo anexo = null;
+
+            if (anexoDTO.getId() != null) {
+                anexo = anexoRepositorio.findById(anexoDTO.getId()).orElse(null);
+            }
+
+            if (anexo == null) {
                 anexo = new Anexo(anexoDTO.getTitulo(), anexoDTO.getConteudo(), noticia);
             } else {
-                anexo = anexoRepositorio.findById(anexoDTO.getId()).get();
                 anexo.setTitulo(anexoDTO.getTitulo());
                 anexo.setConteudo(anexoDTO.getConteudo());
                 ids.add(anexoDTO.getId());
             }
+
             anexoRepositorio.save(anexo);
         }
 
-        Collection<Anexo> anexosVinculados = anexoRepositorio.findByNoticia(noticia);
-        for (Anexo anexoVinculado : anexosVinculados) {
+        // Remover anexos que não estão mais vinculados
+        anexosVinculados.forEach(anexoVinculado -> {
             if (!ids.contains(anexoVinculado.getId())) {
                 anexoRepositorio.delete(anexoVinculado);
             }
-        }
+        });
     }
+
 }
