@@ -26,6 +26,4 @@ public interface NoticiaRepositorio extends CrudRepository<Noticia, Long> {
                         @Param("estado") String estado);
                         //teste de data para usar no swagger
                         //2023-09-30T20:38:58.301Z
-
-
 }
