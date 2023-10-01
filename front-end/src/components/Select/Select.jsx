@@ -1,7 +1,13 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 
-export function Select({ options, selectedOption, handleOptionChange }) {
+export function Select({
+  options,
+  selectedOption,
+  handleOptionChange,
+  optionDefault,
+}) {
+  const opcaoPadrao = optionDefault ?? "Selecione";
   function removerAcentos(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
@@ -10,8 +16,12 @@ export function Select({ options, selectedOption, handleOptionChange }) {
     <Form.Select
       value={removerAcentos(selectedOption)}
       onChange={handleOptionChange}
-      style={{marginRight: "10px", width: "100%" }}
+      style={{ marginRight: "10px", width: "100%" }}
     >
+      <option value="" disabled>
+        {opcaoPadrao}
+      </option>
+
       {options.map((option, index) => (
         <option value={removerAcentos(option)} key={index}>
           {option}

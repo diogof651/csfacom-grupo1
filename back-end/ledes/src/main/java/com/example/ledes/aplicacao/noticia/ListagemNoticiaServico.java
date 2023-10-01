@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.ledes.dominio.Noticia;
 import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.NoticiaRepositorio;
+import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.NoticiaListagemResponseDTO;
 
 @Service
@@ -21,12 +22,21 @@ public class ListagemNoticiaServico {
 
     @Autowired
     private NoticiaRepositorio noticiaRepositorio;
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
 
     public List<NoticiaListagemResponseDTO> buscarNoticiasPorParametros(
-            String titulo, Usuario usuario, String dataPublicacao, String estado) throws ParseException {
+            String titulo, String nomeAutor, String dataPublicacao, String estado) throws ParseException {
         List<Noticia> noticiasFiltradasPorEstado = obterNoticiasFiltradasPorEstado(estado);
         List<Noticia> noticiasFiltradasPorDataPublicacao;
         List<Noticia> noticiasFiltradasPorTitulo;
+        List<Noticia> noticiasFiltradasPorAutor;
+
+        if (nomeAutor != null && !nomeAutor.isEmpty() && !nomeAutor.isBlank()) {
+            Usuario autor = usuarioRepositorio.findByNome(nomeAutor);
+            noticiasFiltradasPorAutor = noticiaRepositorio.findByAutor(autor);
+            noticiasFiltradasPorEstado.retainAll(noticiasFiltradasPorAutor);
+        }
 
         if (titulo != null && !titulo.isEmpty() && !titulo.isBlank()) {
             noticiasFiltradasPorTitulo = noticiaRepositorio.findByTituloContaining(titulo);

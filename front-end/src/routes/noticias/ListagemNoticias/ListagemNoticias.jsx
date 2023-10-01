@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
+import { Select } from "../../../components/Select/Select";
 
 export function ListagemNoticias() {
   const [autores, setAutores] = useState([]);
@@ -24,30 +25,23 @@ export function ListagemNoticias() {
   const [cards, setCards] = useState([]);
   const [activeTab, setActiveTab] = useState("Publicada"); // Aba ativa
 
-  // useEffect(() => {
-  //   function fetchAutores() {
-  //     fetch("http://localhost:8080/api/v1/autores", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-type": "application/json",
-  //       },
-  //     })
-  //       .then((resposta) => resposta.json())
-  //       .then((data) => {
-  //         const autoresData = data.map((autor) => ({
-  //           id: autor.id,
-  //           nome: autor.nome,
-  //         }));
-  //         setAutores([
-  //           { id: "", nome: "Selecione o Autor" },
-  //           ...autoresData,
-  //         ]);
-  //       })
-  //       .catch((erro) => console.log(erro));
-  //   }
+  useEffect(() => {
+    function fetchAutores() {
+      fetch("http://localhost:8080/api/v1/usuarios/autores", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          setAutores(data);
+        })
+        .catch((erro) => console.log(erro));
+    }
 
-  //   fetchAutores();
-  // }, []);
+    fetchAutores();
+  }, []);
 
   useEffect(() => {
     function obterNoticias() {
@@ -85,10 +79,8 @@ export function ListagemNoticias() {
       ? new Date(selectedDate).toISOString()
       : null;
 
-    //fetch(
-    // `http://localhost:8080/api/v1/noticias?autor=${selectedAuthor}&dataPublicacao=${selectedDate}&titulo=${searchText}`,
     fetch(
-      `http://localhost:8080/api/v1/noticias?&titulo=${searchText}&estado=${activeTab}&dataPublicacao=${dataPublicacaoFormatada}`,
+      `http://localhost:8080/api/v1/noticias?titulo=${searchText}&estado=${activeTab}&autor=${selectedAuthor}&dataPublicacao=${dataPublicacaoFormatada}`,
       {
         method: "GET",
         headers: {
@@ -98,10 +90,6 @@ export function ListagemNoticias() {
     )
       .then((resposta) => resposta.json())
       .then((data) => {
-        console.log(
-          `http://localhost:8080/api/v1/noticias?&titulo=${searchText}&estado=${activeTab}&dataPublicacao=${dataPublicacaoFormatada}`
-        );
-        console.log(data);
         setCards(data);
       })
       .catch((erro) => console.log(erro));
@@ -150,14 +138,15 @@ export function ListagemNoticias() {
               searchText={searchText}
             />
           </div>
-          {/* <div className="col-md-3 col-6 mb-2">
+          <div className="col-md-3 col-6 mb-2">
             <Select
+              optionDefault="Autor"
               options={autores.map((autor) => autor.nome)}
               handleOptionChange={handleAuthorChange}
               selectedOption={selectedAuthor}
               placeholder="Autor"
             />
-          </div> */}
+          </div>
 
           <div className="col-md-2 col-6 mb-2">
             <DatePicker
