@@ -10,6 +10,7 @@ import { useNavigate } from "react-router";
 import { Link, useParams } from "react-router-dom";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
 import styles from "./PaginaNoticia.module.css";
+import NoticiaCard from "../../../components/NoticiaCard/NoticiaCard";
 
 export function PaginaNoticia() {
   const navigate = useNavigate();
@@ -20,10 +21,27 @@ export function PaginaNoticia() {
   };
 
   const [noticia, setNoticia] = useState({});
+  const [noticiasEmDestaque, setNoticiaEmDestaque] = useState([]);
 
   useEffect(() => {
     obterNoticia();
+    obterNoticiasEmDestaque();
   }, []);
+
+  function obterNoticiasEmDestaque() {
+    fetch("http://localhost:8080/api/v1/noticias?estado=Destaque", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        const primeiras5Noticias = data.slice(0, 5);
+        setNoticiaEmDestaque(primeiras5Noticias);
+      })
+      .catch((erro) => console.log(erro));
+  }
 
   function obterNoticia() {
     fetch(`http://localhost:8080/api/v1/noticias/${id}`, {
@@ -160,12 +178,7 @@ export function PaginaNoticia() {
         }}
       >
         <h5> Em destaque </h5>
-        <ul>
-          <li>Noticia</li>
-          <li>Noticia</li>
-          <li>Noticia</li>
-          <li>Noticia</li>
-        </ul>
+        <NoticiaCard cards={noticiasEmDestaque} />
       </section>
     </Container>
   );

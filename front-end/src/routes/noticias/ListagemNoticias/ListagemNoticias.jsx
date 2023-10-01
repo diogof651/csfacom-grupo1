@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
@@ -15,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
+import NoticiaCard from "../../../components/NoticiaCard/NoticiaCard";
 import { Select } from "../../../components/Select/Select";
 
 export function ListagemNoticias() {
@@ -202,48 +202,7 @@ export function ListagemNoticias() {
         </Nav.Item>
       </Nav>
 
-      <div className="d-flex flex-wrap mt-4" style={{ gap: "20px" }}>
-        {cards.length === 0 ? (
-          <p>Nenhuma notícia foi encontrada</p>
-        ) : (
-          cards.map((card, index) => (
-            <Card
-              key={index}
-              style={{ width: "239px", height: "180px" }}
-              className="mb-3"
-            >
-              <Link
-                to={`/noticia/${card.id}`}
-                style={{ color: "var(--black)", textDecoration: "none" }}
-              >
-                <Card.Img
-                  variant="top"
-                  src={
-                    card.thumbnail
-                      ? `data:image/jpeg;base64,${card.thumbnail}`
-                      : "src/assets/thumbnailPadrao.png"
-                  }
-                  style={{
-                    width: "100%",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
-                />
-                <Card.Body>
-                  <Card.Title>{card.titulo}</Card.Title>
-                  <div className="d-flex flex-column">
-                    <span style={{ fontSize: "10px" }}>
-                      {`Publicada em ${new Date(
-                        card.dataPublicacao
-                      ).toLocaleDateString()} por ${card.autor.nome}`}
-                    </span>
-                  </div>
-                </Card.Body>
-              </Link>
-            </Card>
-          ))
-        )}
-      </div>
+      <NoticiaCard cards={cards} />
     </Container>
   );
 }
