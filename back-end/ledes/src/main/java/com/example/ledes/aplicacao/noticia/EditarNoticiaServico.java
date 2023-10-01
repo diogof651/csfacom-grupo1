@@ -39,6 +39,7 @@ public class EditarNoticiaServico {
             noticia.setConteudo(noticiaRequest.getConteudo());
             noticia.setEstado(noticiaRequest.getEstado());
             noticia.setThumbnail(noticiaRequest.getThumbnail());
+            noticia.setEmDestaque(noticiaRequest.getEmDestaque());
             noticiaRepositorio.save(noticia);
 
             if (!noticiaRequest.getAnexos().isEmpty() || noticiaRequest.getAnexos() != null) {

@@ -1,8 +1,4 @@
-import {
-  faCalendar,
-  faImage,
-  faPaperclip,
-} from "@fortawesome/free-solid-svg-icons";
+import { faImage, faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Quill from "quill";
 import ImageUploader from "quill-image-uploader";
@@ -10,7 +6,6 @@ import "quill/dist/quill.snow.css";
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import FormCheck from "react-bootstrap/FormCheck";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Controller, useForm } from "react-hook-form";
 import { BsTrash3 } from "react-icons/bs";
@@ -19,16 +14,18 @@ import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
+import { Input } from "../../../components/Input/Input";
 import "./CadastroNoticia.module.css";
 
 Quill.register("modules/imageUploader", ImageUploader);
 
-export function CadastroNoticia(props) {
+export function CadastroNoticia() {
   const { id } = useParams();
   const { handleSubmit, control, setValue } = useForm();
   const navigate = useNavigate();
 
   const [emDestaque, setEmDestaque] = useState(false);
+  const [dataPublicacao, setDataPublicacao] = useState("");
   const [estadoSelecionado, setEstadoSelecionado] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [anexos, setAnexos] = useState([]);
@@ -43,23 +40,36 @@ export function CadastroNoticia(props) {
         .then((data) => {
           setValue("titulo", data.titulo);
           setValue("conteudo", data.conteudo);
-          setValue("estado", data.estado);
-          setEstadoSelecionado(data.tipo);
-          setShowDatePicker(data.tipo === "Agendada");
-          setAnexos(data.anexos || []);
-          setThumbnail(
-            data.thumbnails && data.thumbnails[0]
-              ? { nome: data.thumbnails[0].nome }
-              : null
-          );
+          setEstadoSelecionado(data.estado);
+          setEmDestaque(data.emDestaque);
+
+          if (data.anexos.length > 0) {
+            setAnexos(data.anexos);
+            setHasSelectedAnexo(true);
+          }
+
+          if (data.thumbnail != null) {
+            setThumbnail({ titulo: "thumb.png", conteudo: data.thumbnail });
+            setHasSelectedThumbnail(true);
+          }
+
+          if (data.estado === "Agendada") {
+            setShowDatePicker(true);
+            const formattedDataPublicacao = new Date(data.dataPublicacao)
+              .toISOString()
+              .split("T")[0];
+            setDataPublicacao(formattedDataPublicacao);
+          }
         })
         .catch((erro) => console.log(erro));
     }
-  }, [id, setValue]);
+  }, [id, setValue, setEstadoSelecionado]);
 
   const handleRadioChange = (option) => {
-    setEstadoSelecionado(option);
-    setShowDatePicker(option === "Agendada");
+    if (option !== estadoSelecionado) {
+      setEstadoSelecionado(option);
+      setShowDatePicker(option === "Agendada");
+    }
   };
 
   const onSubmit = (data) => {
@@ -68,6 +78,8 @@ export function CadastroNoticia(props) {
     data.emDestaque = emDestaque;
     data.anexos = anexos ?? null;
     data.thumbnail = thumbnail ? thumbnail.conteudo : null;
+    data.dataPublicacao =
+      estadoSelecionado == "Agendada" ? dataPublicacao : null;
 
     if (id) {
       fetch(`http://localhost:8080/api/v1/noticias/${id}`, {
@@ -175,7 +187,7 @@ export function CadastroNoticia(props) {
             id="custom-switch"
             style={{ marginLeft: "10px" }}
             label="Em destaque"
-            value={emDestaque}
+            checked={emDestaque}
             onChange={() => setEmDestaque(!emDestaque)}
           />
         </div>
@@ -255,28 +267,14 @@ export function CadastroNoticia(props) {
 
       {showDatePicker && (
         <div className="mb-3">
-          <Form.Label style={{ fontWeight: "bold", fontSize: "18px" }}>
-            Data Agendada
-          </Form.Label>
-          <div className="input-group">
-            <Controller
-              name="dataPublicacao"
-              control={control}
-              defaultValue={null}
-              render={({ field }) => (
-                <DatePicker
-                  {...field}
-                  dateFormat="dd/MM/yyyy"
-                  className="form-control inter-bold"
-                  selected={field.value || null}
-                  onChange={(date) => field.onChange(date)}
-                />
-              )}
-            />
-            <span className="input-group-text inter-bold">
-              <FontAwesomeIcon icon={faCalendar} />
-            </span>
-          </div>
+          <Input
+            value={dataPublicacao}
+            onChange={(e) => setDataPublicacao(e.target.value)}
+            label={"Data para publicação"}
+            required={true}
+            placeholder={""}
+            tipo={"date"}
+          ></Input>
         </div>
       )}
 
@@ -383,7 +381,6 @@ export function CadastroNoticia(props) {
       {thumbnail && (
         <ul className="list-unstyled">
           <li
-            className="d-flex align-items-center mb-2"
             style={{
               backgroundColor: "#f2f2f2",
               padding: "8px",
@@ -391,12 +388,11 @@ export function CadastroNoticia(props) {
               borderRadius: "7px",
             }}
           >
-            <span className="file-icon">
-              <FontAwesomeIcon icon={faImage} />
-            </span>{" "}
-            <span style={{ marginRight: "8px" }}></span>
-            <span>{thumbnail.titulo}</span>
-            <div className="ms-auto">
+            <div className="d-flex justify-content-between">
+              <span className="file-icon">
+                <FontAwesomeIcon icon={faImage} /> {thumbnail.titulo}
+              </span>
+
               <button
                 type="button"
                 className="btn btn-link text-reset"
@@ -404,6 +400,13 @@ export function CadastroNoticia(props) {
               >
                 <BsTrash3 className="icon" style={{ color: "var(--red)" }} />
               </button>
+            </div>
+            <div className="mt-2">
+              <img
+                src={`data:image/jpeg;base64,${thumbnail.conteudo}`} // Certifique-se de que o tipo da imagem esteja correto
+                alt={thumbnail.titulo}
+                style={{ maxWidth: "200px", maxHeight: "200px" }} // Ajuste o tamanho conforme necessário
+              />
             </div>
           </li>
         </ul>

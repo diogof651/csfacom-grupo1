@@ -18,6 +18,6 @@ public class NoticiaResponseDTO {
     private String estado;
     private String thumbnail; // Opcional
     private Date dataPublicacao; // Opcional
-    private Boolean emDestaque; //Opcional
+    private Boolean emDestaque; 
     private Collection<AnexoDTO> anexos;
 }
