@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Badge from "react-bootstrap/Badge"; 
+import Badge from "react-bootstrap/Badge";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -111,6 +111,7 @@ export function ListagemProjetos() {
           </div>
           <div className="col-md-3 col-6 mb-2">
             <Select
+              optionDefault={"Tipo de Projeto"}
               options={optionsTipoProjeto}
               handleOptionChange={tipoHandleOptionChange}
               selectedOption={tipoSelectedOption}
@@ -119,6 +120,7 @@ export function ListagemProjetos() {
 
           <div className="col-md-2 col-6 mb-2">
             <Select
+              optionDefault={"Estado"}
               options={optionsEstado}
               handleOptionChange={estadoHandleOptionChange}
               selectedOption={estadoSelectedOption}
@@ -138,43 +140,47 @@ export function ListagemProjetos() {
       </Form>
 
       <div className="d-flex flex-wrap mt-4 w-100" style={{ gap: "20px" }}>
-        {cards.map((card, index) => (
-          <Card key={index} style={{ width: "19rem" }}>
-            <BsPuzzle
-              style={{ fontSize: "2em", marginLeft: "8px", marginTop: "8px" }}
-            />{" "}
-            {/* Aumente o tamanho do ícone */}
-            <Link
-              to={`/projeto/${card.id}`}
-              style={{ color: "var(--black)", textDecoration: "none" }}
-            >
-              <Card.Body>
-                <Card.Title>{card.nome}</Card.Title>
-                <div className="d-flex flex-column">
-                  <span style={{ fontSize: "10px" }}>
-                    {`${new Date(
-                      card.inicio
-                    ).toLocaleDateString()} - ${new Date(
-                      card.termino
-                    ).toLocaleDateString()}`}
-                  </span>
-                  <span>{card.tipo}</span>
-                  <span>
-                    {card.status === "Em andamento" && (
-                      <Badge bg="primary">Em andamento</Badge>
-                    )}
-                    {card.status === "Concluido" && (
-                      <Badge bg="success">Concluído</Badge>
-                    )}
-                    {card.status === "Descontinuado" && (
-                      <Badge bg="danger">Descontinuado</Badge>
-                    )}
-                  </span>
-                </div>
-              </Card.Body>
-            </Link>
-          </Card>
-        ))}
+        {cards.length === 0 ? (
+          <p>Nenhum projeto foi encontrado</p>
+        ) : (
+          cards.map((card, index) => (
+            <Card key={index} style={{ width: "19rem" }}>
+              <BsPuzzle
+                style={{ fontSize: "2em", marginLeft: "8px", marginTop: "8px" }}
+              />{" "}
+              {/* Aumente o tamanho do ícone */}
+              <Link
+                to={`/projeto/${card.id}`}
+                style={{ color: "var(--black)", textDecoration: "none" }}
+              >
+                <Card.Body>
+                  <Card.Title>{card.nome}</Card.Title>
+                  <div className="d-flex flex-column">
+                    <span style={{ fontSize: "10px" }}>
+                      {`${new Date(
+                        card.inicio
+                      ).toLocaleDateString()} - ${new Date(
+                        card.termino
+                      ).toLocaleDateString()}`}
+                    </span>
+                    <span>{card.tipo}</span>
+                    <span>
+                      {card.status === "Em andamento" && (
+                        <Badge bg="primary">Em andamento</Badge>
+                      )}
+                      {card.status === "Concluido" && (
+                        <Badge bg="success">Concluído</Badge>
+                      )}
+                      {card.status === "Descontinuado" && (
+                        <Badge bg="danger">Descontinuado</Badge>
+                      )}
+                    </span>
+                  </div>
+                </Card.Body>
+              </Link>
+            </Card>
+          ))
+        )}
       </div>
     </Container>
   );

@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import {
   BsArchive,
+  BsDownload,
   BsPaperclip,
   BsPencilSquare,
-  BsDownload,
 } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { Link, useParams } from "react-router-dom";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
-import styles from "./PaginaNoticia.module.css";
 import NoticiaCard from "../../../components/NoticiaCard/NoticiaCard";
+import styles from "./PaginaNoticia.module.css";
 
 export function PaginaNoticia() {
   const navigate = useNavigate();

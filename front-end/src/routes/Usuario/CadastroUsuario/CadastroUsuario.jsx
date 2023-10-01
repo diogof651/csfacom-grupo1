@@ -31,6 +31,9 @@ export function CadastroUsuario() {
       .then((resposta) => navigate("/"))
       .catch((erro) => console.log(erro));
   };
+  function cancelar(){
+    navigate("/");
+  }
   return (
     <>
       <Container
@@ -76,7 +79,9 @@ export function CadastroUsuario() {
             label="Ativo"
           />
           <div className="d-flex justify-content-end gap-2 mt-4">
-            <BotaoOutline color="var(--blue)">Cancelar</BotaoOutline>
+            <BotaoOutline color="var(--blue)" onClick={cancelar}>
+              Cancelar
+            </BotaoOutline>
             <BotaoComFundo type="submit" color="var(--blue)">
               Cadastrar
             </BotaoComFundo>

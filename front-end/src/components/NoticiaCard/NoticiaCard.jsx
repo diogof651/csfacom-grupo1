@@ -21,7 +21,7 @@ export default function NoticiaCard({ cards }) {
               <Card.Img
                 variant="top"
                 src={
-                  card.thumbnail
+                  card.thumbnail != null && card.thumbnail
                     ? `data:image/jpeg;base64,${card.thumbnail}`
                     : "src/assets/thumbnailPadrao.png"
                 }

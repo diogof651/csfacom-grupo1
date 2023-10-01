@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { FotoPerfil } from "../../../components/FotoPerfil/FotoPerfil";
@@ -13,6 +14,11 @@ export function Perfil() {
     width: "24px", // Defina o tamanho desejado
     height: "24px", // Defina a altura desejada (opcional)
   };
+  const navigate = useNavigate();
+
+  function cancelar() {
+    navigate("/");
+  }
 
   return (
     <>
@@ -57,7 +63,9 @@ export function Perfil() {
           ></Input>
 
           <div className="d-flex justify-content-end gap-2 mt-4">
-            <BotaoOutline color="var(--blue)">Cancelar</BotaoOutline>
+            <BotaoOutline color="var(--blue)" onClick={cancelar}>
+              Cancelar
+            </BotaoOutline>
             <BotaoComFundo color="var(--blue)">Cadastrar</BotaoComFundo>
           </div>
         </Form>

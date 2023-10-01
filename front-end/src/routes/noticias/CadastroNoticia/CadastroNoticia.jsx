@@ -89,7 +89,7 @@ export function CadastroNoticia() {
         },
         body: JSON.stringify(data),
       })
-        .then((resposta) => navigate("/"))
+        .then((resposta) => navigate("/noticias"))
         .catch((erro) => console.log(erro));
     } else {
       fetch("http://localhost:8080/api/v1/noticias", {
@@ -99,7 +99,7 @@ export function CadastroNoticia() {
         },
         body: JSON.stringify(data),
       })
-        .then((resposta) => navigate("/"))
+        .then((resposta) => navigate("/noticias"))
         .catch((erro) => console.log(erro));
     }
   };
@@ -168,6 +168,10 @@ export function CadastroNoticia() {
       }
     }
   };
+
+  function cancelar() {
+    navigate("/noticias");
+  }
 
   return (
     <Form
@@ -428,7 +432,9 @@ export function CadastroNoticia() {
       )}
 
       <div className="d-flex justify-content-end gap-2 mt-4">
-        <BotaoOutline color="var(--blue)">Cancelar</BotaoOutline>
+        <BotaoOutline color="var(--blue)" onClick={cancelar}>
+          Cancelar
+        </BotaoOutline>
         <BotaoComFundo type="submit" color="var(--blue)">
           Salvar
         </BotaoComFundo>
