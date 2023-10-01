@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.noticia.AdicionarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.ArquivarNoticiaServico;
+import com.example.ledes.aplicacao.noticia.DesarquivarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.EditarNoticiaServico;
 import com.example.ledes.aplicacao.noticia.ObterNoticiaPorIdServico;
 import com.example.ledes.infraestrutura.dto.NoticiaRequestDTO;
@@ -32,6 +33,8 @@ public class NoticiaController {
     private EditarNoticiaServico editarNoticia;
     @Autowired
     private ArquivarNoticiaServico arquivarNoticia;
+    @Autowired
+    private DesarquivarNoticiaServico desarquivarNoticia;
     @Autowired
     private ObterNoticiaPorIdServico obterNoticiaPorIdServico;
 
@@ -64,6 +67,20 @@ public class NoticiaController {
     @PutMapping(path = "/{id}/arquivar", consumes = "application/json")
     public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(@PathVariable Long id) {
         NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id);
+
+        if (noticiaArquivada != null) {
+            return ResponseEntity.ok(noticiaArquivada);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Desarquivar uma noticia")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
+    @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
+    @PutMapping(path = "/{id}/desarquivar", consumes = "application/json")
+    public ResponseEntity<NoticiaResponseDTO> desarquivarNoticia(@PathVariable Long id) {
+        NoticiaResponseDTO noticiaArquivada = desarquivarNoticia.desarquivar(id);
 
         if (noticiaArquivada != null) {
             return ResponseEntity.ok(noticiaArquivada);

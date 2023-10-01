@@ -34,14 +34,23 @@ export function PaginaNoticia() {
     })
       .then((resposta) => resposta.json())
       .then((data) => {
-        console.log(data);
         setNoticia(data);
       })
       .catch((erro) => console.log(erro));
   }
 
   function arquivar() {
-    fetch(`http://localhost:8080/api/v1/projetos/${id}/arquivar`, {
+    fetch(`http://localhost:8080/api/v1/noticias/${id}/arquivar`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then(() => navigate("/"))
+      .catch((erro) => console.log(erro));
+  }
+  function desarquivar() {
+    fetch(`http://localhost:8080/api/v1/noticias/${id}/desarquivar`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -87,16 +96,25 @@ export function PaginaNoticia() {
               {noticia.autor ? noticia.autor.nome : ""}
             </p>
           </div>
-          <div className="d-flex gap-2">
-            <Link to={`/editarNoticia/${id}`} className="text-decoration-none">
-              <BotaoComIcone color="var(--black)">
-                <BsPencilSquare style={iconStyle} /> Editar
-              </BotaoComIcone>
-            </Link>
-            <BotaoComIcone color="var(--black)" onClick={arquivar}>
-              <BsArchive style={iconStyle} /> Arquivar
+          {noticia.estado === "Arquivada" ? (
+            <BotaoComIcone color="var(--black)" onClick={desarquivar}>
+              <BsArchive style={iconStyle} /> Desarquivar
             </BotaoComIcone>
-          </div>
+          ) : (
+            <div className="d-flex gap-2">
+              <Link
+                to={`/editarNoticia/${id}`}
+                className="text-decoration-none"
+              >
+                <BotaoComIcone color="var(--black)">
+                  <BsPencilSquare style={iconStyle} /> Editar
+                </BotaoComIcone>
+              </Link>
+              <BotaoComIcone color="var(--black)" onClick={arquivar}>
+                <BsArchive style={iconStyle} /> Arquivar
+              </BotaoComIcone>
+            </div>
+          )}
         </div>
         <div
           className={styles.noticiaConteudo}
