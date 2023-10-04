@@ -1,16 +1,15 @@
 DO $$
 Begin
-    If NOT EXISTS (Select 1 from information_schema.tables WHERE table_name = 'Membro') THEN
+    If NOT EXISTS (Select 1 from information_schema.tables WHERE table_name = 'membro') THEN
         CREATE TABLE membro (
-        id bigint not null,
+        id int PRIMARY KEY,
         ativo boolean not null,
-        data_ingresso timestamp,
-        data_termino timestamp,
-        tipo_papel integerL,
-        tipo_vinculo integer,
-        projeto_id bigint,
-        usuario_id bigint, 
-        primary key (id)           
+        data_ingresso date,
+        data_termino date,
+        projeto_id int,
+        usuario_id int, 
+        FOREIGN KEY (projeto_id) REFERENCES projeto(id),
+        FOREIGN KEY (usuario_id) REFERENCES usuario(id)
 );
     END IF;
 END $$;

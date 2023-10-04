@@ -18,6 +18,7 @@ import com.example.ledes.aplicacao.membro.DesativarMembroServico;
 import com.example.ledes.aplicacao.membro.RemoverMembroProjetoServico;
 import com.example.ledes.infraestrutura.dto.MembroRequestDTO;
 import com.example.ledes.infraestrutura.dto.MembroResponseDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
@@ -35,12 +36,12 @@ public class MembroController {
     @Autowired
     private RemoverMembroProjetoServico removerMembroProjetoServico;
 
-
     @Operation(summary = "Criar um novo membro")
     @ApiResponse(responseCode = "201")
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<MembroResponseDTO> cadastrarMembro(@RequestBody MembroRequestDTO membrorequestDTO) {
-        MembroResponseDTO novoMembro = cadastrarMembroServico.adicionar(membrorequestDTO);
+    @PostMapping(path = "projeto/{idProjeto}/cadastrar", consumes = "application/json")
+    public ResponseEntity<MembroResponseDTO> cadastrarMembro(@PathVariable Long idProjeto,
+            @RequestBody MembroRequestDTO membrorequestDTO) {
+        MembroResponseDTO novoMembro = cadastrarMembroServico.adicionar(idProjeto, membrorequestDTO);
         return new ResponseEntity<>(novoMembro, HttpStatus.CREATED);
     }
 
@@ -74,8 +75,7 @@ public class MembroController {
     @DeleteMapping("/{membroId}/{projetoId}")
     public ResponseEntity<MembroResponseDTO> removerMembroProjeto(
             @PathVariable Long membroId,
-            @PathVariable Long projetoId
-    ) {
+            @PathVariable Long projetoId) {
         MembroResponseDTO membroRemovido = removerMembroProjetoServico.desativar(membroId, projetoId);
 
         if (membroRemovido != null) {
@@ -85,4 +85,3 @@ public class MembroController {
         }
     }
 }
-

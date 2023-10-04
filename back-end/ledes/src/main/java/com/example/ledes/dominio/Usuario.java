@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 import com.example.ledes.utils.SenhaUtils;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,7 +52,6 @@ public class Usuario {
     }
 
     @OneToMany(mappedBy = "usuario")
-    private List <Membro> projetos;
-
+    private List<Membro> projetos;
 
 }

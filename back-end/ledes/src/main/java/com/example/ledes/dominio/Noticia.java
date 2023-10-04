@@ -54,7 +54,7 @@ public class Noticia {
             setDataPublicacao(new Date());
         } else if ("agendada".equals(estado)) {
             setDataPublicacao(dataPublicacao);
-        } else if("rascunho".equals(estado)){
+        } else if ("rascunho".equals(estado)) {
             setDataPublicacao(null);
         }
     }

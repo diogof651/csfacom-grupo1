@@ -26,12 +26,13 @@ public class DesativarMembroServico {
             membroRepositorio.save(membro);
 
             return new MembroResponseDTO(membro.getId(),
-                membro.getUsuario(), 
-                membro.getTipoVinculo(),
-                membro.getTipoPapel(),
-                membro.getDataIngresso(), 
-                membro.getDataTermino(), 
-                membro.isAtivo());
+                    membro.getUsuario(),
+                    membro.getProjeto(),
+                    membro.getPapeis(),
+                    membro.getVinculos(),
+                    membro.getDataIngresso(),
+                    membro.getDataTermino(),
+                    membro.isAtivo());
         } else {
             return null;
         }
