@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,10 +12,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./CadastroProjeto.module.css";
 
 import { useNavigate, useParams } from "react-router";
-import "./CadastroProjeto.module.css";
-import { Select } from "../../../components/Select/Select";
-import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
+import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
+import { Select } from "../../../components/Select/Select";
+import "./CadastroProjeto.module.css";
 
 export function CadastroProjeto(props) {
   const { id } = useParams();
