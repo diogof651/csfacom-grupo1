@@ -31,8 +31,6 @@ public class RemoverMembroProjetoServico {
                 return new MembroResponseDTO(membro.getId(),
                         membro.getUsuario(),
                         membro.getProjeto(),
-                        membro.getPapeis(),
-                        membro.getVinculos(),
                         membro.getDataIngresso(),
                         membro.getDataTermino(),
                         membro.isAtivo());
