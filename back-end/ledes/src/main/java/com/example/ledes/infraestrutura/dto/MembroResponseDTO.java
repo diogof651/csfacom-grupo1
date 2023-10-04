@@ -15,8 +15,6 @@ import lombok.Data;
 public class MembroResponseDTO {
     private Long id; 
     private Usuario usuario;
-    private String nome;
-    private String email;
     private TipoVinculo TipoVinculo;
     private TipoPapel tipoPapel; 
     private Date dataIngresso; 

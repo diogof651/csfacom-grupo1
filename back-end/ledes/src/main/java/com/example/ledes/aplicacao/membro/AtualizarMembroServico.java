@@ -29,9 +29,13 @@ public class AtualizarMembroServico {
             membro.setDataTermino(membroRequestDTO.getDataTermino());
             membroRepositorio.save(membro);
 
-            return new MembroResponseDTO(membro.getId(), membro.getUsuario(), membro.getUsuario().getNome(), 
-            membro.getUsuario().getEmail(), membro.getTipoVinculo(), membro.getTipoPapel(),
-            membro.getDataIngresso(), membro.getDataTermino(), membro.isAtivo());
+            return new MembroResponseDTO(membro.getId(),
+            membro.getUsuario(), 
+            membro.getTipoVinculo(),
+            membro.getTipoPapel(),
+            membro.getDataIngresso(), 
+            membro.getDataTermino(), 
+            membro.isAtivo());
             
         } else {
             return null;

@@ -34,18 +34,13 @@ public class CadastrarMembroServico {
                 .dataTermino(membroRequestDTO.getDataTermino())
                 .ativo(membroRequestDTO.isAtivo()).build();
 
-                
-                return new MembroResponseDTO(
-                membro.getId(),
+                return new MembroResponseDTO(membro.getId(),
                 membro.getUsuario(), 
-                membro.getUsuario().getNome(), 
-                membro.getUsuario().getEmail(), 
-                membro.getTipoVinculo(), 
+                membro.getTipoVinculo(),
                 membro.getTipoPapel(),
                 membro.getDataIngresso(), 
                 membro.getDataTermino(), 
-                membro.isAtivo()
-                );
+                membro.isAtivo());
            
             } else {
                 Usuario novoUsuario = new Usuario(membroRequestDTO.getNome(), membroRequestDTO.getEmail());
@@ -60,9 +55,13 @@ public class CadastrarMembroServico {
                 membroNovo.setAtivo(membroNovo.isAtivo());
                 membroRepositorio.save(membroNovo);
 
-                return new MembroResponseDTO(membroNovo.getId(), membroNovo.getUsuario(), membroNovo.getUsuario().getNome(), 
-                membroNovo.getUsuario().getEmail(), membroNovo.getTipoVinculo(), membroNovo.getTipoPapel(),
-                membroNovo.getDataIngresso(), membroNovo.getDataTermino(), membroNovo.isAtivo());
+                return new MembroResponseDTO(membroNovo.getId(),
+                membroNovo.getUsuario(), 
+                membroNovo.getTipoVinculo(),
+                membroNovo.getTipoPapel(),
+                membroNovo.getDataIngresso(), 
+                membroNovo.getDataTermino(), 
+                membroNovo.isAtivo());
             }  
         }
     }

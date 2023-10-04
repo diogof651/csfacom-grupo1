@@ -23,15 +23,25 @@ public class RemoverMembroProjetoServico {
         Membro membro = membroRepositorio.findById(membroId).orElse(null);
         Projeto projeto = projetoRepositorio.findById(projetoId).orElse(null);
 
-        if (membro != null) {
-            membro.getProjetos_ativos().remove(projeto);
-            membroRepositorio.save(membro);
+        if (membro != null && projeto != null) {
+            if (membro.getProjeto() != null && membro.getProjeto().getId().equals(projetoId)) {
+                membro.setProjeto(null);
+                membroRepositorio.save(membro);
 
-            return new MembroResponseDTO(membro.getId(), membro.getUsuario(), membro.getUsuario().getNome(), 
-            membro.getUsuario().getEmail(),membro.getTipoVinculo(), membro.getTipoPapel(),
-            membro.getDataIngresso(), membro.getDataTermino(), membro.isAtivo());
-        } else {
-            return null;
+                return new MembroResponseDTO(membro.getId(),
+                membro.getUsuario(), 
+                membro.getTipoVinculo(),
+                membro.getTipoPapel(),
+                membro.getDataIngresso(), 
+                membro.getDataTermino(), 
+                membro.isAtivo());
+        }   else {
+            // O membro não pertence ao projeto com o ID fornecido
+            throw new IllegalArgumentException("O membro não pertence ao projeto com o ID fornecido.");
+        }
+    }   else {
+        // Membro ou projeto não encontrados com os IDs fornecidos
+        throw new IllegalArgumentException("Membro ou projeto não encontrados com os IDs fornecidos.");
         }
     }
 }

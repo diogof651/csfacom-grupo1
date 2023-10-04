@@ -1,15 +1,18 @@
 package com.example.ledes.dominio;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -40,12 +43,19 @@ public class Membro {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @ManyToMany
-    @JoinTable(
-    name = "projetos_ativos", 
-    joinColumns = @JoinColumn(name = "membro_id"), 
-    inverseJoinColumns = @JoinColumn(name = "projeto_id"))
-    Set<Projeto> projetos_ativos;
+    @ManyToOne
+    @JoinColumn(name = "projeto_id")
+    private Projeto projeto;
 
-    
+    @ElementCollection(targetClass = TipoVinculo.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "membro_tipos_vinculo")
+    @Column(name = "tipo_vinculo")
+    private List<TipoVinculo> tiposVinculo;
+
+    @ElementCollection(targetClass = TipoPapel.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "membro_tipos_papel")
+    @Column(name = "tipo_papel")
+    private List<TipoPapel> tiposPapel;
 }
