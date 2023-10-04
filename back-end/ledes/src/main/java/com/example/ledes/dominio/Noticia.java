@@ -50,12 +50,20 @@ public class Noticia {
     }
 
     public void definirDataDePublicacao(String estado, Date dataPublicacao) {
-        if ("publicacao_imediata".equals(estado)) {
+        if ("Imediata".equals(estado)) {
             setDataPublicacao(new Date());
-        } else if ("agendada".equals(estado)) {
+        } else if ("Agendada".equals(estado)) {
             setDataPublicacao(dataPublicacao);
-        } else if ("rascunho".equals(estado)) {
+        } else if ("Rascunho".equals(estado)) {
             setDataPublicacao(null);
+        }
+    }
+
+    public void desarquivar() {
+        if (dataPublicacao != null) {
+            setEstado("Agendada");
+        } else {
+            setEstado("Rascunho");
         }
     }
 }

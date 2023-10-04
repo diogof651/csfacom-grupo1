@@ -11,6 +11,7 @@ export function BotaoOutline(props) {
           padding:"5px",
           height: "40px"
         }}
+        onClick={props.onClick}
       >
         {props.children}
       </button>

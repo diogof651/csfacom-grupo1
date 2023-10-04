@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Badge from "react-bootstrap/Badge"; // Importe o componente Badge
+import Badge from "react-bootstrap/Badge";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { BsPuzzle } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
-import { Select } from "../../../components/Select/Select";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
+import { Select } from "../../../components/Select/Select";
 
 export function ListagemProjetos() {
-  const [selectedOption1, setSelectedOption1] = useState("");
-  const [selectedOption2, setSelectedOption2] = useState("");
+  const [tipoSelectedOption, setTipoSelectedOption] = useState("");
+  const [estadoSelectedOption, setEstadoSelectedOption] = useState("");
   const [searchText, setSearchText] = useState("");
   const [cards, setCards] = useState([]);
 
@@ -40,18 +40,17 @@ export function ListagemProjetos() {
     })
       .then((resposta) => resposta.json())
       .then((data) => {
-        console.log(data);
         setCards(data);
       })
       .catch((erro) => console.log(erro));
   }
 
-  const handleOptionChange1 = (e) => {
-    setSelectedOption1(e.target.value);
+  const tipoHandleOptionChange = (e) => {
+    setTipoSelectedOption(e.target.value);
   };
 
-  const handleOptionChange2 = (e) => {
-    setSelectedOption2(e.target.value);
+  const estadoHandleOptionChange = (e) => {
+    setEstadoSelectedOption(e.target.value);
   };
 
   const handleSearchChange = (e) => {
@@ -59,23 +58,20 @@ export function ListagemProjetos() {
   };
 
   const handleApplyFilter = () => {
-    // Aplicar os filtros selecionados e atualizar a lista de cartões
-    const filteredCards = generateFixedCards().filter((card) => {
-      if (selectedOption1 && card.type !== selectedOption1) return false;
-      if (selectedOption2 && card.state !== selectedOption2) return false;
-      if (
-        searchText &&
-        !card.type.toLowerCase().includes(searchText.toLowerCase()) &&
-        !card.state.toLowerCase().includes(searchText.toLowerCase()) &&
-        !card.text.toLowerCase().includes(searchText.toLowerCase())
-      ) {
-        return false;
+    fetch(
+      `http://localhost:8080/api/v1/projetos/listagem?tipo=${tipoSelectedOption}&status=${estadoSelectedOption}&nome=${searchText}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
       }
-      return true;
-    });
-
-    // Atualizar a lista de cartões filtrados
-    setCards(filteredCards);
+    )
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        setCards(data);
+      })
+      .catch((erro) => console.log(erro));
   };
 
   return (
@@ -115,17 +111,19 @@ export function ListagemProjetos() {
           </div>
           <div className="col-md-3 col-6 mb-2">
             <Select
+              optionDefault={"Tipo de Projeto"}
               options={optionsTipoProjeto}
-              handleOptionChange={handleOptionChange1}
-              selectedOption={selectedOption1}
+              handleOptionChange={tipoHandleOptionChange}
+              selectedOption={tipoSelectedOption}
             />
           </div>
 
           <div className="col-md-2 col-6 mb-2">
             <Select
+              optionDefault={"Estado"}
               options={optionsEstado}
-              handleOptionChange={handleOptionChange2}
-              selectedOption={selectedOption2}
+              handleOptionChange={estadoHandleOptionChange}
+              selectedOption={estadoSelectedOption}
             />
           </div>
           <div className="col-md-2 col-12">
@@ -142,43 +140,47 @@ export function ListagemProjetos() {
       </Form>
 
       <div className="d-flex flex-wrap mt-4 w-100" style={{ gap: "20px" }}>
-        {cards.map((card, index) => (
-          <Card key={index} style={{ width: "19rem" }}>
-            <BsPuzzle
-              style={{ fontSize: "2em", marginLeft: "8px", marginTop: "8px" }}
-            />{" "}
-            {/* Aumente o tamanho do ícone */}
-            <Link
-              to={`/projeto/${card.id}`}
-              style={{ color: "var(--black)", textDecoration: "none" }}
-            >
-              <Card.Body>
-                <Card.Title>{card.nome}</Card.Title>
-                <div className="d-flex flex-column">
-                  <span style={{ fontSize: "10px" }}>
-                    {`${new Date(
-                      card.inicio
-                    ).toLocaleDateString()} - ${new Date(
-                      card.termino
-                    ).toLocaleDateString()}`}
-                  </span>
-                  <span>{card.tipo}</span>
-                  <span>
-                    {card.status === "Em andamento" && (
-                      <Badge bg="primary">Em andamento</Badge>
-                    )}
-                    {card.status === "Concluído" && (
-                      <Badge bg="success">Concluído</Badge>
-                    )}
-                    {card.status === "Descontinuado" && (
-                      <Badge bg="danger">Descontinuado</Badge>
-                    )}
-                  </span>
-                </div>
-              </Card.Body>
-            </Link>
-          </Card>
-        ))}
+        {cards.length === 0 ? (
+          <p>Nenhum projeto foi encontrado</p>
+        ) : (
+          cards.map((card, index) => (
+            <Card key={index} style={{ width: "19rem" }}>
+              <BsPuzzle
+                style={{ fontSize: "2em", marginLeft: "8px", marginTop: "8px" }}
+              />{" "}
+              {/* Aumente o tamanho do ícone */}
+              <Link
+                to={`/projeto/${card.id}`}
+                style={{ color: "var(--black)", textDecoration: "none" }}
+              >
+                <Card.Body>
+                  <Card.Title>{card.nome}</Card.Title>
+                  <div className="d-flex flex-column">
+                    <span style={{ fontSize: "10px" }}>
+                      {`${new Date(
+                        card.inicio
+                      ).toLocaleDateString()} - ${new Date(
+                        card.termino
+                      ).toLocaleDateString()}`}
+                    </span>
+                    <span>{card.tipo}</span>
+                    <span>
+                      {card.status === "Em andamento" && (
+                        <Badge bg="primary">Em andamento</Badge>
+                      )}
+                      {card.status === "Concluido" && (
+                        <Badge bg="success">Concluído</Badge>
+                      )}
+                      {card.status === "Descontinuado" && (
+                        <Badge bg="danger">Descontinuado</Badge>
+                      )}
+                    </span>
+                  </div>
+                </Card.Body>
+              </Link>
+            </Card>
+          ))
+        )}
       </div>
     </Container>
   );
