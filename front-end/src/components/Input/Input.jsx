@@ -1,7 +1,15 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 
-export function Input({ label, tipo, placeholder, required, value, onChange }) {
+export function Input({
+  label,
+  tipo,
+  placeholder,
+  required,
+  disabled,
+  value,
+  onChange,
+}) {
   return (
     <>
       <Form.Label
@@ -14,6 +22,7 @@ export function Input({ label, tipo, placeholder, required, value, onChange }) {
         type={tipo}
         placeholder={placeholder}
         required={required}
+        disabled={disabled}
         value={value}
         onChange={onChange}
       />

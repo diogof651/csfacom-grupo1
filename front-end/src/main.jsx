@@ -5,12 +5,13 @@ import { CadastroProjeto } from "./routes/projetos/CadastroProjeto/CadastroProje
 import { ListagemProjetos } from "./routes/projetos/ListagemProjetos/ListagemProjetos.jsx";
 import { PaginaProjeto } from "./routes/projetos/PaginaProjeto/PaginaProjeto.jsx";
 
-import { ListagemNoticias } from './routes/noticias/ListagemNoticias/ListagemNoticias.jsx';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { CadastroNoticia } from "./routes/noticias/CadastroNoticia/CadastroNoticia.jsx";
+import { ListagemNoticias } from "./routes/noticias/ListagemNoticias/ListagemNoticias.jsx";
+import { PaginaNoticia } from "./routes/noticias/PaginaNoticia/PaginaNoticia.jsx";
+import { CadastroMembro } from "./routes/projetos/Membro/CadastroMembro.jsx";
 import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
 import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
-import { CadastroNoticia } from "./routes/noticias/CadastroNoticia/CadastroNoticia.jsx";
-import { PaginaNoticia } from "./routes/noticias/PaginaNoticia/PaginaNoticia.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "/projeto/:id",
         element: <PaginaProjeto />,
+      },
+      {
+        path: "/cadastroMembro",
+        element: <CadastroMembro />,
       },
       {
         path: "/cadastroUsuario",
