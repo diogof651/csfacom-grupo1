@@ -9,7 +9,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CadastroNoticia } from "./routes/noticias/CadastroNoticia/CadastroNoticia.jsx";
 import { ListagemNoticias } from "./routes/noticias/ListagemNoticias/ListagemNoticias.jsx";
 import { PaginaNoticia } from "./routes/noticias/PaginaNoticia/PaginaNoticia.jsx";
-import { CadastroMembro } from "./routes/Projeto/CadastroMembro.jsx";
+import { CadastroMembro } from "./routes/projetos/Membro/CadastroMembro.jsx";
 import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
 import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
 

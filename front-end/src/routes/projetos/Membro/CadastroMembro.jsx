@@ -3,10 +3,10 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-quill/dist/quill.snow.css";
-import { BotaoComFundo } from "../../components/Botoes/BotaoComFundo";
-import { BotaoOutline } from "../../components/Botoes/BotaoOutline";
-import { Input } from "../../components/Input/Input";
-import { FotoPerfil } from "../../components/FotoPerfil/FotoPerfil";
+import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
+import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
+import { Input } from "../../../components/Input/Input";
+import { FotoPerfil } from "../../../components/FotoPerfil/FotoPerfil";
 
 export function CadastroMembro() {
   const [ativo, setAtivo] = useState(true);
