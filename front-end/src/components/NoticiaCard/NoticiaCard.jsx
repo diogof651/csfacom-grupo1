@@ -1,6 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
+import styles from "./NoticiaCard.module.css";
 
 export default function NoticiaCard({ cards }) {
   return (
@@ -23,7 +24,7 @@ export default function NoticiaCard({ cards }) {
                 src={
                   card.thumbnail != null && card.thumbnail
                     ? `data:image/jpeg;base64,${card.thumbnail}`
-                    : "src/assets/thumbnailPadrao.png"
+                    : "/src/assets/thumbnailPadrao.png"
                 }
                 style={{
                   width: "100%",
@@ -32,8 +33,8 @@ export default function NoticiaCard({ cards }) {
                 }}
               />
               <Card.Body>
-                <Card.Title>{card.titulo}</Card.Title>
-                <div className="d-flex flex-column">
+              <Card.Title className={styles["titulo-noticia"]}>{card.titulo}</Card.Title>
+                  <div className="d-flex flex-column">
                   <span style={{ fontSize: "10px" }}>
                     {`Publicada em ${new Date(
                       card.dataPublicacao

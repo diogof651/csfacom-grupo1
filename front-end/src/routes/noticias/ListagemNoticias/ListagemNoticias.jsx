@@ -60,7 +60,7 @@ export function ListagemNoticias() {
     }
 
     obterNoticias();
-  }, []);
+  }, [activeTab]);
 
   const handleAuthorChange = (e) => {
     setSelectedAuthor(e.target.value);
@@ -95,12 +95,21 @@ export function ListagemNoticias() {
       .catch((erro) => console.log(erro));
   };
 
+  const handleClearFilters = () => {
+    setSelectedAuthor("");
+    setSelectedDate(null);
+    setSearchText("");
+    handleApplyFilter();
+  };
+
   const handleTabSelect = (selectedTab) => {
     setActiveTab(selectedTab);
   };
 
   useEffect(() => {
     handleApplyFilter();
+    // Defina o título da página aqui
+    document.title = "Notícias";
   }, [activeTab]);
 
   return (
@@ -165,6 +174,13 @@ export function ListagemNoticias() {
               onClick={handleApplyFilter}
             >
               Buscar
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger inter-bold w-100 mt-2"
+              onClick={handleClearFilters}
+            >
+              Limpar Filtros
             </button>
           </div>
         </div>
