@@ -68,20 +68,13 @@ public class MembroController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    @Operation(summary = "Remover um membro de um projeto")
+    
+    @Operation(summary = "Remover um membro")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro removido")
     @ApiResponse(responseCode = "404", description = "Membro ou projeto não encontrado")
-    @DeleteMapping("/{membroId}/{projetoId}")
-    public ResponseEntity<MembroResponseDTO> removerMembroProjeto(
-            @PathVariable Long membroId,
-            @PathVariable Long projetoId) {
-        MembroResponseDTO membroRemovido = removerMembroProjetoServico.desativar(membroId, projetoId);
-
-        if (membroRemovido != null) {
-            return ResponseEntity.ok(membroRemovido);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/{membroId}")
+    public ResponseEntity<Void> removerMembro(@PathVariable Long membroId) {
+        removerMembroProjetoServico.removerMembro(membroId);
+        return ResponseEntity.noContent().build();
     }
 }
