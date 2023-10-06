@@ -34,13 +34,12 @@ export function CadastroProjeto(props) {
     "Estágio",
   ];
 
-  const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
+  const optionsEstado = ["Em andamento", "Concluido", "Descontinuado"];
   useEffect(() => {
     if (id) {
       fetch(`http://localhost:8080/api/v1/projetos/${id}`)
         .then((resposta) => resposta.json())
         .then((data) => {
-          // Use setValue para definir os valores iniciais dos campos
           setValue("nome", data.nome);
           setValue("tipo", data.tipo);
           setValue("status", data.status);

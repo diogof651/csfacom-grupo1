@@ -6,12 +6,12 @@ export function Input({
   tipo,
   placeholder,
   required,
-  disabled,
   value,
   onChange,
+  disabled,
 }) {
   return (
-    <>
+    <div className="w-100">
       <Form.Label
         style={{ fontWeight: "bold", fontSize: "18px" }}
         className="mt-3"
@@ -26,6 +26,6 @@ export function Input({
         value={value}
         onChange={onChange}
       />
-    </>
+    </div>
   );
 }

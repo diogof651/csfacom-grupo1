@@ -45,7 +45,6 @@ export function ListagemNoticias() {
 
   useEffect(() => {
     function obterNoticias() {
-      // Substitua isso com uma chamada à API que lista as notícias
       fetch(`http://localhost:8080/api/v1/noticias?estado=${activeTab}`, {
         method: "GET",
         headers: {

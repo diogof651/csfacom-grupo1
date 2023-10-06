@@ -44,6 +44,10 @@ const router = createBrowserRouter([
         element: <CadastroMembro />,
       },
       {
+        path: "/editarMembro/:id",
+        element: <CadastroMembro />,
+      },
+      {
         path: "/cadastroUsuario",
         element: <CadastroUsuario />,
       },

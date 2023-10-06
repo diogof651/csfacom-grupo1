@@ -25,7 +25,7 @@ export function ListagemProjetos() {
     "Estágio",
   ];
 
-  const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
+  const optionsEstado = ["Em andamento", "Concluido", "Descontinuado"];
 
   useEffect(() => {
     obterProjetos();
