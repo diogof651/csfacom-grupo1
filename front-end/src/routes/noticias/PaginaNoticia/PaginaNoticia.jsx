@@ -64,7 +64,7 @@ export function PaginaNoticia() {
         "Content-type": "application/json",
       },
     })
-      .then(() => navigate("/"))
+      .then(() => navigate("/noticias"))
       .catch((erro) => console.log(erro));
   }
 
@@ -75,7 +75,7 @@ export function PaginaNoticia() {
         "Content-type": "application/json",
       },
     })
-      .then(() => navigate("/"))
+      .then(() => navigate("/noticias"))
       .catch((erro) => console.log(erro));
   }
 

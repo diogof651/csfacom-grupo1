@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ledes.dominio.Anexo;
 import com.example.ledes.dominio.Noticia;
-import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.AnexoRepositorio;
 import com.example.ledes.infraestrutura.NoticiaRepositorio;
 import com.example.ledes.infraestrutura.UsuarioRepositorio;
@@ -31,12 +30,10 @@ public class EditarNoticiaServico {
     public NoticiaResponseDTO editar(Long id, NoticiaRequestDTO noticiaRequest) {
 
         Noticia noticia = noticiaRepositorio.findById(id).orElse(null);
-        Usuario autor = usuarioRepositorio.findById(noticiaRequest.getAutor_id()).get();
 
         if (noticia != null) {
             noticia.definirDataDePublicacao(noticiaRequest.getEstado(), noticiaRequest.getDataPublicacao());
             noticia.setTitulo(noticiaRequest.getTitulo());
-            noticia.setAutor(autor);
             noticia.setConteudo(noticiaRequest.getConteudo());
             noticia.setEstado(noticiaRequest.getEstado());
             noticia.setThumbnail(noticiaRequest.getThumbnail());
