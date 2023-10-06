@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +36,10 @@ public class Projeto {
 
     private Boolean ativo;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "projeto")
+    List<Membro> membros;
+
     public Projeto(String nome, String descricao, Date inicio, Date termino, String status, String tipo) {
         this.nome = nome;
         this.descricao = descricao;
@@ -43,7 +49,4 @@ public class Projeto {
         this.tipo = tipo;
         this.ativo = true;
     }
-
-    @OneToMany(mappedBy = "projeto")
-    List<Membro>projetos;
 }

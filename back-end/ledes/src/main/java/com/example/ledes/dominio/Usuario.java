@@ -1,12 +1,9 @@
 package com.example.ledes.dominio;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.example.ledes.utils.SenhaUtils;
@@ -20,7 +17,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "usuario")
-
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,8 +46,4 @@ public class Usuario {
         this.senha = SenhaUtils.gerarSenhaCriptografada("123456");
         this.ativo = true;
     }
-
-    @OneToMany(mappedBy = "usuario")
-    private List<Membro> projetos;
-
 }
