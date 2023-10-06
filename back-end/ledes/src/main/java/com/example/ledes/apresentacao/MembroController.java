@@ -20,6 +20,7 @@ import com.example.ledes.aplicacao.membro.AtualizarMembroServico;
 import com.example.ledes.aplicacao.membro.CadastrarMembroServico;
 import com.example.ledes.aplicacao.membro.DesativarMembroServico;
 import com.example.ledes.aplicacao.membro.ListarMembroServico;
+import com.example.ledes.aplicacao.membro.ObterMembroPorIdServico;
 import com.example.ledes.aplicacao.membro.RemoverMembroProjetoServico;
 import com.example.ledes.infraestrutura.dto.MembroRequestDTO;
 import com.example.ledes.infraestrutura.dto.MembroResponseDTO;
@@ -40,9 +41,10 @@ public class MembroController {
     private AtualizarMembroServico atualizarMembroServico;
     @Autowired
     private RemoverMembroProjetoServico removerMembroProjetoServico;
-
     @Autowired
     private ListarMembroServico listarMembroServico;
+    @Autowired
+    private ObterMembroPorIdServico obterMembroPorIdServico;
 
     @Operation(summary = "Criar um novo membro")
     @ApiResponse(responseCode = "201")
@@ -95,4 +97,10 @@ public class MembroController {
         return ResponseEntity.ok(listaMembros);
     }
 
+    @Operation(summary = "Obter membro")
+    @ApiResponse(responseCode = "200", description = "Retorna um membro pelo id")
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<MembroResponseDTO> obterMembro(@PathVariable Long id) {
+        return ResponseEntity.ok(obterMembroPorIdServico.obterMembroPorId(id));
+    }
 }

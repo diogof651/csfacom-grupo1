@@ -170,7 +170,7 @@ export function PaginaProjeto() {
             </Nav.Link>
           </Nav.Item>
         </Nav>
-        <Link to="/cadastroMembro" className="text-decoration-none">
+        <Link to={`/cadastroMembro/projeto/${id}`} className="text-decoration-none">
           <BotaoOutline color="var(--blue)"> Novo Membro </BotaoOutline>
         </Link>
       </div>

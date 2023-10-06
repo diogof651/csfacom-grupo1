@@ -40,11 +40,11 @@ const router = createBrowserRouter([
         element: <PaginaProjeto />,
       },
       {
-        path: "/cadastroMembro",
+        path: "/cadastroMembro/projeto/:idProjeto",
         element: <CadastroMembro />,
       },
       {
-        path: "/editarMembro/:id",
+        path: "/editarMembro/projeto/:idProjeto/membro/:idMembro",
         element: <CadastroMembro />,
       },
       {

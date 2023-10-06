@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
 
 export function CadastroMembro() {
+  const { idProjeto, idMembro } = useParams();
   const navigate = useNavigate();
   const { handleSubmit } = useForm();
   const [ativo, setAtivo] = useState(true);
@@ -18,14 +19,12 @@ export function CadastroMembro() {
   const [dataIngresso, setDataIngresso] = useState("");
   const [dataTermino, setDataTermino] = useState("");
 
-  // Função para lidar com a mudança em uma lista de checkboxes com base no índice
   const handleCheckboxChange = (index, lista, setLista) => {
     const updatedList = [...lista];
     updatedList[index].checked = !updatedList[index].checked;
     setLista(updatedList);
   };
 
-  // Função para obter os valores selecionados em uma lista de checkboxes
   const getValoresSelecionados = (lista) => {
     return lista
       .filter((checkbox) => checkbox.checked)
@@ -51,9 +50,32 @@ export function CadastroMembro() {
   //   { label: "Desenvolvedor Back-end", checked: false },
   //   { label: "Desenvolvedor Front-end", checked: false },
   // ]);
+  function formatarData(data) {
+    return new Date(data).toISOString().split("T")[0];
+  }
+
+  useEffect(() => {
+    if (idMembro) {
+      fetch(`http://localhost:8080/api/v1/membros/${idMembro}`)
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          setAtivo(data.ativo);
+          setNome(data.usuario.nome);
+          setEmail(data.usuario.email);
+          setDataIngresso(formatarData(data.dataIngresso));
+          if (!ativo) {
+            setDataTermino(formatarData(data.dataTermino));
+          }
+        })
+        .catch((erro) => console.log(erro));
+    }
+  });
+
+  function cancelar() {
+    navigate("/projeto/" + idProjeto);
+  }
 
   const onSubmit = () => {
-    const id_projeto = 5;
     const data = {
       dataIngresso: dataIngresso,
       dataTermino: dataTermino,
@@ -62,30 +84,30 @@ export function CadastroMembro() {
       ativo: ativo,
     };
 
-    // if (id) {
-    //   fetch(`http://localhost:8080/api/v1/membros/projeto/${id_projeto}/cadastrar/`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   })
-    //     .then((resposta) => navigate("/projetos"))
-    //     .catch((erro) => console.log(erro));
-    // } else {
-    fetch(
-      `http://localhost:8080/api/v1/membros/projeto/${id_projeto}/cadastrar/`,
-      {
-        method: "POST",
+    if (!idMembro) {
+      fetch(
+        `http://localhost:8080/api/v1/membros/projeto/${idProjeto}/cadastrar/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      )
+        .then((resposta) => navigate("/projetos"))
+        .catch((erro) => console.log(erro));
+    } else {
+      fetch(`http://localhost:8080/api/v1/membros/${idMembro}`, {
+        method: "PUT",
         headers: {
           "Content-type": "application/json",
         },
         body: JSON.stringify(data),
-      }
-    )
-      .then((resposta) => navigate("/projeto/2"))
-      .catch((erro) => console.log(erro));
-    //}
+      })
+        .then((resposta) => navigate("/projeto/2"))
+        .catch((erro) => console.log(erro));
+    }
   };
 
   return (
@@ -94,16 +116,6 @@ export function CadastroMembro() {
         className="d-flex flex-column"
         style={{ width: "50vw", marginTop: "40px" }}
       >
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "10px",
-            fontWeight: "bold",
-            paddingBottom: "5px",
-          }}
-        >
-          Adicionar novo membro
-        </h1>
         <Form
           className={`d-flex justify-content-center flex-column form-container w-100`}
           onSubmit={handleSubmit(onSubmit)}
@@ -147,7 +159,7 @@ export function CadastroMembro() {
             type="checkbox"
             id="ativoCheckbox"
             label="Ativo"
-            defaultChecked={ativo}
+            checked={ativo}
             onChange={(e) => {
               setAtivo(e.target.checked);
             }}
@@ -195,7 +207,9 @@ export function CadastroMembro() {
           ))} */}
 
           <div className="d-flex justify-content-end gap-2 mt-4 mb-4">
-            <BotaoOutline color="var(--blue)">Cancelar</BotaoOutline>
+            <BotaoOutline color="var(--blue)" onClick={cancelar}>
+              Cancelar
+            </BotaoOutline>
             <BotaoComFundo type="submit" color="var(--blue)">
               Cadastrar
             </BotaoComFundo>

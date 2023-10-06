@@ -8,7 +8,7 @@ export function OpcoesMembroDropdown({ idProjeto, idMembro }) {
   const navigate = useNavigate();
 
   function editar() {
-    navigate("/editarMembro/" + idMembro);
+    navigate("/editarMembro/projeto/" + idProjeto + "/membro/" + idMembro);
   }
 
   function desativar() {
