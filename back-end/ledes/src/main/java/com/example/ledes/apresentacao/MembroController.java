@@ -1,20 +1,25 @@
 package com.example.ledes.apresentacao;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.membro.AtualizarMembroServico;
 import com.example.ledes.aplicacao.membro.CadastrarMembroServico;
 import com.example.ledes.aplicacao.membro.DesativarMembroServico;
+import com.example.ledes.aplicacao.membro.ListarMembroServico;
 import com.example.ledes.aplicacao.membro.RemoverMembroProjetoServico;
 import com.example.ledes.infraestrutura.dto.MembroRequestDTO;
 import com.example.ledes.infraestrutura.dto.MembroResponseDTO;
@@ -35,6 +40,9 @@ public class MembroController {
     private AtualizarMembroServico atualizarMembroServico;
     @Autowired
     private RemoverMembroProjetoServico removerMembroProjetoServico;
+
+    @Autowired
+    private ListarMembroServico listarMembroServico;
 
     @Operation(summary = "Criar um novo membro")
     @ApiResponse(responseCode = "201")
@@ -68,7 +76,7 @@ public class MembroController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @Operation(summary = "Remover um membro")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro removido")
     @ApiResponse(responseCode = "404", description = "Membro ou projeto não encontrado")
@@ -77,4 +85,14 @@ public class MembroController {
         removerMembroProjetoServico.removerMembro(membroId);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Obter lista de membros")
+    @ApiResponse(responseCode = "200", description = "Retorna a lista de membros")
+    @GetMapping(path = "projeto/{idProjeto}/obter")
+    public ResponseEntity<List<MembroResponseDTO>> obterListaMembros(@PathVariable Long idProjeto,
+            @RequestParam(name = "ativo", required = false, defaultValue = "true") boolean ativo) {
+        List<MembroResponseDTO> listaMembros = listarMembroServico.obterListaMembros(idProjeto, ativo);
+        return ResponseEntity.ok(listaMembros);
+    }
+
 }
