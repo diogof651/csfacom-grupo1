@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Badge from "react-bootstrap/Badge"; // Importe o componente Badge
+import Badge from "react-bootstrap/Badge";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
@@ -15,8 +15,8 @@ export function PaginaProjeto() {
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
   const iconStyle = {
-    width: "18px", // Defina o tamanho desejado
-    height: "18px", // Defina a altura desejada (opcional)
+    width: "18px",
+    height: "18px",
   };
 
   const opcoes = [
@@ -62,6 +62,7 @@ export function PaginaProjeto() {
       .then((resposta) => resposta.json())
       .then((data) => {
         setProjeto(data);
+        document.title = data.nome; // Define o título da aba como o título do projeto
       })
       .catch((erro) => console.log(erro));
   }
