@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
+import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
+import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioLoginRequestDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
@@ -34,6 +38,10 @@ public class UsuarioController {
     private AtualizarUsuarioServico atualizarUsuarioServico;
     @Autowired
     private BuscarUsuarioNoticiaServico buscarUsuarioIdNoticiaServico;
+    @Autowired
+    private ValidarEmailESenhaServico validarEmailESenhaServico;
+    @Autowired
+    private BuscarUsuarioPorIdServico buscarUsuarioPorIdServico;
 
     @Operation(summary = "Criar um novo usuário")
     @ApiResponse(responseCode = "201")
@@ -66,7 +74,36 @@ public class UsuarioController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    @Operation(summary = "Verificar usuário no banco.")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário e realiza a autenticação.")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioLoginResponseDTO> validarEmailESenha(
+            @RequestBody UsuarioLoginRequestDTO loginRequest) {
+        UsuarioLoginResponseDTO usuarioEncontrado = validarEmailESenhaServico.autenticar(loginRequest.getEmail(),
+                loginRequest.getSenha());
+
+        if (usuarioEncontrado != null) {
+            return ResponseEntity.ok(usuarioEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Buscar usuário por ID.")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário.")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id) {
+        UsuarioResponseDTO usuarioEncontrado = buscarUsuarioPorIdServico.buscarUsuarioPorId(id);
+
+        if (usuarioEncontrado != null) {
+            return ResponseEntity.ok(usuarioEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
