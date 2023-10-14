@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
@@ -14,6 +12,7 @@ export function CadastroUsuario() {
   const [ativo, setAtivo] = useState(true);
 
   const navigate = useNavigate();
+  
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -31,9 +30,11 @@ export function CadastroUsuario() {
       .then((resposta) => navigate("/"))
       .catch((erro) => console.log(erro));
   };
-  function cancelar(){
+
+  function cancelar() {
     navigate("/");
   }
+
   return (
     <>
       <Container
