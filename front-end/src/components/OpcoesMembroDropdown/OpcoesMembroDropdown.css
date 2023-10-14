@@ -1,0 +1,11 @@
+/* MenuComDropdown.css */
+/* Oculta a seta padrão do botão de toggle */
+#dropdown-basic::after {
+  content: none;
+}
+
+/* Ajusta a largura do botão conforme necessário */
+#dropdown-basic {
+  width: auto;
+  background-color: transparent;
+}

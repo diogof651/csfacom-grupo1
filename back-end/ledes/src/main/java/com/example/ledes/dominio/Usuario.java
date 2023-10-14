@@ -21,7 +21,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "usuario")
-
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

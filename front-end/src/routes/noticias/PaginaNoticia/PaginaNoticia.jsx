@@ -37,8 +37,7 @@ export function PaginaNoticia() {
     })
       .then((resposta) => resposta.json())
       .then((data) => {
-        const primeiras5Noticias = data.slice(0, 5);
-        setNoticiaEmDestaque(primeiras5Noticias);
+        setNoticiaEmDestaque(data.slice(0, 5));
       })
       .catch((erro) => console.log(erro));
   }
@@ -53,6 +52,7 @@ export function PaginaNoticia() {
       .then((resposta) => resposta.json())
       .then((data) => {
         setNoticia(data);
+        document.title = data.titulo; // Define o título da aba como o título da notícia
       })
       .catch((erro) => console.log(erro));
   }
@@ -64,9 +64,10 @@ export function PaginaNoticia() {
         "Content-type": "application/json",
       },
     })
-      .then(() => navigate("/"))
+      .then(() => navigate("/noticias"))
       .catch((erro) => console.log(erro));
   }
+
   function desarquivar() {
     fetch(`http://localhost:8080/api/v1/noticias/${id}/desarquivar`, {
       method: "PUT",
@@ -74,7 +75,7 @@ export function PaginaNoticia() {
         "Content-type": "application/json",
       },
     })
-      .then(() => navigate("/"))
+      .then(() => navigate("/noticias"))
       .catch((erro) => console.log(erro));
   }
 
@@ -104,6 +105,7 @@ export function PaginaNoticia() {
                 fontFamily: "Inter",
                 fontWeight: "bold",
                 marginRight: "10px",
+                wordWrap: "break-word",
               }}
             >
               {noticia.titulo}

@@ -25,7 +25,7 @@
     <p>**Java**</p>
       <ul>
         <li>Voltar para a pasta raiz do repositório: `cd ..`</li>
-        <li>Entrar na pasta back-end: `cd back-end`</li>
+        <li>Entrar na pasta back-end: `cd back-end/ledes`</li>
         <li>Instalar dependências do projeto com o comando: `mvn install`</li>
         <li>Para rodar a aplicação rodar o comando: `mvn spring-boot:run`</li>
         <li>A aplicação ficará disponível em: http://127.0.0.1:8080/</li>

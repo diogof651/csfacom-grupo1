@@ -25,10 +25,12 @@ export function ListagemProjetos() {
     "Estágio",
   ];
 
-  const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
+  const optionsEstado = ["Em andamento", "Concluido", "Descontinuado"];
 
   useEffect(() => {
     obterProjetos();
+    // Defina o título da página aqui
+    document.title = "Projetos";
   }, []);
 
   function obterProjetos() {
@@ -72,6 +74,13 @@ export function ListagemProjetos() {
         setCards(data);
       })
       .catch((erro) => console.log(erro));
+  };
+
+  const handleClearFilters = () => {
+    setTipoSelectedOption("");
+    setEstadoSelectedOption("");
+    setSearchText("");
+    handleApplyFilter();
   };
 
   return (
@@ -134,6 +143,13 @@ export function ListagemProjetos() {
               onClick={handleApplyFilter}
             >
               Aplicar
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-danger inter-bold w-100 mt-2"
+              onClick={handleClearFilters}
+            >
+              Limpar Filtros
             </button>
           </div>
         </div>
