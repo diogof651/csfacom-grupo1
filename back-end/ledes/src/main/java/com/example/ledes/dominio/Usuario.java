@@ -1,11 +1,14 @@
 package com.example.ledes.dominio;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.example.ledes.utils.HashUtils;
 import com.example.ledes.utils.SenhaUtils;
 
 import lombok.Getter;
@@ -29,6 +32,8 @@ public class Usuario {
     private String linkedin;
     private String github;
     private String codigoUnico;
+    private Date dataAcesso;
+    private String codigoHash;
 
     public Usuario(String nome, String email, String senha, boolean ativo, String fotoPerfil, String linkedin,
             String github) {
@@ -47,5 +52,10 @@ public class Usuario {
         this.senha = SenhaUtils.gerarSenhaCriptografada("123456");
         this.ativo = true;
         this.codigoUnico = codigoUnico;
+    }
+
+    public void logar() {
+        this.dataAcesso = new Date();
+        this.codigoHash = HashUtils.gerarHash(this.nome, this.dataAcesso);
     }
 }

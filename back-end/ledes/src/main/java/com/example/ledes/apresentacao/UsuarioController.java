@@ -12,12 +12,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
+import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
+import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
+import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
+import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioLoginRequestDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
@@ -34,6 +41,14 @@ public class UsuarioController {
     private AtualizarUsuarioServico atualizarUsuarioServico;
     @Autowired
     private BuscarUsuarioNoticiaServico buscarUsuarioIdNoticiaServico;
+    @Autowired
+    private ValidarEmailESenhaServico validarEmailESenhaServico;
+    @Autowired
+    private BuscarUsuarioPorIdServico buscarUsuarioPorIdServico;
+    @Autowired
+    private ValidarEmailECodigoUnicoServico validarEmailECodigoUnicoServico;
+    @Autowired
+    private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
 
     @Operation(summary = "Criar um novo usuário")
     @ApiResponse(responseCode = "201")
@@ -66,10 +81,53 @@ public class UsuarioController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
-    //primeiro acesso
+    @Operation(summary = "Verificar usuário no banco.")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário e realiza a autenticação.")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioLoginResponseDTO> validarEmailESenha(
+            @RequestBody UsuarioLoginRequestDTO loginRequest) {
+        UsuarioLoginResponseDTO usuarioEncontrado = validarEmailESenhaServico.autenticar(loginRequest.getEmail(),
+                loginRequest.getSenha());
 
+        if (usuarioEncontrado != null) {
+            return ResponseEntity.ok(usuarioEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
+    @Operation(summary = "Buscar usuário por ID.")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário.")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id) {
+        UsuarioResponseDTO usuarioEncontrado = buscarUsuarioPorIdServico.buscarUsuarioPorId(id);
+
+        if (usuarioEncontrado != null) {
+            return ResponseEntity.ok(usuarioEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Primeiro acesso.")
+    @ApiResponse(responseCode = "200", description = "Verificar validade de email e código único")
+    @ApiResponse(responseCode = "404", description = "Não foi encontrado email ou código único.")
+    @GetMapping("/verificacaoParaDefinicaoDeSenha")
+    public ResponseEntity<String> verificarEmaileCodigoUnico(@RequestParam String email,
+            @RequestParam String codigoUnico) {
+        return ResponseEntity.ok(validarEmailECodigoUnicoServico.verificar(email, codigoUnico));
+    }
+
+    @Operation(summary = "Esqueci a senha.")
+    @ApiResponse(responseCode = "200", description = "Altera a senha")
+    @ApiResponse(responseCode = "404", description = "Não foi encontrado email ou código único.")
+    @PostMapping("/alterarSenha")
+    public ResponseEntity<UsuarioLoginResponseDTO> alterarSenha(
+            @RequestBody UsuarioLoginRequestDTO loginRequest) {
+        return ResponseEntity.ok(atualizarSenhaUsuarioServico.alterarSenha(loginRequest));
+    }
 }
