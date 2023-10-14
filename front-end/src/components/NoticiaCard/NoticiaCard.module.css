@@ -1,0 +1,8 @@
+/* Em seu arquivo CSS ou estilo inline */
+.titulo-noticia {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%; /* Ajuste esse valor conforme necessário */
+  }
+  

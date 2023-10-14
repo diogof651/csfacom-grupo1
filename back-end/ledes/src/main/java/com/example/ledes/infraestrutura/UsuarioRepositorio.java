@@ -9,6 +9,8 @@ import com.example.ledes.dominio.Usuario;
 
 public interface UsuarioRepositorio extends CrudRepository<Usuario, Long> {
 
+    Usuario findByEmail(String email);
+
     @Query("SELECT DISTINCT n.autor FROM Noticia n")
     List<Usuario> encontrarAutoresDeNoticias();
 

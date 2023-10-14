@@ -1,0 +1,6 @@
+/* Estilo padrão para radio buttons não selecionados */
+.unselected-radio {
+  color: #000; /* Cor do texto quando não selecionado */
+  border: none; /* Remove a borda quando não selecionado */
+  background-color: transparent; /* Fundo transparente quando não selecionado */
+}

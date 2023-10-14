@@ -73,7 +73,7 @@ export function CadastroNoticia() {
   };
 
   const onSubmit = (data) => {
-    data.autor_id = 1; // TO-DO: mudar para usuario logado
+    data.autor_id = 6; // TO-DO: mudar para usuario logado
     data.estado = estadoSelecionado;
     data.emDestaque = emDestaque;
     data.anexos = anexos ?? null;
@@ -304,7 +304,6 @@ export function CadastroNoticia() {
             name="anexos"
             multiple
             className="d-none"
-            accept="application/pdf"
             onChange={handleFileInputChange}
           />
         </label>
