@@ -14,6 +14,8 @@ import { PaginaNoticia } from "./routes/noticias/PaginaNoticia/PaginaNoticia.jsx
 import { CadastroMembro } from "./routes/projetos/Membro/CadastroMembro.jsx";
 import { CadastroUsuario } from "./routes/Usuario/CadastroUsuario/CadastroUsuario.jsx";
 import { Perfil } from "./routes/Usuario/Perfil/Perfil.jsx";
+import Entrar from "./routes/login/entrar.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -84,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: "/noticia/:id",
         element: <PaginaNoticia />,
+      },
+      {
+        path: "/entrar",
+        element: <Entrar />,
       },
     ],
   },
