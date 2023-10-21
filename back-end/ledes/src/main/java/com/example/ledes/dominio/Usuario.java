@@ -1,6 +1,5 @@
 package com.example.ledes.dominio;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -53,7 +52,7 @@ public class Usuario {
         this.ativo = true;
     }
 
-    public void logar(){
+    public void logar() {
         this.dataAcesso = new Date();
         this.codigoHash = HashUtils.gerarHash(this.nome, this.dataAcesso);
     }

@@ -3,7 +3,7 @@ import { FormControl, InputGroup } from "react-bootstrap";
 import { BsKey, BsPerson } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { useAuth } from "./../../AutorizacaoServico";
+import { useAuth } from "../../../AutorizacaoServico";
 
 export default function Entrar() {
   const { login } = useAuth();
@@ -74,7 +74,6 @@ export default function Entrar() {
     justifyContent: "center",
     alignItems: "center",
     minHeight: "85vh",
-    maxHeight: "100vh",
   };
 
   const loginBoxStyle = {
@@ -152,7 +151,7 @@ export default function Entrar() {
               <div>{senhaError}</div>
             </InputGroup>
             <InputGroup className="mb-2">
-              <Link to="/recuperarSenha" style={linkStyle}>
+              <Link to="/esqueciMinhaSenha" style={linkStyle}>
                 Esqueci minha senha
               </Link>
             </InputGroup>
@@ -161,7 +160,7 @@ export default function Entrar() {
             </button>
           </form>
           <InputGroup className="mb-2">
-            <Link to="/cadastroUsuario" style={linkStyle}>
+            <Link to="/primeiroAcesso" style={linkStyle}>
               Novo por aqui? Primeiro acesso.
             </Link>
           </InputGroup>
