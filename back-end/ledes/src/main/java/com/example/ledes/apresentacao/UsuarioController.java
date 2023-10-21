@@ -116,7 +116,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Verificar validade de email e código único")
     @ApiResponse(responseCode = "404", description = "Não foi encontrado email ou código único.")
     @GetMapping("/verificacaoParaDefinicaoDeSenha")
-    public ResponseEntity<String> verificarEmaileCodigoUnico(@RequestParam String email,
+    public ResponseEntity<UsuarioLoginResponseDTO> verificarEmaileCodigoUnico(@RequestParam String email,
             @RequestParam String codigoUnico) {
         return ResponseEntity.ok(validarEmailECodigoUnicoServico.verificar(email, codigoUnico));
     }

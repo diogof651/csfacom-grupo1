@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         element: <PrimeiroAcesso />,
       },
       {
-        path: "/definirSenha",
+        path: "/definirSenha/:codigoUnico",
         element: <DefinicaoSenha />,
       },
       {

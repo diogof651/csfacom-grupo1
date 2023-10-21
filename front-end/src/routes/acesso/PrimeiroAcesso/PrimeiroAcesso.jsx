@@ -30,10 +30,27 @@ export function PrimeiroAcesso() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const data = {
-      codigoUnico: codigoUnico,
-      email: email,
-    };
+    fetch(
+      `http://localhost:8080/api/v1/usuarios/verificacaoParaDefinicaoDeSenha?email=${email}&codigoUnico=${codigoUnico}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    )
+      .then((resposta) => {
+        // nao autorizado (credenciais incorretas)
+
+        resposta.json().then((dados) => {
+          if (dados.resposta === "Informações corretas") {
+            navigate(`/definirSenha/${codigoUnico}`);
+          } else {
+            // exibir mensagem
+          }
+        });
+      })
+      .catch((erro) => console.log(erro));
 
     // fazer requisição na api
   };
