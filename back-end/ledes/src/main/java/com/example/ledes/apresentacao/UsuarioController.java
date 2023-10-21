@@ -89,7 +89,7 @@ public class UsuarioController {
     @PostMapping(path = "/login", consumes = "application/json")
     public ResponseEntity<UsuarioLoginResponseDTO> validarEmailESenha(
             @RequestBody UsuarioLoginRequestDTO loginRequest) {
-        UsuarioLoginResponseDTO usuarioEncontrado = validarEmailESenhaServico.autenticar(loginRequest.getEmail(),
+        UsuarioLoginResponseDTO usuarioEncontrado = validarEmailESenhaServico.autenticar(loginRequest.getCodigoUnico(),
                 loginRequest.getSenha());
 
         if (usuarioEncontrado.getResposta().equals("Informações Incorretas")) {

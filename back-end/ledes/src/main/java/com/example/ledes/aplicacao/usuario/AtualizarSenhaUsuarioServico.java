@@ -23,7 +23,7 @@ public class AtualizarSenhaUsuarioServico {
     public UsuarioLoginResponseDTO alterarSenha(UsuarioLoginRequestDTO usuarioLoginRequestDTO) {
         String resposta = "Informações Incorretas";
         if (validarPadraoSenha(usuarioLoginRequestDTO)) {
-            Usuario usuario = usuarioRepositorio.findByEmail(usuarioLoginRequestDTO.getEmail());
+            Usuario usuario = usuarioRepositorio.findByCodigoUnico(usuarioLoginRequestDTO.getCodigoUnico());
             if (usuario != null) {
                 usuario.setSenha(SenhaUtils.gerarSenhaCriptografada(usuarioLoginRequestDTO.getSenha()));
                 usuario.logar();
