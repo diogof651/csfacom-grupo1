@@ -111,9 +111,8 @@ public class MembroController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro ativado")
     @ApiResponse(responseCode = "404", description = "membro não encontrado")
     @PostMapping(path = "/{id}/ativar")
-    public ResponseEntity<String> ativarMembro(@PathVariable Long id) {
-        String membroAtivado = ativarMembroServico.ativar(id);
-
+    public ResponseEntity<MembroResponseDTO> ativarMembro(@PathVariable Long id) {
+        MembroResponseDTO membroAtivado = ativarMembroServico.ativar(id);
         if (membroAtivado != null) {
             return ResponseEntity.ok(membroAtivado);
         } else {

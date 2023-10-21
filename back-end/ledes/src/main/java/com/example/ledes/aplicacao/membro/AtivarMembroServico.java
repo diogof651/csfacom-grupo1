@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ledes.dominio.Membro;
 import com.example.ledes.infraestrutura.MembroRepositorio;
+import com.example.ledes.infraestrutura.dto.MembroResponseDTO;
 
 @Service
 public class AtivarMembroServico {
@@ -16,7 +17,7 @@ public class AtivarMembroServico {
     private MembroRepositorio membroRepositorio;
 
     @Transactional
-    public String ativar(Long id) {
+    public MembroResponseDTO ativar(Long id) {
         Membro membro = membroRepositorio.findById(id).orElse(null);
 
         if (membro != null) {
@@ -26,12 +27,17 @@ public class AtivarMembroServico {
             membro.setDataTermino(null);
             membroRepositorio.save(membro);
 
-            return "Membro ativado com sucesso!";
+            return new MembroResponseDTO(membro.getId(),
+            membro.getUsuario(),
+            membro.getProjeto(),
+            membro.getDataIngresso(),
+            membro.getDataTermino(),
+            membro.isAtivo());
             }else{
-                return "Membro já se encontra ativo!";
+                return null;
             }
         } else {
-            return "Membro não encontrado!";
+            return null;
         }
     }
 }
