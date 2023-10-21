@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
+import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
+import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioLoginRequestDTO;
@@ -42,6 +45,10 @@ public class UsuarioController {
     private ValidarEmailESenhaServico validarEmailESenhaServico;
     @Autowired
     private BuscarUsuarioPorIdServico buscarUsuarioPorIdServico;
+    @Autowired
+    private ValidarEmailECodigoUnicoServico validarEmailECodigoUnicoServico;
+    @Autowired
+    private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
 
     @Operation(summary = "Criar um novo usuário")
     @ApiResponse(responseCode = "201")
@@ -105,4 +112,21 @@ public class UsuarioController {
         }
     }
 
+    @Operation(summary = "Primeiro acesso.")
+    @ApiResponse(responseCode = "200", description = "Verificar validade de email e código único")
+    @ApiResponse(responseCode = "404", description = "Não foi encontrado email ou código único.")
+    @GetMapping("/verificacaoParaDefinicaoDeSenha")
+    public ResponseEntity<String> verificarEmaileCodigoUnico(@RequestParam String email,
+            @RequestParam String codigoUnico) {
+        return ResponseEntity.ok(validarEmailECodigoUnicoServico.verificar(email, codigoUnico));
+    }
+
+    @Operation(summary = "Esqueci a senha.")
+    @ApiResponse(responseCode = "200", description = "Altera a senha")
+    @ApiResponse(responseCode = "404", description = "Não foi encontrado email ou código único.")
+    @PostMapping("/alterarSenha")
+    public ResponseEntity<UsuarioLoginResponseDTO> alterarSenha(
+            @RequestBody UsuarioLoginRequestDTO loginRequest) {
+        return ResponseEntity.ok(atualizarSenhaUsuarioServico.alterarSenha(loginRequest));
+    }
 }

@@ -15,7 +15,6 @@ public class ValidarEmailESenhaServico {
     @Autowired
     public ValidarEmailESenhaServico(UsuarioRepositorio usuarioRepositorio) {
         this.usuarioRepositorio = usuarioRepositorio;
-
     }
 
     public UsuarioLoginResponseDTO autenticar(String email, String senha) {

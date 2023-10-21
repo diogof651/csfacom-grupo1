@@ -31,6 +31,7 @@ public class Usuario {
     private String fotoPerfil;
     private String linkedin;
     private String github;
+    private String codigoUnico;
     private Date dataAcesso;
     private String codigoHash;
 
@@ -45,11 +46,12 @@ public class Usuario {
         this.github = github;
     }
 
-    public Usuario(String nome, String email) {
+    public Usuario(String nome, String email, String codigoUnico) {
         this.nome = nome;
         this.email = email;
         this.senha = SenhaUtils.gerarSenhaCriptografada("123456");
         this.ativo = true;
+        this.codigoUnico = codigoUnico;
     }
 
     public void logar() {
