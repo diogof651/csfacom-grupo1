@@ -1,22 +1,80 @@
 import React, { useState } from "react";
+import { FormControl, InputGroup } from "react-bootstrap";
+import { BsKey, BsPerson } from "react-icons/bs";
+import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { InputGroup, FormControl } from "react-bootstrap";
-import { BsPerson, BsKey } from "react-icons/bs";
+import { useAuth } from "./../../AutorizacaoServico";
 
-function Entrar() {
+export default function Entrar() {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setSenha] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [senhaError, setSenhaError] = useState("");
+  const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setEmailError("");
+    setSenhaError("");
+    setLoginError("");
+
+    if (email.length <= 0 || !validateEmail(email)) {
+      setEmailError("Email inválido");
+      return;
+    }
+
+    if (senha.length <= 0) {
+      setSenhaError("Campo obrigatório");
+      return;
+    }
+
+    const data = {
+      email,
+      senha,
+    };
+
+    fetch("http://localhost:8080/api/v1/usuarios/login", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((resposta) => {
+        // nao autorizado (credenciais incorretas)
+        if (resposta.status === 401) {
+          resposta.json().then((dados) => {
+            setLoginError(dados.resposta);
+          });
+        }
+        if (resposta.status === 200) {
+          resposta.json().then((dados) => {
+            login(dados.resposta);
+            navigate("/");
+          });
+        }
+      })
+      .catch((erro) => console.log(erro));
+  };
 
   const containerStyle = {
     background: `url("https://www.ufms.br/wp-content/uploads/2018/09/UFMS.jpg") center/cover`,
-    width: "100%",
-    height: "100vh",
+  };
+
+  const overlayStyle = {
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    position: "relative",
+    minHeight: "85vh",
+    maxHeight: "100vh",
   };
 
   const loginBoxStyle = {
@@ -26,18 +84,7 @@ function Entrar() {
     borderRadius: "8px",
     textAlign: "center",
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-    position: "relative",
-    zIndex: 1,
-  };
-
-  const overlayStyle = {
-    content: "",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    top: 0,
-    left: 0,
+    margin: "40px",
   };
 
   const logoStyle = {
@@ -70,87 +117,56 @@ function Entrar() {
     marginTop: "10px",
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleLogin = () => {
-    setEmailError("");
-    setPasswordError("");
-
-    if (!validateEmail(email)) {
-      setEmailError("Email inválido");
-      return;
-    }
-
-    // Simulando uma autenticação falhada para teste. Substitua isso pela lógica real.
-    const authFailed = true;
-
-    if (authFailed) {
-      setEmailError("Email ou senha incorretos");
-      // Ou você pode definir a mensagem de erro do password, dependendo do que deseja destacar.
-      // setPasswordError("Email ou senha incorretos");
-      return;
-    }
-  };
-
   return (
     <div style={containerStyle}>
-      <div style={overlayStyle}></div>
-      <div style={loginBoxStyle}>
-        <div className="logo" style={{ ...logoStyle, marginBottom: "20px" }}>
-          <img
-            src="/ledes-logo.svg"
-            alt="LEDES Logo"
-            style={{ maxWidth: "80px" }}
-          />
-        </div>
-        <form style={formStyle}>
-          <InputGroup className="mb-2">
-            <InputGroup.Text>
-              <BsPerson />
-            </InputGroup.Text>
-            <FormControl
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              isInvalid={emailError.length > 0}
+      <div style={overlayStyle}>
+        <div style={loginBoxStyle}>
+          <div className="logo" style={{ ...logoStyle, marginBottom: "20px" }}>
+            <img
+              src="/ledes-logo.svg"
+              alt="LEDES Logo"
+              style={{ maxWidth: "80px" }}
             />
-            <FormControl.Feedback type="invalid">
-              {emailError}
-            </FormControl.Feedback>
-          </InputGroup>
+          </div>
+          <form style={formStyle}>
+            <div>{loginError}</div>
+            <InputGroup className="mb-2">
+              <InputGroup.Text>
+                <BsPerson />
+              </InputGroup.Text>
+              <FormControl
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <div>{emailError}</div>
+            </InputGroup>
+            <InputGroup className="mb-2">
+              <InputGroup.Text>
+                <BsKey />
+              </InputGroup.Text>
+              <FormControl
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
+              <div>{senhaError}</div>
+            </InputGroup>
+            <InputGroup className="mb-2">
+              <Link to="/recuperarSenha" style={linkStyle}>
+                Esqueci minha senha
+              </Link>
+            </InputGroup>
+            <button onClick={handleLogin} style={buttonStyle}>
+              Entrar
+            </button>
+          </form>
           <InputGroup className="mb-2">
-            <InputGroup.Text>
-              <BsKey />
-            </InputGroup.Text>
-            <FormControl
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              isInvalid={passwordError.length > 0}
-            />
-            <FormControl.Feedback type="invalid">
-              {passwordError}
-            </FormControl.Feedback>
-          </InputGroup>
-          <InputGroup className="mb-2">
-            <Link to="/recuperarSenha" style={linkStyle}>
-              Esqueci minha senha
+            <Link to="/cadastroUsuario" style={linkStyle}>
+              Novo por aqui? Primeiro acesso.
             </Link>
           </InputGroup>
-          <button onClick={handleLogin} style={buttonStyle}>
-            Entrar
-          </button>
-        </form>
-        <InputGroup className="mb-2">
-          <Link to="/cadastroUsuario" style={linkStyle}>
-            Novo por aqui? Primeiro acesso.
-          </Link>
-        </InputGroup>
+        </div>
       </div>
     </div>
   );
 }
-
-export default Entrar;

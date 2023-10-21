@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping(path = { "/api/v1/usuarios" }, produces = { "application/json" })
 public class UsuarioController {
     @Autowired
     private AdicionarUsuarioServico usuarioServico;
@@ -76,20 +76,19 @@ public class UsuarioController {
         }
     }
 
-    @Operation(summary = "Verificar usuário no banco.")
+    @Operation(summary = "Login de usuario")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário e realiza a autenticação.")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
-    @PostMapping("/login")
+    @PostMapping(path = "/login", consumes = "application/json")
     public ResponseEntity<UsuarioLoginResponseDTO> validarEmailESenha(
             @RequestBody UsuarioLoginRequestDTO loginRequest) {
         UsuarioLoginResponseDTO usuarioEncontrado = validarEmailESenhaServico.autenticar(loginRequest.getEmail(),
                 loginRequest.getSenha());
 
-        if (usuarioEncontrado != null) {
-            return ResponseEntity.ok(usuarioEncontrado);
-        } else {
-            return ResponseEntity.notFound().build();
+        if (usuarioEncontrado.getResposta().equals("Informações Incorretas")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(usuarioEncontrado);
         }
+        return ResponseEntity.ok(usuarioEncontrado);
     }
 
     @Operation(summary = "Buscar usuário por ID.")
