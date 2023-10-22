@@ -123,7 +123,6 @@ public class UsuarioController {
 
     @Operation(summary = "Esqueci a senha.")
     @ApiResponse(responseCode = "200", description = "Altera a senha")
-    @ApiResponse(responseCode = "404", description = "Não foi encontrado email ou código único.")
     @PostMapping("/alterarSenha")
     public ResponseEntity<UsuarioLoginResponseDTO> alterarSenha(
             @RequestBody UsuarioLoginRequestDTO loginRequest) {

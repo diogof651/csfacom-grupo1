@@ -13,6 +13,7 @@ export function PrimeiroAcesso() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [mensagemErro, setMensagemErro] = useState("");
   const [email, setEmail] = useState("");
   const [codigoUnico, setCodigoUnico] = useState("");
 
@@ -46,13 +47,11 @@ export function PrimeiroAcesso() {
           if (dados.resposta === "Informações corretas") {
             navigate(`/definirSenha/${codigoUnico}`);
           } else {
-            // exibir mensagem
+            setMensagemErro(dados.resposta);
           }
         });
       })
       .catch((erro) => console.log(erro));
-
-    // fazer requisição na api
   };
 
   function cancelar() {
@@ -71,6 +70,7 @@ export function PrimeiroAcesso() {
               <h1 style={{ fontFamily: "Inter", fontWeight: "bold" }}>
                 {titulo}
               </h1>
+              {mensagemErro && <Alert type="erro">{mensagemErro}</Alert>}
 
               <Input
                 value={email}

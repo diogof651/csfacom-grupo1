@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Alert from "../../../components/Alert/Alert";
 
+import { useAuth } from "../../../AutorizacaoServico";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
@@ -10,19 +11,61 @@ import "./../PrimeiroAcesso/PrimeiroAcesso.css";
 
 export function DefinicaoSenha() {
   const navigate = useNavigate();
+  const { codigoUnico } = useParams();
+  const { login } = useAuth();
 
+  const [mensagemErro, setMensagemErro] = useState("");
   const [senha, setSenha] = useState("");
   const [repeticaoSenha, setRepeticaoSenha] = useState("");
+  function isSenhaValida(senha) {
+    // Verifica se a senha possui pelo menos 10 caracteres
+    if (senha.length < 10) return false;
+
+    // Verifica se a senha contém pelo menos 1 letra maiúscula
+    if (!/[A-Z]/.test(senha)) return false;
+
+    // Verifica se a senha contém pelo menos 1 letra minúscula
+    if (!/[a-z]/.test(senha)) return false;
+
+    // Verifica se a senha contém pelo menos 1 caractere numérico
+    if (!/[0-9]/.test(senha)) return false;
+
+    // Verifica se a senha contém pelo menos 1 caractere especial
+    if (!/[@!#$%*]/.test(senha)) return false;
+
+    return true;
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // Não permitir senhas que estejam fora do padrão estabelecido
+    if(!(isSenhaValida(senha) && senha === repeticaoSenha)){
+      setMensagemErro("Senha fora do padrão estabelecido");
+      return;
+    }
 
     const data = {
+      codigoUnico: codigoUnico,
       senha: senha,
     };
 
-    // fazer requisição na api
+    fetch(`http://localhost:8080/api/v1/usuarios/alterarSenha`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((resposta) => {
+        resposta.json().then((dados) => {
+          if (dados.resposta === "Informações Incorretas") {
+            setMensagemErro(dados.resposta);
+          } else {
+            login(dados.resposta);
+            navigate("/");
+          }
+        });
+      })
+      .catch((erro) => console.log(erro));
   };
 
   function cancelar() {
@@ -49,7 +92,7 @@ export function DefinicaoSenha() {
                 <br></br>- 1 Carácter numérico
                 <br></br>- 1 Carácter especial
               </Alert>
-
+              {mensagemErro && <Alert type="erro">{mensagemErro}</Alert>}
               <Input
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
