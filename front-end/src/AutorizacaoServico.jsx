@@ -1,27 +1,42 @@
 import React, { createContext, useContext, useState } from "react";
-import Cookies from 'js-cookie';
+import { CookiesProvider, useCookies } from "react-cookie";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(["usuario"]);
+
+  const usuarioLogado = () => {
+    return !!cookies.usuario;
+  };
+
+  const hashUsuarioLogado = () => {
+    return cookies.usuario;
+  };
 
   const login = (hash) => {
-    Cookies.set("usuario", hash);
+    setCookie("usuario", hash);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    Cookies.remove("usuario");
+    removeCookie("usuario");
     setIsAuthenticated(false);
   };
 
   const value = {
+    usuarioLogado,
     isAuthenticated,
+    hashUsuarioLogado,
     login,
     logout,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <CookiesProvider>
+      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    </CookiesProvider>
+  );
 }
 
 export function useAuth() {

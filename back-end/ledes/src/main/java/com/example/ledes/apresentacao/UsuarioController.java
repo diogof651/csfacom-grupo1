@@ -22,8 +22,8 @@ import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
+import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
-import com.example.ledes.infraestrutura.dto.UsuarioLoginRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
@@ -88,7 +88,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     @PostMapping(path = "/login", consumes = "application/json")
     public ResponseEntity<UsuarioLoginResponseDTO> validarEmailESenha(
-            @RequestBody UsuarioLoginRequestDTO loginRequest) {
+            @RequestBody DefinirSenhaRequestDTO loginRequest) {
         UsuarioLoginResponseDTO usuarioEncontrado = validarEmailESenhaServico.autenticar(loginRequest.getCodigoUnico(),
                 loginRequest.getSenha());
 
@@ -125,7 +125,7 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Altera a senha")
     @PostMapping("/alterarSenha")
     public ResponseEntity<UsuarioLoginResponseDTO> alterarSenha(
-            @RequestBody UsuarioLoginRequestDTO loginRequest) {
-        return ResponseEntity.ok(atualizarSenhaUsuarioServico.alterarSenha(loginRequest));
+            @RequestBody DefinirSenhaRequestDTO definirSenhaRequestDTO) {
+        return ResponseEntity.ok(atualizarSenhaUsuarioServico.alterarSenha(definirSenhaRequestDTO));
     }
 }

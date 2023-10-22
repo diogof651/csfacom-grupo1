@@ -4,6 +4,7 @@ import { BsKey, BsPerson } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../AutorizacaoServico";
+import Alert from "../../../components/Alert/Alert";
 
 export default function Entrar() {
   const { login } = useAuth();
@@ -36,7 +37,7 @@ export default function Entrar() {
     }
 
     const data = {
-      email,
+      "codigoUnico": email,
       senha,
     };
 
@@ -128,7 +129,7 @@ export default function Entrar() {
             />
           </div>
           <form style={formStyle}>
-            <div>{loginError}</div>
+            {loginError && <Alert type="erro">{loginError}</Alert>}
             <InputGroup className="mb-2">
               <InputGroup.Text>
                 <BsPerson />

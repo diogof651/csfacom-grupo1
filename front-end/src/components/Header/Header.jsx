@@ -17,7 +17,7 @@ export function Header() {
     marginRight: "10px", // Espaçamento à direita (opcional)
   };
 
-  const { isAuthenticated, logout } = useAuth();
+  const { usuarioLogado, isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -45,13 +45,13 @@ export function Header() {
         </Nav>
       </div>
       <Nav.Item as="lu" className="ml-auto ml-5">
-        {isAuthenticated ? (
+        {usuarioLogado() || isAuthenticated ? (
           <div className="d-flex align-items-center gap-3">
             <Nav.Link href="/perfil" className="font-weight-bold text-white">
               <BsPersonCircle style={iconStyle} /> Perfil
             </Nav.Link>
             <Nav.Link
-              href="/"
+              href="#"
               className="font-weight-bold text-white"
               onClick={handleLogout}
             >

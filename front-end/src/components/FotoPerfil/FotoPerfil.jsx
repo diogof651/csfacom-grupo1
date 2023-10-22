@@ -1,21 +1,19 @@
 import React, { useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import { BsFillCameraFill } from "react-icons/bs";
 
-export function FotoPerfil() {
+export function FotoPerfil({ onImageSelect }) {
   const fileInputRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleButtonClick = () => {
-    // Simule um clique no input do tipo file quando o botão for clicado
     fileInputRef.current.click();
   };
 
   const handleFileInputChange = (e) => {
-    // Aqui você pode lidar com o arquivo selecionado
     const selectedFile = e.target.files[0];
-    console.log("Arquivo selecionado:", selectedFile);
+    setSelectedImage(URL.createObjectURL(selectedFile));
+    onImageSelect(URL.createObjectURL(selectedFile));
   };
 
   return (
@@ -25,30 +23,44 @@ export function FotoPerfil() {
           width: "120px",
           height: "120px",
           borderRadius: "50%",
-          backgroundColor: "#ccc", // Cor de fundo do círculo
-          position: "relative", // Para posicionar o botão sobre o círculo
+          backgroundColor: "#ccc",
+          position: "relative",
         }}
       >
+        {selectedImage && (
+          <img
+            src={selectedImage}
+            alt="Foto de perfil"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "50%",
+            }}
+          />
+        )}
+
         <Button
           style={{
             backgroundColor: "var(--blue)",
             width: "40px",
             height: "40px",
-            borderRadius: "50%", // Torna o botão redondo
+            borderRadius: "50%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            position: "absolute", // Posiciona o botão sobre o círculo
-            bottom: "5px", // Ajuste a posição vertical conforme necessário
-            right: "5px", // Ajuste a posição horizontal conforme necessário
+            position: "absolute",
+            bottom: "5px",
+            right: "5px",
+            opacity: selectedImage ? 0.5 : 1,
           }}
           onClick={handleButtonClick}
         >
           <BsFillCameraFill
             style={{
-              width: "20px", // Tamanho do ícone
-              height: "20px", // Tamanho do ícone
-              color: "#fff", // Cor do ícone
+              width: "20px",
+              height: "20px",
+              color: "#fff",
             }}
           />
         </Button>
