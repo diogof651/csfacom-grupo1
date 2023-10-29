@@ -58,4 +58,8 @@ public class Usuario {
         this.dataAcesso = new Date();
         this.codigoHash = HashUtils.gerarHash(this.nome, this.dataAcesso);
     }
+
+    public void deslogar(){
+        this.codigoHash = null;
+    }
 }

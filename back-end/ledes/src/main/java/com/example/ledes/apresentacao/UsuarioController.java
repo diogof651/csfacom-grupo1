@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
+import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioLogadoServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
@@ -25,6 +26,7 @@ import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
 import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioLoginSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
@@ -49,6 +51,8 @@ public class UsuarioController {
     private ValidarEmailECodigoUnicoServico validarEmailECodigoUnicoServico;
     @Autowired
     private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
+    @Autowired
+    private AtualizarSenhaUsuarioLogadoServico atualizarSenhaUsuarioLogadoServico;
 
     @Operation(summary = "Criar um novo usuário")
     @ApiResponse(responseCode = "201")
@@ -127,5 +131,14 @@ public class UsuarioController {
     public ResponseEntity<UsuarioLoginResponseDTO> alterarSenha(
             @RequestBody DefinirSenhaRequestDTO definirSenhaRequestDTO) {
         return ResponseEntity.ok(atualizarSenhaUsuarioServico.alterarSenha(definirSenhaRequestDTO));
+    }
+
+    @Operation(summary = "Trocar a senha de usuário logado.")
+    @ApiResponse(responseCode = "200", description = "Senha alterada.")
+    @ApiResponse(responseCode = "404", description = "Não foi encontrado usuário pelo hash.")
+    @PostMapping("/trocarSenhaLogado")
+    public ResponseEntity<UsuarioLoginResponseDTO> trocarSenha(
+            @RequestBody UsuarioLoginSenhaRequestDTO loginRequest) {
+        return ResponseEntity.ok(atualizarSenhaUsuarioLogadoServico.trocarSenha(loginRequest));
     }
 }
