@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.UsuarioRepositorio;
-import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
+import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
 @Service
@@ -16,14 +16,14 @@ public class AtualizarUsuarioPorHashServico {
     private UsuarioRepositorio usuarioRepositorio;
 
     @Transactional
-    public UsuarioResponseDTO atualizarUsuarioPorHash(String hash, UsuarioRequestDTO usuarioRequestDTO) {
-        Usuario usuario = usuarioRepositorio.findByHash(hash).orElse(null);
+    public UsuarioResponseDTO atualizarUsuarioPorHash(String hash, PerfilUsuarioRequestDTO usuarioRequestDTO) {
+        Usuario usuario = usuarioRepositorio.findByCodigoHash(hash).orElse(null);
 
         if (usuario != null) {
             usuario.setNome(usuarioRequestDTO.getNome());
             usuario.setEmail(usuarioRequestDTO.getEmail());
-            usuario.setAtivo(usuarioRequestDTO.isAtivo());
-            usuario.setFotoPerfil(usuarioRequestDTO.getFotoPerfil());
+            // usuario.setAtivo(usuarioRequestDTO.isAtivo());
+            usuario.setFotoPerfil(usuarioRequestDTO.getFoto());
             usuario.setGithub(usuarioRequestDTO.getGithub());
             usuario.setLinkedin(usuarioRequestDTO.getLinkedin());
 

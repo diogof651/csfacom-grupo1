@@ -16,7 +16,7 @@ public interface UsuarioRepositorio extends CrudRepository<Usuario, Long> {
     
     Usuario findByCodigoUnico(String codigoUnico);
 
-    Optional<Usuario> findByHash(String hash);
+    Optional<Usuario> findByCodigoHash(String hash);
 
     @Query("SELECT DISTINCT n.autor FROM Noticia n")
     List<Usuario> encontrarAutoresDeNoticias();

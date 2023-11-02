@@ -41,7 +41,7 @@ export function Perfil() {
       })
         .then((resposta) => resposta.json())
         .then((data) => {
-          // preencher inputs com dados do backend
+          preencherCampos(data);
         })
         .catch((erro) => console.log(erro));
     }
@@ -58,17 +58,35 @@ export function Perfil() {
       github: github,
       foto: foto,
     };
-    fetch("http://localhost:8080/api/v1/usuarios", {
-      method: "POST",
+    fetch(`http://localhost:8080/api/v1/usuarios/${codigoUnico}`, {
+      method: "PUT",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
       body: JSON.stringify(data),
     })
-      .then((resposta) => navigate("/"))
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        preencherCampos(data);
+      })
       .catch((erro) => console.log(erro));
   };
 
+  function preencherCampos(data) {
+    setCodigoUnico(data.codigoUnico);
+    setNome(data.nome);
+    setEmail(data.email);
+    if (data.linkedin) {
+      setLinkedin(data.linkedin);
+    }
+    if (data.github) {
+      setGithub(data.github);
+    }
+    if (data.foto) {
+      setFoto(data.foto);
+    }
+  }
 
   if (usuarioLogado()) {
     return (
@@ -89,10 +107,10 @@ export function Perfil() {
           </h1>
           <Form
             className={`d-flex justify-content-center flex-column form-container w-100`}
-            //   onSubmit=""
+            onSubmit={onSubmit}
           >
             <div className="mx-auto mt-2 mb-2">
-              <FotoPerfil onImageSelect={handleImageSelect} />
+              <FotoPerfil onImageSelect={handleImageSelect} foto={foto} />
             </div>
 
             <Input
@@ -138,7 +156,9 @@ export function Perfil() {
               <BotaoOutline color="var(--blue)" onClick={cancelar}>
                 Cancelar
               </BotaoOutline>
-              <BotaoComFundo color="var(--blue)">Cadastrar</BotaoComFundo>
+              <BotaoComFundo type="submit" color="var(--blue)">
+                Salvar
+              </BotaoComFundo>
             </div>
           </Form>
         </Container>

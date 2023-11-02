@@ -8,8 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.lang.Nullable;
+
 import com.example.ledes.utils.HashUtils;
-import com.example.ledes.utils.SenhaUtils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class Usuario {
     private Long id;
     private String nome;
     private String email;
+    @Nullable
     private String senha;
     private boolean ativo;
     private String fotoPerfil;
@@ -49,7 +51,6 @@ public class Usuario {
     public Usuario(String nome, String email, String codigoUnico) {
         this.nome = nome;
         this.email = email;
-        this.senha = SenhaUtils.gerarSenhaCriptografada("123456");
         this.ativo = true;
         this.codigoUnico = codigoUnico;
     }

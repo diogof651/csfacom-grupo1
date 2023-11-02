@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
-import com.example.ledes.aplicacao.usuario.AtualizarUsuarioPorHashServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorHashServico;
@@ -25,9 +25,9 @@ import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
 import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
+import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
-import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +40,7 @@ public class UsuarioController {
     @Autowired
     private AdicionarUsuarioServico usuarioServico;
     @Autowired
-    private AtualizarUsuarioServico atualizarUsuarioServico;
+    private AtualizarUsuarioServico atualizarPerfilUsuarioServico;
     @Autowired
     private BuscarUsuarioNoticiaServico buscarUsuarioIdNoticiaServico;
     @Autowired
@@ -53,25 +53,13 @@ public class UsuarioController {
     private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
     @Autowired
     private BuscarUsuarioPorHashServico buscarUsuarioPorHashServico;
-    @Autowired
-    private AtualizarUsuarioPorHashServico atualizarUsuarioPorHashServico;
 
-    @Operation(summary = "Criar um novo usuário")
+    @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         UsuarioResponseDTO novoUsuario = usuarioServico.adicionar(usuarioDTO);
         return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
-    }
-
-    @Operation(summary = "Atualizar um usuário")
-    @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
-    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<UsuarioResponseDTO> atualizarUsuarioServico(
-            @PathVariable Long id, @RequestBody UsuarioRequestDTO atualizacaoDTO) {
-        UsuarioResponseDTO usuarioAtualizado = atualizarUsuarioServico.atualizarUsuario(id, atualizacaoDTO);
-        return ResponseEntity.ok(usuarioAtualizado);
     }
 
     @Operation(summary = "Buscar usuário com noticia")
@@ -104,6 +92,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioEncontrado);
     }
 
+    // verificar se está sendo usado
     @Operation(summary = "Buscar usuário por ID.")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário.")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
@@ -135,27 +124,33 @@ public class UsuarioController {
         return ResponseEntity.ok(atualizarSenhaUsuarioServico.alterarSenha(definirSenhaRequestDTO));
     }
 
-    @Operation(summary = "Buscar usuário por hash.")
+    @Operation(summary = "Buscar informações do perfil do usuario logado")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário.")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
-    @GetMapping("/{hash}/hash")
-    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorHash(@PathVariable String hash) {
-        UsuarioResponseDTO usuarioEncontrado = buscarUsuarioPorHashServico.buscarUsuarioPorHash(hash);
-
-        if (usuarioEncontrado != null) {
-            return ResponseEntity.ok(usuarioEncontrado);
-        } else {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/perfil")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorHash(
+            @RequestHeader("usuarioLogado") String hash) {
+        if (hash != null) {
+            UsuarioResponseDTO usuarioEncontrado = buscarUsuarioPorHashServico.buscarUsuarioPorHash(hash);
+            if (usuarioEncontrado != null) {
+                return ResponseEntity.ok(usuarioEncontrado);
+            }
         }
+        return ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Atualizar um usuário por hash")
+    @Operation(summary = "Atualização de dados do perfil de um usuario logado")
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
-    @PutMapping(path = "/{hash}", consumes = "application/json")
-    public ResponseEntity<UsuarioResponseDTO> atualizarUsuarioPorHashServico(
-            @PathVariable String hash, @RequestBody UsuarioRequestDTO atualizacaoDTO) {
-        UsuarioResponseDTO usuarioAtualizado = atualizarUsuarioPorHashServico.atualizarUsuarioPorHash(hash, atualizacaoDTO);
-        return ResponseEntity.ok(usuarioAtualizado);
+    @PutMapping(path = "/{codigoUnico}", consumes = "application/json")
+    public ResponseEntity<UsuarioResponseDTO> atualizarPerfilUsuarioServico(
+            @PathVariable String codigoUnico, @RequestHeader("usuarioLogado") String hash,
+            @RequestBody PerfilUsuarioRequestDTO perfilAtualizacaoDTO) {
+        if (hash != null) {
+            UsuarioResponseDTO usuarioAtualizado = atualizarPerfilUsuarioServico.atualizarPerfilUsuario(codigoUnico,
+                    perfilAtualizacaoDTO);
+            return ResponseEntity.ok(usuarioAtualizado);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

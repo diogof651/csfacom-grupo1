@@ -17,12 +17,13 @@ public class BuscarUsuarioPorHashServico {
 
     @Transactional(readOnly = true)
     public UsuarioResponseDTO buscarUsuarioPorHash(String hash) {
-        Optional<Usuario> usuarioOptional = usuarioRepositorio.findByHash(hash);
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findByCodigoHash(hash);
 
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
             return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
-                    usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub());
+                    usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(),
+                    usuario.getCodigoUnico());
         } else {
             return null;
         }
