@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router";
@@ -8,6 +10,7 @@ import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { FotoPerfil } from "../../../components/FotoPerfil/FotoPerfil";
 import { Input } from "../../../components/Input/Input";
+import { FormularioDefinirSenha } from "../../acesso/DefinicaoSenha/FormularioDefinirSenha";
 import { useAuth } from "./../../../AutorizacaoServico";
 
 export function Perfil() {
@@ -21,12 +24,22 @@ export function Perfil() {
   const [github, setGithub] = useState("");
   const [foto, setFoto] = useState("");
 
+  const [showModal, setShowModal] = useState(false);
+
   function cancelar() {
     navigate("/");
   }
 
   const handleImageSelect = (selectedImage) => {
     setFoto(selectedImage);
+  };
+
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -112,6 +125,13 @@ export function Perfil() {
             <div className="mx-auto mt-2 mb-2">
               <FotoPerfil onImageSelect={handleImageSelect} foto={foto} />
             </div>
+            <div className="d-flex justify-content-between align-items-center mt-2">
+              <div className="ml-auto">
+                <Button variant="outline-secondary" onClick={handleShowModal}>
+                  Trocar Senha
+                </Button>
+              </div>
+            </div>
 
             <Input
               value={codigoUnico}
@@ -161,6 +181,17 @@ export function Perfil() {
               </BotaoComFundo>
             </div>
           </Form>
+
+          <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal.Header closeButton></Modal.Header>
+            <Modal.Body>
+              <FormularioDefinirSenha
+                textoBotao="Trocar senha"
+                navegacao={handleCloseModal}
+                codigoUnico={codigoUnico}
+              ></FormularioDefinirSenha>
+            </Modal.Body>
+          </Modal>
         </Container>
       </>
     );
