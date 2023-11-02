@@ -1,14 +1,22 @@
-import React from "react";
-import Image from "react-bootstrap/Image";
+import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
 
 export default function InformacoesMembroModal({ membro, show, onClose }) {
+  const [fotoPerfil, setFotoPerfil] = useState("");
+
+  useEffect(() => {
+    if (membro) {
+      setFotoPerfil(membro.usuario.fotoPerfil);
+    }
+  }, [membro]);
+
   if (!membro) {
     return null;
   }
+
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
@@ -16,18 +24,31 @@ export default function InformacoesMembroModal({ membro, show, onClose }) {
       </Modal.Header>
       <Modal.Body className="p-4">
         <div className="d-flex gap-2">
-          {membro.foto ? (
-            <Image src={imagemSrc} alt="Foto de Perfil" roundedCircle fluid />
-          ) : (
-            <div
-              className="rounded-circle d-flex align-items-center justify-content-end m-0"
-              style={{
-                width: "50px",
-                height: "50px",
-                backgroundColor: "#ccc",
-              }}
-            ></div>
-          )}
+          <div
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              backgroundColor: "#ccc",
+            }}
+          >
+            {fotoPerfil && (
+              <img
+                src={
+                  fotoPerfil != null && fotoPerfil
+                    ? `data:image/jpeg;base64,${fotoPerfil}`
+                    : ""
+                }
+                alt="Foto de perfil"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+              />
+            )}
+          </div>
           <div className="d-flex flex-column">
             <h4 className="m-0">{membro.usuario.nome}</h4>
             <p>{membro.email}</p>
@@ -35,10 +56,15 @@ export default function InformacoesMembroModal({ membro, show, onClose }) {
         </div>
 
         <p>
-          Data de Ingresso: 
+          Data de Ingresso:
           {new Date(membro.dataIngresso).toLocaleDateString()}
         </p>
-        <p>Data de Termino: {membro.dataTermino ? new Date(membro.dataTermino).toLocaleDateString() : "-"}</p>
+        <p>
+          Data de Termino:{" "}
+          {membro.dataTermino
+            ? new Date(membro.dataTermino).toLocaleDateString()
+            : "-"}
+        </p>
         {/* <div className="mt-3">
           <h4> Vinculo </h4>
           <div className="d-flex gap-2">

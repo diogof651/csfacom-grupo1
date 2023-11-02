@@ -4,13 +4,14 @@ import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
 
 export function CadastroMembro() {
   const navigate = useNavigate();
+  const { idProjeto } = useParams();
   const { handleSubmit } = useForm();
   const [ativo, setAtivo] = useState(true);
   const [nome, setNome] = useState("");
@@ -53,7 +54,6 @@ export function CadastroMembro() {
   // ]);
 
   const onSubmit = () => {
-    const id_projeto = 5;
     const data = {
       dataIngresso: dataIngresso,
       dataTermino: dataTermino,
@@ -74,7 +74,7 @@ export function CadastroMembro() {
     //     .catch((erro) => console.log(erro));
     // } else {
     fetch(
-      `http://localhost:8080/api/v1/membros/projeto/${id_projeto}/cadastrar/`,
+      `http://localhost:8080/api/v1/membros/projeto/${idProjeto}/cadastrar/`,
       {
         method: "POST",
         headers: {
@@ -92,7 +92,7 @@ export function CadastroMembro() {
     <>
       <Container
         className="d-flex flex-column"
-        style={{ width: "50vw", marginTop: "40px" }}
+        style={{ width: "50vw", marginTop: "40px"}}
       >
         <h1
           style={{
