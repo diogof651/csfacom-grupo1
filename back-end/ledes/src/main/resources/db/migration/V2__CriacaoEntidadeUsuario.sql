@@ -5,10 +5,10 @@ Begin
         id INT PRIMARY KEY,
         nome VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
-        senha VARCHAR(255) NOT NULL,
         ativo BOOLEAN NOT NULL,
-        fotoPerfil text,
-        gitHub VARCHAR(255),
+        senha VARCHAR(255),
+        foto_perfil text,
+        github VARCHAR(255),
         linkedin VARCHAR(255)
 );
     END IF;

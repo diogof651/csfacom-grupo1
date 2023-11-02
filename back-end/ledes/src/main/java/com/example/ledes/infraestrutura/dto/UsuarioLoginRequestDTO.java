@@ -3,10 +3,9 @@ package com.example.ledes.infraestrutura.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public class UsuarioDTO {
-    private String nome;
+@Getter
+public class UsuarioLoginRequestDTO {
     private String email;
-    
+    private String senha;
 }

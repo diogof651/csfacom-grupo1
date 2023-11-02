@@ -1,19 +1,26 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
-import styles from "./Header.module.css";
-import ledesLogo from "../../assets/ledes-logo.svg";
-
 import {
+  BsBoxArrowInRight,
   BsFillPuzzleFill,
   BsMegaphoneFill,
-  BsBoxArrowInRight,
+  BsPersonCircle,
 } from "react-icons/bs";
+import ledesLogo from "../../assets/ledes-logo.svg";
+import { useAuth } from "./../../AutorizacaoServico";
+import styles from "./Header.module.css";
 
 export function Header() {
   const iconStyle = {
     width: "24px", // Defina o tamanho desejado
     height: "24px", // Defina a altura desejada (opcional)
     marginRight: "10px", // Espaçamento à direita (opcional)
+  };
+
+  const { usuarioLogado, isAuthenticated, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -38,11 +45,25 @@ export function Header() {
         </Nav>
       </div>
       <Nav.Item as="lu" className="ml-auto ml-5">
-        {" "}
-        {/* Adicione ml-auto e ml-2 para empurrar 'Entrar' para a direita */}
-        <Nav.Link href="/entrar" className="font-weight-bold text-white">
-          <BsBoxArrowInRight style={iconStyle} />
-        </Nav.Link>
+        {usuarioLogado() || isAuthenticated ? (
+          <div className="d-flex align-items-center gap-3">
+            <Nav.Link href="/perfil" className="font-weight-bold text-white">
+              <BsPersonCircle style={iconStyle} /> Perfil
+            </Nav.Link>
+            <Nav.Link
+              href="#"
+              className="font-weight-bold text-white"
+              onClick={handleLogout}
+            >
+              <BsBoxArrowInRight style={iconStyle} />
+              Sair
+            </Nav.Link>
+          </div>
+        ) : (
+          <Nav.Link href="/entrar" className="font-weight-bold text-white">
+            Entrar
+          </Nav.Link>
+        )}
       </Nav.Item>
     </header>
   );

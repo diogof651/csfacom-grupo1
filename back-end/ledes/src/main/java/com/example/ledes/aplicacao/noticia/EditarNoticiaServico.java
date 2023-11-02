@@ -11,7 +11,6 @@ import com.example.ledes.dominio.Anexo;
 import com.example.ledes.dominio.Noticia;
 import com.example.ledes.infraestrutura.AnexoRepositorio;
 import com.example.ledes.infraestrutura.NoticiaRepositorio;
-import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.AnexoDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaRequestDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaResponseDTO;
@@ -23,9 +22,6 @@ public class EditarNoticiaServico {
 
     @Autowired
     private AnexoRepositorio anexoRepositorio;
-
-    @Autowired
-    private UsuarioRepositorio usuarioRepositorio;
 
     public NoticiaResponseDTO editar(Long id, NoticiaRequestDTO noticiaRequest) {
 

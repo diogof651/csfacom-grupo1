@@ -10,26 +10,26 @@ import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
 @Service
-public class AtualizarUsuarioServico {
+public class AtualizarUsuarioPorHashServico {
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
     @Transactional
-    public UsuarioResponseDTO atualizarPerfilUsuario(String codigoUnico, PerfilUsuarioRequestDTO usuarioRequestDTO) {
-        Usuario usuario = usuarioRepositorio.findByCodigoUnico(codigoUnico);
+    public UsuarioResponseDTO atualizarUsuarioPorHash(String hash, PerfilUsuarioRequestDTO usuarioRequestDTO) {
+        Usuario usuario = usuarioRepositorio.findByCodigoHash(hash).orElse(null);
 
         if (usuario != null) {
-            usuario.setFotoPerfil(usuarioRequestDTO.getFoto());
             usuario.setNome(usuarioRequestDTO.getNome());
             usuario.setEmail(usuarioRequestDTO.getEmail());
+            // usuario.setAtivo(usuarioRequestDTO.isAtivo());
+            usuario.setFotoPerfil(usuarioRequestDTO.getFoto());
             usuario.setGithub(usuarioRequestDTO.getGithub());
             usuario.setLinkedin(usuarioRequestDTO.getLinkedin());
 
             usuarioRepositorio.save(usuario);
             return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
-                    usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(),
-                    usuario.getCodigoUnico());
+                    usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub());
         } else {
             return null;
         }

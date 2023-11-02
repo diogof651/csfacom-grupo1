@@ -1,0 +1,21 @@
+.container-modal-fundo {
+  background: url("https://www.ufms.br/wp-content/uploads/2018/09/UFMS.jpg")
+    center/cover;
+}
+
+.container-modal {
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+}
+
+.modal-conteudo {
+  background: white;
+  width: 500px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 40px;
+}

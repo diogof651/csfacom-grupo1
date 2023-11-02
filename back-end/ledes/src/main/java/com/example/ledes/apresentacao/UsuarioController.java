@@ -11,14 +11,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
+import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
+import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorHashServico;
+import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
+import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
+import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
+import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
+import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
-import com.example.ledes.infraestrutura.dto.UsuarioRequestDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,31 +35,31 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/api/v1/usuarios")
+@RequestMapping(path = { "/api/v1/usuarios" }, produces = { "application/json" })
 public class UsuarioController {
     @Autowired
     private AdicionarUsuarioServico usuarioServico;
     @Autowired
-    private AtualizarUsuarioServico atualizarUsuarioServico;
+    private AtualizarUsuarioServico atualizarPerfilUsuarioServico;
     @Autowired
     private BuscarUsuarioNoticiaServico buscarUsuarioIdNoticiaServico;
+    @Autowired
+    private ValidarEmailESenhaServico validarEmailESenhaServico;
+    @Autowired
+    private BuscarUsuarioPorIdServico buscarUsuarioPorIdServico;
+    @Autowired
+    private ValidarEmailECodigoUnicoServico validarEmailECodigoUnicoServico;
+    @Autowired
+    private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
+    @Autowired
+    private BuscarUsuarioPorHashServico buscarUsuarioPorHashServico;
 
-    @Operation(summary = "Criar um novo usuário")
+    @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         UsuarioResponseDTO novoUsuario = usuarioServico.adicionar(usuarioDTO);
         return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
-    }
-
-    @Operation(summary = "Atualizar um usuário")
-    @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
-    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
-    @PutMapping(path = "/{id}", consumes = "application/json")
-    public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(
-            @PathVariable Long id, @RequestBody UsuarioRequestDTO atualizacaoDTO) {
-        UsuarioResponseDTO usuarioAtualizado = atualizarUsuarioServico.atualizarUsuario(id, atualizacaoDTO);
-        return ResponseEntity.ok(usuarioAtualizado);
     }
 
     @Operation(summary = "Buscar usuário com noticia")
@@ -66,7 +75,82 @@ public class UsuarioController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
+    @Operation(summary = "Login de usuario")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário e realiza a autenticação.")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @PostMapping(path = "/login", consumes = "application/json")
+    public ResponseEntity<UsuarioLoginResponseDTO> validarEmailESenha(
+            @RequestBody DefinirSenhaRequestDTO loginRequest) {
+        UsuarioLoginResponseDTO usuarioEncontrado = validarEmailESenhaServico.autenticar(loginRequest.getCodigoUnico(),
+                loginRequest.getSenha());
+
+        if (usuarioEncontrado.getResposta().equals("Informações Incorretas")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(usuarioEncontrado);
+        }
+        return ResponseEntity.ok(usuarioEncontrado);
+    }
+
+    // verificar se está sendo usado
+    @Operation(summary = "Buscar usuário por ID.")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário.")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorId(@PathVariable Long id) {
+        UsuarioResponseDTO usuarioEncontrado = buscarUsuarioPorIdServico.buscarUsuarioPorId(id);
+
+        if (usuarioEncontrado != null) {
+            return ResponseEntity.ok(usuarioEncontrado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Primeiro acesso.")
+    @ApiResponse(responseCode = "200", description = "Verificar validade de email e código único")
+    @ApiResponse(responseCode = "404", description = "Não foi encontrado email ou código único.")
+    @GetMapping("/verificacaoParaDefinicaoDeSenha")
+    public ResponseEntity<UsuarioLoginResponseDTO> verificarEmaileCodigoUnico(@RequestParam String email,
+            @RequestParam String codigoUnico) {
+        return ResponseEntity.ok(validarEmailECodigoUnicoServico.verificar(email, codigoUnico));
+    }
+
+    @Operation(summary = "Esqueci a senha.")
+    @ApiResponse(responseCode = "200", description = "Altera a senha")
+    @PostMapping("/alterarSenha")
+    public ResponseEntity<UsuarioLoginResponseDTO> alterarSenha(
+            @RequestBody DefinirSenhaRequestDTO definirSenhaRequestDTO) {
+        return ResponseEntity.ok(atualizarSenhaUsuarioServico.alterarSenha(definirSenhaRequestDTO));
+    }
+
+    @Operation(summary = "Buscar informações do perfil do usuario logado")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuário.")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @GetMapping("/perfil")
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorHash(
+            @RequestHeader("usuarioLogado") String hash) {
+        if (hash != null) {
+            UsuarioResponseDTO usuarioEncontrado = buscarUsuarioPorHashServico.buscarUsuarioPorHash(hash);
+            if (usuarioEncontrado != null) {
+                return ResponseEntity.ok(usuarioEncontrado);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Atualização de dados do perfil de um usuario logado")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @PutMapping(path = "/{codigoUnico}", consumes = "application/json")
+    public ResponseEntity<UsuarioResponseDTO> atualizarPerfilUsuarioServico(
+            @PathVariable String codigoUnico, @RequestHeader("usuarioLogado") String hash,
+            @RequestBody PerfilUsuarioRequestDTO perfilAtualizacaoDTO) {
+        if (hash != null) {
+            UsuarioResponseDTO usuarioAtualizado = atualizarPerfilUsuarioServico.atualizarPerfilUsuario(codigoUnico,
+                    perfilAtualizacaoDTO);
+            return ResponseEntity.ok(usuarioAtualizado);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

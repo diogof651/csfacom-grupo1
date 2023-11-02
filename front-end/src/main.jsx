@@ -6,6 +6,9 @@ import { ListagemProjetos } from "./routes/projetos/ListagemProjetos/ListagemPro
 import { PaginaProjeto } from "./routes/projetos/PaginaProjeto/PaginaProjeto.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { DefinicaoSenha } from "./routes/acesso/DefinicaoSenha/DefinicaoSenha.jsx";
+import Entrar from "./routes/acesso/login/entrar.jsx";
+import { PrimeiroAcesso } from "./routes/acesso/PrimeiroAcesso/PrimeiroAcesso.jsx";
 import { CadastroNoticia } from "./routes/noticias/CadastroNoticia/CadastroNoticia.jsx";
 import { ListagemNoticias } from "./routes/noticias/ListagemNoticias/ListagemNoticias.jsx";
 import { PaginaNoticia } from "./routes/noticias/PaginaNoticia/PaginaNoticia.jsx";
@@ -20,11 +23,23 @@ const router = createBrowserRouter([
     //errorElement: </> -> para colocar uma pagina de erro caso nao encontre a rota
     children: [
       {
-        path: "/projetos",
+        path: "/",
         element: <ListagemProjetos />,
       },
       {
-        path: "/",
+        path: "/primeiroAcesso",
+        element: <PrimeiroAcesso />,
+      },
+      {
+        path: "/definirSenha/:codigoUnico",
+        element: <DefinicaoSenha />,
+      },
+      {
+        path: "/esqueciMinhaSenha",
+        element: <PrimeiroAcesso />,
+      },
+      {
+        path: "/projetos",
         element: <ListagemProjetos />,
       },
       {
@@ -56,12 +71,12 @@ const router = createBrowserRouter([
         element: <Perfil />,
       },
       {
-        path: "/cadastroNoticia",
-        element: <CadastroNoticia />,
-      },
-      {
         path: "/noticias",
         element: <ListagemNoticias />,
+      },
+      {
+        path: "/cadastroNoticia",
+        element: <CadastroNoticia />,
       },
       {
         path: "/editarNoticia/:id",
@@ -70,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: "/noticia/:id",
         element: <PaginaNoticia />,
+      },
+      {
+        path: "/entrar",
+        element: <Entrar />,
       },
     ],
   },

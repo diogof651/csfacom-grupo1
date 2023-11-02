@@ -3,7 +3,7 @@
   background: var(--blue);
   display: flex;
   align-items: flex-start;
-  padding: 1.25rem 0;
+  padding: 1.25rem 1rem;
   justify-content: space-between;
   width: 100%;
 }
