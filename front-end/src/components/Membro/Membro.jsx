@@ -1,10 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { Container, Image } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 import { OpcoesMembroDropdown } from "../OpcoesMembroDropdown/OpcoesMembroDropdown";
 
 export default function Membro({ membro, selecionar, idProjeto }) {
+  const fotoPerfil = membro.usuario.fotoPerfil;
   return (
     <Container className="mt-4">
       <div className="d-flex align-items-center w-100 justify-content-between">
@@ -13,23 +14,31 @@ export default function Membro({ membro, selecionar, idProjeto }) {
           onClick={selecionar}
         >
           <div className="col-md-1 col-2 mb-2 p-0">
-            {membro.foto ? (
-              <Image
-                src={membro.foto}
-                alt="Foto de Perfil"
-                roundedCircle
-                fluid
-              />
-            ) : (
-              <div
-                className="rounded-circle d-flex align-items-center justify-content-end m-0"
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  backgroundColor: "#ccc",
-                }}
-              ></div>
-            )}
+            <div
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                backgroundColor: "#ccc",
+              }}
+            >
+              {fotoPerfil && (
+                <img
+                  src={
+                    fotoPerfil != null && fotoPerfil
+                      ? `data:image/jpeg;base64,${fotoPerfil}`
+                      : ""
+                  }
+                  alt="Foto de perfil"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                  }}
+                />
+              )}
+            </div>
           </div>
           <div className="col-md-10 col-8 mb-2 p-0">
             <strong>{membro.usuario.nome}</strong>
@@ -50,6 +59,7 @@ export default function Membro({ membro, selecionar, idProjeto }) {
           <OpcoesMembroDropdown
             idProjeto={idProjeto}
             idMembro={membro.id}
+            ativo={membro.ativo}
           ></OpcoesMembroDropdown>
         </div>
       </div>

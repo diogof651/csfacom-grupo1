@@ -1,19 +1,49 @@
-import React, { useRef, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { BsFillCameraFill } from "react-icons/bs";
 
-export function FotoPerfil({ onImageSelect }) {
+export function FotoPerfil({ onImageSelect, foto }) {
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    setSelectedImage(foto);
+  }, [foto]);
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
 
+  function converterParaBase64(selectedFile, callback) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const base64String = event.target.result.split(",")[1];
+      callback(base64String);
+    };
+    reader.readAsDataURL(selectedFile);
+  }
+
   const handleFileInputChange = (e) => {
     const selectedFile = e.target.files[0];
-    setSelectedImage(URL.createObjectURL(selectedFile));
-    onImageSelect(URL.createObjectURL(selectedFile));
+    const fotoUrl = URL.createObjectURL(selectedFile);
+
+    if (selectedFile) {
+      if (
+        selectedFile.type === "image/png" ||
+        selectedFile.type === "image/jpeg"
+      ) {
+        const processFile = (file) => {
+          converterParaBase64(file, (conteudoBase64) => {
+            setSelectedImage(conteudoBase64);
+            onImageSelect(conteudoBase64);
+          });
+        };
+
+        processFile(selectedFile);
+      } else {
+        alert("Por favor, selecione um arquivo PNG ou JPEG válido.");
+      }
+    }
   };
 
   return (
@@ -29,7 +59,11 @@ export function FotoPerfil({ onImageSelect }) {
       >
         {selectedImage && (
           <img
-            src={selectedImage}
+            src={
+              selectedImage != null && selectedImage
+                ? `data:image/jpeg;base64,${selectedImage}`
+                : ""
+            }
             alt="Foto de perfil"
             style={{
               width: "100%",

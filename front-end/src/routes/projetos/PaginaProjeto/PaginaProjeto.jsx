@@ -50,7 +50,7 @@ export function PaginaProjeto() {
 
   useEffect(() => {
     obterMembros();
-  }, [activeTab]); 
+  }, [activeTab]);
 
   function obterProjeto() {
     fetch(`http://localhost:8080/api/v1/projetos/${id}`, {
@@ -98,7 +98,7 @@ export function PaginaProjeto() {
   return (
     <Container
       className="d-flex flex-column mb-4"
-      style={{ height: "100vh", marginTop: "40px" }}
+      style={{ minHeight: "100vh", marginTop: "40px" }}
     >
       <div
         className="d-flex justify-content-between align-items-start flex-wrap gap-2"
@@ -171,31 +171,41 @@ export function PaginaProjeto() {
             </Nav.Link>
           </Nav.Item>
         </Nav>
-        <Link to={`/cadastroMembro/projeto/${id}`} className="text-decoration-none">
+        <Link
+          to={`/cadastroMembro/projeto/${id}`}
+          className="text-decoration-none"
+        >
           <BotaoOutline color="var(--blue)"> Novo Membro </BotaoOutline>
         </Link>
       </div>
-      {membros.length === 0 ? (
-        <></>
-      ) : (
-        membros.map((membro, index) => (
-          <div key={index} style={{ cursor: "pointer" }}>
-            <Membro
-              membro={membro}
-              selecionar={() => handleOpenModal(membro)}
-              idProjeto={id}
-            />
-          </div>
-        ))
-      )}
+      <div style={{ marginBottom: "120px", display: "block" }}>
+        {membros.length === 0 ? (
+          <></>
+        ) : (
+          membros.map((membro, index) => (
+            <div
+              key={index}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              <Membro
+                membro={membro}
+                selecionar={() => handleOpenModal(membro)}
+                idProjeto={id}
+              />
+            </div>
+          ))
+        )}
 
-      {membroSelecionado && (
-        <InformacoesMembroModal
-          membro={membroSelecionado}
-          onClose={handleCloseModal}
-          show={showModal}
-        />
-      )}
+        {membroSelecionado && (
+          <InformacoesMembroModal
+            membro={membroSelecionado}
+            onClose={handleCloseModal}
+            show={showModal}
+          />
+        )}
+      </div>
     </Container>
   );
 }

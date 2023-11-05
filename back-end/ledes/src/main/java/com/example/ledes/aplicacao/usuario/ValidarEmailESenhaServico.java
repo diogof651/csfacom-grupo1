@@ -1,6 +1,5 @@
 package com.example.ledes.aplicacao.usuario;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.ledes.dominio.Usuario;
@@ -12,7 +11,7 @@ import com.example.ledes.utils.SenhaUtils;
 public class ValidarEmailESenhaServico {
     private final UsuarioRepositorio usuarioRepositorio;
 
-    @Autowired
+    
     public ValidarEmailESenhaServico(UsuarioRepositorio usuarioRepositorio) {
         this.usuarioRepositorio = usuarioRepositorio;
     }

@@ -86,7 +86,7 @@ export function ListagemProjetos() {
   return (
     <Container
       className="d-flex flex-column"
-      style={{ height: "100vh", marginTop: "40px" }}
+      style={{ height: "100vh", marginTop: "40px"}}
     >
       <div
         className="d-flex justify-content-between align-items-center"

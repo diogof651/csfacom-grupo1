@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.ledes.aplicacao.membro.AtivarMembroServico;
 import com.example.ledes.aplicacao.membro.AtualizarMembroServico;
 import com.example.ledes.aplicacao.membro.CadastrarMembroServico;
 import com.example.ledes.aplicacao.membro.DesativarMembroServico;
@@ -45,6 +46,8 @@ public class MembroController {
     private ListarMembroServico listarMembroServico;
     @Autowired
     private ObterMembroPorIdServico obterMembroPorIdServico;
+    @Autowired
+    private AtivarMembroServico ativarMembroServico;
 
     @Operation(summary = "Criar um novo membro")
     @ApiResponse(responseCode = "201")
@@ -68,7 +71,7 @@ public class MembroController {
     @Operation(summary = "Desativar um membro projeto")
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro desativado")
     @ApiResponse(responseCode = "404", description = "membro não encontrado")
-    @PostMapping(path = "/{id}/desativar", consumes = "application/json")
+    @PostMapping(path = "/{id}/desativar")
     public ResponseEntity<MembroResponseDTO> desativarMembro(@PathVariable Long id) {
         MembroResponseDTO membroDesativado = desativarMembroServico.desativar(id);
 
@@ -102,5 +105,18 @@ public class MembroController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<MembroResponseDTO> obterMembro(@PathVariable Long id) {
         return ResponseEntity.ok(obterMembroPorIdServico.obterMembroPorId(id));
+    }
+
+    @Operation(summary = "Ativar um membro projeto")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do membro ativado")
+    @ApiResponse(responseCode = "404", description = "membro não encontrado")
+    @PostMapping(path = "/{id}/ativar")
+    public ResponseEntity<MembroResponseDTO> ativarMembro(@PathVariable Long id) {
+        MembroResponseDTO membroAtivado = ativarMembroServico.ativar(id);
+        if (membroAtivado != null) {
+            return ResponseEntity.ok(membroAtivado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
