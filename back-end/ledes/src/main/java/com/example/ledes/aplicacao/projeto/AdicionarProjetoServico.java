@@ -16,9 +16,9 @@ public class AdicionarProjetoServico {
     public ProjetoResponseDTO adicionar(ProjetoRequestDTO projetoRequest) {
         Projeto projeto = new Projeto(projetoRequest.getNome(), projetoRequest.getDescricao(),
                 projetoRequest.getInicio(), projetoRequest.getTermino(), projetoRequest.getStatus(),
-                projetoRequest.getTipo());
+                projetoRequest.getTipoProjeto());
         projetoRepositorio.save(projeto);
         return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(), projeto.getInicio(),
-                projeto.getTermino(), projeto.getStatus(), projeto.getTipo(), projeto.getAtivo());
+                projeto.getTermino(), projeto.getStatus(), projeto.getTipoProjeto(), projeto.getAtivo());
     }
 }

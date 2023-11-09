@@ -31,7 +31,7 @@ public class ListagemProjetoServico {
                 projeto.getInicio(),
                 projeto.getTermino(),
                 projeto.getStatus(),
-                projeto.getTipo(),
+                projeto.getTipoProjeto(),
                 projeto.getAtivo());
     }
 }

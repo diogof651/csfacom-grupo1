@@ -44,13 +44,13 @@ public class Projeto {
     @OneToMany(mappedBy = "projeto")
     List<Membro> membros;
 
-    public Projeto(String nome, String descricao, Date inicio, Date termino, String status, String tipo) {
+    public Projeto(String nome, String descricao, Date inicio, Date termino, String status, TipoProjeto tipoProjeto) {
         this.nome = nome;
         this.descricao = descricao;
         this.inicio = inicio;
         this.termino = termino;
         this.status = status;
-        this.tipo = tipo;
+        this.tipoProjeto = tipoProjeto;
         this.ativo = true;
     }
 }

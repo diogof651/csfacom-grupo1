@@ -2,6 +2,8 @@ package com.example.ledes.infraestrutura.dto;
 
 import java.util.Date;
 
+import com.example.ledes.dominio.TipoProjeto;
+
 import lombok.Data;
 
 @Data
@@ -17,5 +19,5 @@ public class ProjetoRequestDTO {
 
     private String status;
 
-    private String tipo;
+    private TipoProjeto tipoProjeto;
 }

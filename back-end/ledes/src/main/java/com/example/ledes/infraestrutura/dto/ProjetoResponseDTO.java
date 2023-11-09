@@ -2,6 +2,8 @@ package com.example.ledes.infraestrutura.dto;
 
 import java.util.Date;
 
+import com.example.ledes.dominio.TipoProjeto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,6 +16,6 @@ public class ProjetoResponseDTO {
     private Date inicio; // Data de início do projeto
     private Date termino; // Data de término do projeto
     private String status; // Status do projeto (Em andamento, Concluído, Descontinuado)
-    private String tipo; // Tipo de projeto
+    private TipoProjeto tipoProjeto;// Tipo de projeto
     private Boolean ativo; // se o projeto está ativo ou não
 }

@@ -25,13 +25,13 @@ public class AtualizarProjetoServico {
             projeto.setInicio(projetoRequest.getInicio());
             projeto.setTermino(projetoRequest.getTermino());
             projeto.setStatus(projetoRequest.getStatus());
-            projeto.setTipo(projetoRequest.getTipo());
+            projeto.setTipoProjeto(projetoRequest.getTipoProjeto());
             projetoRepositorio.save(projeto);
 
             // Retornar o projeto atualizado como ProjetoResponseDTO
             return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(),
                     projeto.getInicio(),
-                    projeto.getTermino(), projeto.getStatus(), projeto.getTipo(), projeto.getAtivo());
+                    projeto.getTermino(), projeto.getStatus(), projeto.getTipoProjeto(), projeto.getAtivo());
         } else {
             return null;
         }
