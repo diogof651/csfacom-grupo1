@@ -28,12 +28,7 @@ public class CadastrarMembroServico {
 
     public MembroResponseDTO adicionar(Long idProjeto, MembroRequestDTO membroRequestDTO) {
         Projeto projeto = projetoRepositorio.findById(idProjeto).orElse(null);
-        if (projeto == null) {
-            // Trate o cenário em que o projeto não foi encontrado.
-            // Pode ser uma boa ideia lançar uma exceção ou tomar outra ação apropriada.
-            // Exemplo: throw new ProjetoNaoEncontradoException("Projeto não encontrado");
-        }
-
+        
         Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
 
         if (usuario == null) {
@@ -42,7 +37,7 @@ public class CadastrarMembroServico {
         }
 
         Membro membro = new Membro(membroRequestDTO.getDataIngresso(), membroRequestDTO.getDataTermino(),
-                membroRequestDTO.isAtivo(), usuario, projeto);
+                membroRequestDTO.isAtivo(), usuario, projeto, membroRequestDTO.getVinculos());
 
         membroRepositorio.save(membro);
 

@@ -17,7 +17,7 @@ public class ListagemTipoVinculoAtivoServico {
     private TipoVinculoRepositorio tipoVinculoRepositorio;
 
     public List<TipoVinculoResponseDTO> listarTiposVinculosAtivos() {
-        List<TipoVinculo> tipoVinculos = (List<TipoVinculo>) tipoVinculoRepositorio.findByAtivo();
+        List<TipoVinculo> tipoVinculos = (List<TipoVinculo>) tipoVinculoRepositorio.findByAtivoTrue();
         return tipoVinculos.stream()
                 .map(this::converterParaDTO)
                 .collect(Collectors.toList());

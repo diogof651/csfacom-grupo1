@@ -4,7 +4,7 @@ Begin
         CREATE TABLE tipo_vinculo (
             id INT PRIMARY KEY,
             nome VARCHAR(255) NOT NULL UNIQUE,
-            ativo BOOLEAN
+            ativo BOOLEAN NOT NULL
         );
     END IF;
 END $$;
