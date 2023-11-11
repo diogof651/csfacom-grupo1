@@ -8,7 +8,6 @@ Begin
             inicio DATE NOT NULL,
             termino DATE NOT NULL,
             status VARCHAR(255) NOT NULL,
-            tipo VARCHAR(255) NOT NULL,
             ativo BOOLEAN NOT NULL
         );
     END IF;

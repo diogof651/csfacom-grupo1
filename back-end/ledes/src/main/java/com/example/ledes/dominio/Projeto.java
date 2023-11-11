@@ -33,8 +33,6 @@ public class Projeto {
 
     private String status;
 
-    private String tipo;
-
     private Boolean ativo;
 
     @ManyToOne
