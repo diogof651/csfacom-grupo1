@@ -5,12 +5,13 @@ import {
   BsFillPuzzleFill,
   BsMegaphoneFill,
   BsPersonCircle,
+  BsGear,
 } from "react-icons/bs";
 import ledesLogo from "../../assets/ledes-logo.svg";
 import { useAuth } from "./../../AutorizacaoServico";
 import styles from "./Header.module.css";
 
-export function Header() {
+export function Header({ mostrarNavLinkGerenciar }) {
   const iconStyle = {
     width: "24px", // Defina o tamanho desejado
     height: "24px", // Defina a altura desejada (opcional)
@@ -42,6 +43,13 @@ export function Header() {
               Projetos
             </Nav.Link>
           </Nav.Item>
+          <Nav.Item as="li">
+        <Nav.Link href="/gerenciar" className="font-weight-bold text-white">
+          <BsGear style={iconStyle} />
+          Gerenciar
+        </Nav.Link>
+      </Nav.Item>
+
         </Nav>
       </div>
       <Nav.Item as="lu" className="ml-auto ml-5">
