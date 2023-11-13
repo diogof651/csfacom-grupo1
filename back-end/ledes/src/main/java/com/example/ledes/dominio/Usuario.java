@@ -1,17 +1,21 @@
 package com.example.ledes.dominio;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.lang.Nullable;
 
 import com.example.ledes.utils.HashUtils;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -59,4 +63,18 @@ public class Usuario {
         this.dataAcesso = new Date();
         this.codigoHash = HashUtils.gerarHash(this.nome, this.dataAcesso);
     }
+
+    @ManyToMany
+    @JoinTable(name = "usuario_permissoes", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "permissao_id"))
+    private Set<Permissao> permissoes = new HashSet<>();
+
+    public boolean possuiPermissao(String nomePermissao) {
+        if (permissoes.isEmpty()) {
+            return false;
+        } else {
+            return permissoes.stream()
+                    .anyMatch(permissao -> permissao.getNome().equals(nomePermissao));
+        }
+    }
+
 }

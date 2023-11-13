@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,12 +42,19 @@ public class ProjetoController {
     @Autowired
     private ListagemProjetoIdServico listagemProjetoIdServico;
 
+
+
     @Operation(summary = "Criar um novo projeto")
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = { "application/json" })
-    public ResponseEntity<ProjetoResponseDTO> criarProjeto(@RequestBody ProjetoRequestDTO novoProjeto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(adicionarProjetoServico.adicionar(novoProjeto));
+    public ResponseEntity<ProjetoResponseDTO> criarProjeto(@RequestBody ProjetoRequestDTO novoProjeto,
+            @RequestHeader("usuarioLogado") String hash) {
+        if (hash != null) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(adicionarProjetoServico.adicionar(novoProjeto, hash));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
     }
 
     @Operation(summary = "Atualizar um projeto")
@@ -77,7 +85,7 @@ public class ProjetoController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @Operation(summary = "Listar Projetos")
     @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
     @GetMapping("/listagem")

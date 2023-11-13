@@ -1,11 +1,14 @@
 package com.example.ledes.apresentacao;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +27,13 @@ import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorHashServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
+import com.example.ledes.dominio.Permissao;
+import com.example.ledes.dominio.Usuario;
+import com.example.ledes.infraestrutura.PermissaoRepositorio;
+import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
+import com.example.ledes.infraestrutura.dto.PermissaoResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
@@ -53,6 +61,9 @@ public class UsuarioController {
     private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
     @Autowired
     private BuscarUsuarioPorHashServico buscarUsuarioPorHashServico;
+    private UsuarioRepositorio usuarioRepositorio; 
+    @Autowired
+    private PermissaoRepositorio permissaoRepositorio;
 
     @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
@@ -153,4 +164,72 @@ public class UsuarioController {
         }
         return ResponseEntity.notFound().build();
     }
+    @Operation(summary = "Adicionar permissão a um usuário")
+    @ApiResponse(responseCode = "200", description = "Permissão adicionada com sucesso")
+    @ApiResponse(responseCode = "400", description = "Requisição inválida")
+    @ApiResponse(responseCode = "404", description = "Usuário ou permissão não encontrados")
+    @PostMapping("/usuarios/{usuarioId}/permissoes/{permissaoNome}")
+    public ResponseEntity<String> adicionarPermissaoAoUsuario(
+            @PathVariable Long usuarioId,
+            @PathVariable String permissaoNome) {
+
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(usuarioId);
+        Permissao permissao = permissaoRepositorio.findByNome(permissaoNome);
+
+        if (usuarioOptional.isPresent() && permissao != null) {
+            Usuario usuario = usuarioOptional.get();
+
+            if (usuario.getPermissoes().isEmpty()) {
+                usuario.getPermissoes().add(permissao);// olhar aqui
+                usuarioRepositorio.save(usuario);
+                return ResponseEntity.status(HttpStatus.OK).body("Permissão adicionada ao usuário.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O usuário já possui uma permissão.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário ou permissão não encontrados.");
+        }
+    }
+
+    @Operation(summary = "Remover permissão de um usuário")
+    @ApiResponse(responseCode = "200", description = "Permissão removida com sucesso")
+    @ApiResponse(responseCode = "400", description = "Requisição inválida")
+    @ApiResponse(responseCode = "404", description = "Usuário ou permissão não encontrados")
+    @DeleteMapping("/usuarios/{usuarioId}/permissoes/{permissaoNome}")
+    public ResponseEntity<String> removerPermissaoDoUsuario(
+            @PathVariable Long usuarioId,
+            @PathVariable String permissaoNome) {
+
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(usuarioId);
+        Permissao permissao = permissaoRepositorio.findByNome(permissaoNome);
+
+        if (usuarioOptional.isPresent() && permissao != null) {
+            Usuario usuario = usuarioOptional.get();
+
+            if (usuario.getPermissoes().contains(permissao)) {
+                usuario.getPermissoes().remove(permissao);//olhar aqui se vai dar ruim
+                usuarioRepositorio.save(usuario);
+                return ResponseEntity.status(HttpStatus.OK).body("Permissão removida do usuário.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O usuário não possui essa permissão.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário ou permissão não encontrados.");
+        }
+    }
+
+    @GetMapping("/permissoes")
+    public ResponseEntity<List<PermissaoResponseDTO>> listarPermissoes() {
+        List<Permissao> permissoes = (List<Permissao>) permissaoRepositorio.findAll(); 
+                                                                   
+        List<PermissaoResponseDTO> permissaoDTOs = permissoes.stream()
+        .map(permissao -> {
+            PermissaoResponseDTO dto = new PermissaoResponseDTO();
+            dto.setNome(permissao.getNome()); 
+            return dto;
+        })
+        .collect(Collectors.toList());
+        return ResponseEntity.ok(permissaoDTOs);
+    }
+
 }

@@ -17,4 +17,5 @@ public class MembroResponseDTO {
     private Date dataIngresso;
     private Date dataTermino;
     private boolean ativo;
+
 }

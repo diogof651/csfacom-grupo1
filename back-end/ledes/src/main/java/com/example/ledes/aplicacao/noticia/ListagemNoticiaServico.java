@@ -31,7 +31,7 @@ public class ListagemNoticiaServico {
         List<Noticia> noticiasFiltradasPorDataPublicacao;
         List<Noticia> noticiasFiltradasPorTitulo;
         List<Noticia> noticiasFiltradasPorAutor;
-
+        //verificar se o estado está vindo null se o usuário não tiver permissao deixar o estado como null
         if (nomeAutor != null && !nomeAutor.isEmpty() && !nomeAutor.isBlank()) {
             Usuario autor = usuarioRepositorio.findByNome(nomeAutor);
             noticiasFiltradasPorAutor = noticiaRepositorio.findByAutor(autor);
