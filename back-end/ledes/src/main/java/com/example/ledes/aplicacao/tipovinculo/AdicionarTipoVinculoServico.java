@@ -14,11 +14,11 @@ public class AdicionarTipoVinculoServico {
     private TipoVinculoRepositorio tipoVinculoRepositorio;
 
     public TipoVinculoResponseDTO adicionar(TipoVinculoRequestDTO tipovinculoRequest) {
-
+        String resposta = "Vinculo com o mesmo nome encontrado e desativado.";
         TipoVinculo tipovinculo = tipoVinculoRepositorio.findByNome(tipovinculoRequest.getNome());
         if(tipovinculo != null){
             if(tipovinculo.getAtivo() == false){
-                throw new IllegalArgumentException("Vinculo com o mesmo nome encontrado e desativado.");
+                return new TipoVinculoResponseDTO(resposta);
             }
         }
         else{
