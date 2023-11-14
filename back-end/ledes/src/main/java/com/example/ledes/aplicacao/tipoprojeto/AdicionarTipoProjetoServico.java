@@ -14,11 +14,11 @@ public class AdicionarTipoProjetoServico {
     private TipoProjetoRepositorio tipoProjetoRepositorio;
 
     public TipoProjetoResponseDTO adicionar(TipoProjetoRequestDTO tipoprojetoRequest) {
-        
+        String resposta = "Projeto com o mesmo tipo encontrado e desativado.";
         TipoProjeto tipoprojeto = tipoProjetoRepositorio.findByTipo(tipoprojetoRequest.getTipo());
         if(tipoprojeto != null){
             if(tipoprojeto.getAtivo() == false){
-                throw new IllegalArgumentException("Projeto com o mesmo tipo encontrado e desativado.");
+                return new TipoProjetoResponseDTO(resposta);
             }
         }
         else{
