@@ -1,5 +1,6 @@
 package com.example.ledes.dominio;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -7,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -35,11 +37,16 @@ public class Membro {
     @JoinColumn(name = "projeto_id")
     private Projeto projeto;
 
-    public Membro(Date dataIngresso, Date dataTermino, boolean ativo, Usuario usuario, Projeto projeto) {
+    @ManyToMany
+    private Collection<TipoPapel> papeis;
+
+    public Membro(Date dataIngresso, Date dataTermino, boolean ativo, Usuario usuario, Projeto projeto
+    , Collection<TipoPapel> tipoPapel) {
         this.dataIngresso = dataIngresso;
         this.dataTermino = dataTermino;
         this.ativo = ativo;
         this.usuario = usuario;
         this.projeto = projeto;
+        this.papeis = tipoPapel;
     }
 }

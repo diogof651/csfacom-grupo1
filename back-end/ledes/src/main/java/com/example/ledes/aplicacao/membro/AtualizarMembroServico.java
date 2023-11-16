@@ -42,6 +42,7 @@ public class AtualizarMembroServico {
             membro.setDataTermino(membroRequestDTO.getDataTermino());
             membro.setUsuario(usuario);
             membro.setAtivo(membroRequestDTO.isAtivo());
+            membro.setPapeis(membroRequestDTO.getPapeis());
 
             membroRepositorio.save(membro);
 
