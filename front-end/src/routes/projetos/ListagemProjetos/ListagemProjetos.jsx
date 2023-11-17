@@ -47,7 +47,7 @@ export function ListagemProjetos() {
     })
       .then((resposta) => resposta.json())
       .then((data) => {
-        let mapeamento = data.map((tipoProjeto) => tipoProjeto.tipo);
+        let mapeamento = data.map((tipoProjeto) => tipoProjeto.nome);
         setOptionsTipoProjeto(mapeamento);
       })
       .catch((erro) => console.log(erro));
