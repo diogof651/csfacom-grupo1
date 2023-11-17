@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
+import { BsPlusCircle } from "react-icons/bs";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
-import { format } from "date-fns";
+import { ModalTipos } from "../../gerenciador/ModalTipos";
 
 export function CadastroMembro() {
   const navigate = useNavigate();
@@ -23,6 +24,25 @@ export function CadastroMembro() {
   const [tiposDeVinculo, setTiposDeVinculo] = useState([]);
   const [papeisSelecionados, setPapeisSelecionados] = useState([]);
   const [vinculosSelecionados, setVinculosSelecionados] = useState([]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [modoEdicao, setModoEdicao] = useState(false);
+  const [titulo, setTitulo] = useState("");
+  const [salvar, setSalvar] = useState(null);
+
+  const handleOpenTipoPapel = () => {
+    setTitulo("Tipo de Papel");
+    setSalvar(() => salvarTipoPapel);
+    setModoEdicao(false);
+    setShowModal(true);
+  };
+
+  const handleOpenTipoVinculo = () => {
+    setTitulo("Tipo de Vinculo");
+    setSalvar(() => salvarTipoVinculo);
+    setModoEdicao(false);
+    setShowModal(true);
+  };
 
   useEffect(() => {
     if (tiposDePapel.length === 0) {
@@ -95,6 +115,32 @@ export function CadastroMembro() {
       .catch((erro) => console.log(erro));
   }
 
+  function salvarTipoPapel(tipo) {
+    const url = "http://localhost:8080/api/v1/tipoPapel";
+    fetch(`${url}/`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(tipo),
+    })
+      .then(() => obterTiposDePapel())
+      .catch((erro) => console.log(erro));
+  }
+
+  function salvarTipoVinculo(tipo) {
+    const url = "http://localhost:8080/api/v1/tipoVinculo";
+    fetch(`${url}/`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(tipo),
+    })
+      .then(() => obterTiposDeVinculo())
+      .catch((erro) => console.log(erro));
+  }
+
   const onSubmit = () => {
     const data = {
       dataIngresso: dataIngresso,
@@ -131,6 +177,10 @@ export function CadastroMembro() {
         .catch((erro) => console.log(erro));
     }
   };
+
+  function cancelar() {
+    navigate(`/projeto/${idProjeto}`);
+  }
 
   return (
     <>
@@ -196,35 +246,66 @@ export function CadastroMembro() {
               setAtivo(e.target.checked);
             }}
           />
+          <div className="row">
+            <div className="col-md-10 col-12">
+              <Form.Label
+                style={{ fontWeight: "bold", fontSize: "18px" }}
+                className="mt-3"
+              >
+                Tipo de vinculo
+              </Form.Label>
+            </div>
+            <div className="col-md-2 col-12">
+              <BotaoOutline
+                color="var(--blue)"
+                style={{
+                  fontSize: "0.8em", // Ajuste de tamanho
+                  padding: "5px 8px", // Ajuste de padding
+                }}
+                onClick={handleOpenTipoVinculo}
+              >
+                <BsPlusCircle style={{ marginRight: "-3px" }} /> Adicionar
+              </BotaoOutline>
+            </div>
 
-          <Form.Label
-            style={{ fontWeight: "bold", fontSize: "18px" }}
-            className="mt-3"
-          >
-            Tipo de vinculo
-          </Form.Label>
-
-          {tiposDeVinculo.map((vinculo, index) => (
-            <Form.Check
-              key={index}
-              className="mt-3"
-              type="checkbox"
-              id="ativoCheckbox"
-              label={vinculo.nome}
-              checked={vinculosSelecionados.some(
-                (vinculoSelecionado) => vinculoSelecionado.id == vinculo.id
-              )}
-              onChange={() =>
-                toggleSelecionado(vinculo, setVinculosSelecionados)
-              }
-            />
-          ))}
-          <Form.Label
-            style={{ fontWeight: "bold", fontSize: "18px" }}
-            className="mt-3"
-          >
-            Tipo de papel
-          </Form.Label>
+            {tiposDeVinculo.map((vinculo, index) => (
+              <Form.Check
+                key={index}
+                className="mt-3"
+                type="checkbox"
+                id="ativoCheckbox"
+                label={vinculo.nome}
+                checked={vinculosSelecionados.some(
+                  (vinculoSelecionado) => vinculoSelecionado.id == vinculo.id
+                )}
+                onChange={() =>
+                  toggleSelecionado(vinculo, setVinculosSelecionados)
+                }
+              />
+            ))}
+          </div>
+          <div className="row">
+            <div className="col-md-10 col-12 ">
+              <Form.Label
+                style={{ fontWeight: "bold", fontSize: "18px" }}
+                className="mt-3"
+              >
+                Tipo de papel
+              </Form.Label>
+            </div>
+            <div className="col-md-2 col-12">
+              <BotaoOutline
+                color="var(--blue)"
+                style={{
+                  fontSize: "0.8em", // Ajuste de tamanho
+                  padding: "5px 8px", // Ajuste de padding
+                }}
+                onClick={handleOpenTipoPapel}
+              >
+                <BsPlusCircle style={{ marginRight: "-3px" }} /> Adicionar
+              </BotaoOutline>
+            </div>
+          </div>
 
           {tiposDePapel.map((papel, index) => (
             <Form.Check
@@ -241,13 +322,24 @@ export function CadastroMembro() {
           ))}
 
           <div className="d-flex justify-content-end gap-2 mt-4 mb-4">
-            <BotaoOutline color="var(--blue)">Cancelar</BotaoOutline>
+            <BotaoOutline color="var(--blue)" onClick={cancelar}>
+              Cancelar
+            </BotaoOutline>
             <BotaoComFundo type="submit" color="var(--blue)">
               Cadastrar
             </BotaoComFundo>
           </div>
         </Form>
       </Container>
+
+      <ModalTipos
+        titulo={titulo}
+        salvar={salvar}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        modoEdicao={modoEdicao}
+        itemSelecionado={null}
+      />
     </>
   );
 }

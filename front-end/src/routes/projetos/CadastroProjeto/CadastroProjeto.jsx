@@ -29,13 +29,6 @@ export function CadastroProjeto(props) {
 
   const [showModal, setShowModal] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
-  const [itemSelecionado, setItemSelecionado] = useState(null);
-
-  const handleOpenModal = (item) => {
-    setShowModal(true);
-    setModoEdicao(true);
-    setItemSelecionado(item);
-  };
 
   const handleOpenAdicionarModal = () => {
     setModoEdicao(false);
@@ -109,27 +102,15 @@ export function CadastroProjeto(props) {
   };
 
   function salvarTipoProjeto(tipoProjeto) {
-    if (tipoProjeto.id) {
-      fetch(`http://localhost:8080/api/v1/tipoProjeto/${tipoProjeto.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ nome: tipoProjeto.nome }),
-      })
-        .then(() => obterTiposDeProjeto())
-        .catch((erro) => console.log(erro));
-    } else {
-      fetch("http://localhost:8080/api/v1/tipoProjeto/", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(tipoProjeto),
-      })
-        .then(() => obterTiposDeProjeto())
-        .catch((erro) => console.log(erro));
-    }
+    fetch("http://localhost:8080/api/v1/tipoProjeto/", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(tipoProjeto),
+    })
+      .then(() => obterTiposDeProjeto())
+      .catch((erro) => console.log(erro));
   }
 
   return (
@@ -277,7 +258,7 @@ export function CadastroProjeto(props) {
         showModal={showModal}
         setShowModal={setShowModal}
         modoEdicao={modoEdicao}
-        itemSelecionado={itemSelecionado}
+        itemSelecionado={null}
       />
     </>
   );

@@ -26,7 +26,6 @@ export function PaginaProjeto() {
   const [activeTab, setActiveTab] = useState(true);
   const handleTabSelect = (selectedTab) => {
     setActiveTab(selectedTab);
-    obterMembros();
   };
 
   const [projeto, setProjeto] = useState({});
