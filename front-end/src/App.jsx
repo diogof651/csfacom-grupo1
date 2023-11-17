@@ -5,9 +5,11 @@ import { Header } from "./components/Header/Header";
 import "./global.css";
 
 function App() {
+  const mostrarNavLinkGerenciar = window.location.pathname.includes("/gerenciar");
+
   return (
     <AuthProvider>
-      <Header />
+      <Header mostrarNavLinkGerenciar={mostrarNavLinkGerenciar} />
       <Outlet />
     </AuthProvider>
   );
