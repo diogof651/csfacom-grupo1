@@ -16,7 +16,7 @@ public class BuscarTipoProjetoIdServico {
         TipoProjeto tipoProjeto = tipoProjetoRepositorio.findById(id).orElse(null);
 
         if (tipoProjeto != null) {
-            return new TipoProjetoResponseDTO(tipoProjeto.getId(), tipoProjeto.getTipo(), tipoProjeto.getAtivo());
+            return new TipoProjetoResponseDTO(tipoProjeto.getId(), tipoProjeto.getNome(), tipoProjeto.getAtivo());
         } else {
             return null;
         }

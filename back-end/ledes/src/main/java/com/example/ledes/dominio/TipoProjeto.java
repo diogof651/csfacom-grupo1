@@ -16,11 +16,11 @@ public class TipoProjeto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tipo;
+    private String nome;
 
     private Boolean ativo;
 
     public TipoProjeto(String tipo) {
-        this.tipo = tipo;
+        this.nome = tipo;
     }
 }

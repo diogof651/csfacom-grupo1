@@ -10,6 +10,6 @@ public class TipoPapelResponseDTO {
         
     }
     private Long id;
-    private String tipo; // Tipo de papel
+    private String nome; // Tipo de papel
     private Boolean ativo; // se o papel está ativo ou não
 }

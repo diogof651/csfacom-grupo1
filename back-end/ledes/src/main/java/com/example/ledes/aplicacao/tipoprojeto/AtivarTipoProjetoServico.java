@@ -22,7 +22,7 @@ public class AtivarTipoProjetoServico {
             tipoProjeto.setAtivo(true);
             tipoProjetoRepositorio.save(tipoProjeto);
 
-            return new TipoProjetoResponseDTO(tipoProjeto.getId(), tipoProjeto.getTipo(), tipoProjeto.getAtivo());
+            return new TipoProjetoResponseDTO(tipoProjeto.getId(), tipoProjeto.getNome(), tipoProjeto.getAtivo());
         } else {
             return null;
         }

@@ -20,7 +20,7 @@ public class AtualizarTipoVinculoServico {
         TipoVinculo tipovinculo = tipoVinculoRepositorio.findById(id).orElse(null);
 
         if (tipovinculo != null) {
-            tipovinculo.setNome(tipoVinculoRequest.getNome().toUpperCase());
+            tipovinculo.setNome(tipoVinculoRequest.getNome());
             tipoVinculoRepositorio.save(tipovinculo);
 
             // Retornar o tipo do vinculo atualizado como TipoVinculoResponseDTO

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,13 +24,12 @@ import com.example.ledes.infraestrutura.dto.TipoPapelRequestDTO;
 import com.example.ledes.infraestrutura.dto.TipoPapelResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping(path = { "/api/v1/tipoPapel" }, produces = { "application/json" })
-public class TipoPapelController  {
+public class TipoPapelController {
     @Autowired
     private AdicionarTipoPapelServico adicionarTipoPapelServico;
     @Autowired
@@ -115,6 +115,5 @@ public class TipoPapelController  {
         }
         return ResponseEntity.notFound().build();
     }
-
 
 }

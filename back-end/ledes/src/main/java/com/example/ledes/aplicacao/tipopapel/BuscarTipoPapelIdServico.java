@@ -16,7 +16,7 @@ public class BuscarTipoPapelIdServico {
         TipoPapel tipoPapel = tipoPapelRepositorio.findById(id).orElse(null);
 
         if (tipoPapel != null) {
-            return new TipoPapelResponseDTO(tipoPapel.getId(), tipoPapel.getTipo(), tipoPapel.getAtivo());
+            return new TipoPapelResponseDTO(tipoPapel.getId(), tipoPapel.getNome(), tipoPapel.getAtivo());
         } else {
             return null;
         }

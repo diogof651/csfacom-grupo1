@@ -19,7 +19,7 @@ public class AdicionarProjetoServico {
     private TipoProjetoRepositorio tipoProjetoRepositorio;
 
     public ProjetoResponseDTO adicionar(ProjetoRequestDTO projetoRequest) {
-        TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByTipo(projetoRequest.getTipoProjeto());
+        TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByNome(projetoRequest.getTipoProjeto());
 
         Projeto projeto = new Projeto(projetoRequest.getNome(), projetoRequest.getDescricao(),
                 projetoRequest.getInicio(), projetoRequest.getTermino(), projetoRequest.getStatus(),

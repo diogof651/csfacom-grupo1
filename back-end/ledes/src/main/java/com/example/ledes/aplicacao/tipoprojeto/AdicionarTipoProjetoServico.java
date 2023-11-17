@@ -15,16 +15,16 @@ public class AdicionarTipoProjetoServico {
 
     public TipoProjetoResponseDTO adicionar(TipoProjetoRequestDTO tipoprojetoRequest) {
         String resposta = "Projeto com o mesmo tipo encontrado e desativado.";
-        TipoProjeto tipoprojeto = tipoProjetoRepositorio.findByTipo(tipoprojetoRequest.getTipo());
-        if(tipoprojeto != null){
-            if(tipoprojeto.getAtivo() == false){
+        TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByNome(tipoprojetoRequest.getNome());
+        if (tipoProjeto != null) {
+            if (tipoProjeto.getAtivo() == false) {
                 return new TipoProjetoResponseDTO(resposta);
             }
+        } else {
+            tipoProjeto = new TipoProjeto(tipoprojetoRequest.getNome());
+            tipoProjeto.setAtivo(true);
+            tipoProjetoRepositorio.save(tipoProjeto);
         }
-        else{
-            tipoprojeto = new TipoProjeto(tipoprojetoRequest.getTipo().toUpperCase());
-            tipoProjetoRepositorio.save(tipoprojeto);
-        }
-        return new TipoProjetoResponseDTO(tipoprojeto.getId(), tipoprojeto.getTipo(), tipoprojeto.getAtivo());
+        return new TipoProjetoResponseDTO(tipoProjeto.getId(), tipoProjeto.getNome(), tipoProjeto.getAtivo());
     }
 }

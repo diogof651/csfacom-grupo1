@@ -15,17 +15,16 @@ public class AdicionarTipoPapelServico {
 
     public TipoPapelResponseDTO adicionar(TipoPapelRequestDTO tipoPapelRequest) {
         String resposta = "Papel com o mesmo nome encontrado e desativado.";
-        TipoPapel tipopapel = tipoPapelRepositorio.findByTipo(tipoPapelRequest.getTipo());
-        if(tipopapel != null){
-            if(tipopapel.getAtivo() == false){
+        TipoPapel tipoPapel = tipoPapelRepositorio.findByNome(tipoPapelRequest.getNome());
+        if (tipoPapel != null) {
+            if (tipoPapel.getAtivo() == false) {
                 return new TipoPapelResponseDTO(resposta);
             }
+        } else {
+            tipoPapel = new TipoPapel(tipoPapelRequest.getNome());
+            tipoPapel.setAtivo(true);
+            tipoPapelRepositorio.save(tipoPapel);
         }
-        else{
-            tipopapel = new TipoPapel(tipoPapelRequest.getTipo().toUpperCase());
-            tipopapel.setAtivo(true);
-            tipoPapelRepositorio.save(tipopapel);
-        }
-        return new TipoPapelResponseDTO(tipopapel.getId(), tipopapel.getTipo(), tipopapel.getAtivo());
+        return new TipoPapelResponseDTO(tipoPapel.getId(), tipoPapel.getNome(), tipoPapel.getAtivo());
     }
 }

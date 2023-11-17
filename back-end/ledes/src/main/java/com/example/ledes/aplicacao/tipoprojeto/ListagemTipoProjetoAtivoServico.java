@@ -26,7 +26,7 @@ public class ListagemTipoProjetoAtivoServico {
     private TipoProjetoResponseDTO converterParaDTO(TipoProjeto tipoProjeto) {
         return new TipoProjetoResponseDTO(
                 tipoProjeto.getId(),
-                tipoProjeto.getTipo(),
+                tipoProjeto.getNome(),
                 tipoProjeto.getAtivo());
     }
 }

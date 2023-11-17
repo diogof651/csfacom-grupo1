@@ -23,7 +23,7 @@ public class AtualizarProjetoServico {
     public ProjetoResponseDTO atualizar(Long id, ProjetoRequestDTO projetoRequest) {
         // Verificar se o projeto com o ID especificado existe
         Projeto projeto = projetoRepositorio.findById(id).orElse(null);
-        TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByTipo(projetoRequest.getTipoProjeto());
+        TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByNome(projetoRequest.getTipoProjeto());
 
         if (projeto != null) {
             projeto.setNome(projetoRequest.getNome());

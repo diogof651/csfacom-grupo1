@@ -7,9 +7,10 @@ import lombok.Data;
 @AllArgsConstructor
 public class TipoProjetoResponseDTO {
     public TipoProjetoResponseDTO(String resposta) {
-        
+
     }
+
     private Long id;
-    private String tipo; // Tipo de projeto
+    private String nome; // Tipo de projeto
     private Boolean ativo; // se o projeto está ativo ou não
 }

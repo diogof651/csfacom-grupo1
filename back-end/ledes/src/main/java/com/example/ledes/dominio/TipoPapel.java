@@ -1,6 +1,5 @@
 package com.example.ledes.dominio;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,11 +16,11 @@ public class TipoPapel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tipo;
+    private String nome;
 
     private Boolean ativo;
 
-    public TipoPapel(String tipo) {
-        this.tipo = tipo;
+    public TipoPapel(String nome) {
+        this.nome = nome;
     }
 }

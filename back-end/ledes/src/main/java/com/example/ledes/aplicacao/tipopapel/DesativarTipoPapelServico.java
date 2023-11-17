@@ -22,7 +22,7 @@ public class DesativarTipoPapelServico {
             tipoPapel.setAtivo(false);
             tipoPapelRepositorio.save(tipoPapel);
 
-            return new TipoPapelResponseDTO(tipoPapel.getId(), tipoPapel.getTipo(), tipoPapel.getAtivo());
+            return new TipoPapelResponseDTO(tipoPapel.getId(), tipoPapel.getNome(), tipoPapel.getAtivo());
         } else {
             return null;
         }

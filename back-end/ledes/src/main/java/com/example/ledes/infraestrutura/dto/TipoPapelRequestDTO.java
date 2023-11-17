@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class TipoPapelRequestDTO {
 
-    private String tipo;
+    private String nome;
 }

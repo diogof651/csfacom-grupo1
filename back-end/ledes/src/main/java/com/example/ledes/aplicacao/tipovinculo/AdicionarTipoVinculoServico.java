@@ -22,7 +22,7 @@ public class AdicionarTipoVinculoServico {
             }
         }
         else{
-            tipovinculo = new TipoVinculo(tipovinculoRequest.getNome().toUpperCase());
+            tipovinculo = new TipoVinculo(tipovinculoRequest.getNome());
             tipovinculo.setAtivo(true);
             tipoVinculoRepositorio.save(tipovinculo);
         }

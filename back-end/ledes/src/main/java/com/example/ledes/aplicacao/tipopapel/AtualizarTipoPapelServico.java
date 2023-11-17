@@ -20,11 +20,11 @@ public class AtualizarTipoPapelServico {
         TipoPapel tipopapel = tipoPapelRepositorio.findById(id).orElse(null);
 
         if (tipopapel != null) {
-            tipopapel.setTipo(tipoPapelRequest.getTipo().toUpperCase());
+            tipopapel.setNome(tipoPapelRequest.getNome());
             tipoPapelRepositorio.save(tipopapel);
 
             // Retornar o tipo papel atualizado como TipoPapelResponseDTO
-            return new TipoPapelResponseDTO(tipopapel.getId(), tipopapel.getTipo(), tipopapel.getAtivo());
+            return new TipoPapelResponseDTO(tipopapel.getId(), tipopapel.getNome(), tipopapel.getAtivo());
         } else {
             return null;
         }

@@ -26,7 +26,7 @@ public class ListagemTipoPapelServico {
     private TipoPapelResponseDTO converterParaDTO(TipoPapel tipoPapel) {
         return new TipoPapelResponseDTO(
                 tipoPapel.getId(),
-                tipoPapel.getTipo(),
+                tipoPapel.getNome(),
                 tipoPapel.getAtivo());
     }
 }

@@ -20,11 +20,11 @@ public class AtualizarTipoProjetoServico {
         TipoProjeto tipoprojeto = tipoprojetoRepositorio.findById(id).orElse(null);
 
         if (tipoprojeto != null) {
-            tipoprojeto.setTipo(tipoProjetoRequest.getTipo().toUpperCase());
+            tipoprojeto.setNome(tipoProjetoRequest.getNome());
             tipoprojetoRepositorio.save(tipoprojeto);
 
             // Retornar o tipo projeto atualizado como TipoProjetoResponseDTO
-            return new TipoProjetoResponseDTO(tipoprojeto.getId(), tipoprojeto.getTipo(), tipoprojeto.getAtivo());
+            return new TipoProjetoResponseDTO(tipoprojeto.getId(), tipoprojeto.getNome(), tipoprojeto.getAtivo());
         } else {
             return null;
         }

@@ -22,7 +22,7 @@ public class DesativarTipoProjetoServico {
             tipoProjeto.setAtivo(false);
             tipoProjetoRepositorio.save(tipoProjeto);
 
-            return new TipoProjetoResponseDTO(tipoProjeto.getId(), tipoProjeto.getTipo(), tipoProjeto.getAtivo());
+            return new TipoProjetoResponseDTO(tipoProjeto.getId(), tipoProjeto.getNome(), tipoProjeto.getAtivo());
         } else {
             return null;
         }
