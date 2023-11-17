@@ -15,7 +15,7 @@ export function ListagemProjetos() {
   const [searchText, setSearchText] = useState("");
   const [cards, setCards] = useState([]);
   const [optionsTipoProjeto, setOptionsTipoProjeto] = useState([]);
-  const optionsEstado = ["Em andamento", "Concluido", "Descontinuado"];
+  const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
 
   useEffect(() => {
     obterProjetos();
@@ -184,12 +184,12 @@ export function ListagemProjetos() {
                         card.termino
                       ).toLocaleDateString()}`}
                     </span>
-                    <span>{card.tipoProjeto.tipo}</span>
+                    <span>{card.tipoProjeto.nome}</span>
                     <span>
                       {card.status === "Em andamento" && (
                         <Badge bg="primary">Em andamento</Badge>
                       )}
-                      {card.status === "Concluido" && (
+                      {card.status === "Concluído" && (
                         <Badge bg="success">Concluído</Badge>
                       )}
                       {card.status === "Descontinuado" && (
