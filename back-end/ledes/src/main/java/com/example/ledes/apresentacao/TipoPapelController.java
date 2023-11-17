@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping(path = { "/api/v1/tipoprojetos" }, produces = { "application/json" })
+@RequestMapping(path = { "/api/v1/tipoPapel" }, produces = { "application/json" })
 public class TipoPapelController  {
     @Autowired
     private AdicionarTipoPapelServico adicionarTipoPapelServico;

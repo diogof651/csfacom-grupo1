@@ -43,6 +43,7 @@ public class AtualizarMembroServico {
             membro.setUsuario(usuario);
             membro.setAtivo(membroRequestDTO.isAtivo());
             membro.setPapeis(membroRequestDTO.getPapeis());
+            membro.setVinculos(membroRequestDTO.getVinculos());
 
             membroRepositorio.save(membro);
 

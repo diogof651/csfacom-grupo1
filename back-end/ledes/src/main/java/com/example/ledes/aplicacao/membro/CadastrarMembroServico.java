@@ -28,16 +28,17 @@ public class CadastrarMembroServico {
 
     public MembroResponseDTO adicionar(Long idProjeto, MembroRequestDTO membroRequestDTO) {
         Projeto projeto = projetoRepositorio.findById(idProjeto).orElse(null);
-        
+
         Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
 
         if (usuario == null) {
             adicionarUsuarioServico.adicionar(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()));
             usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
         }
-        
+
         Membro membro = new Membro(membroRequestDTO.getDataIngresso(), membroRequestDTO.getDataTermino(),
-                membroRequestDTO.isAtivo(), usuario, projeto, membroRequestDTO.getPapeis());
+                membroRequestDTO.isAtivo(), usuario, projeto, membroRequestDTO.getPapeis(),
+                membroRequestDTO.getVinculos());
 
         membroRepositorio.save(membro);
 
