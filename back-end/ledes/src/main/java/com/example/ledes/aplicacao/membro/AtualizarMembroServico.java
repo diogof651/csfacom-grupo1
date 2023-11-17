@@ -25,14 +25,14 @@ public class AtualizarMembroServico {
     private AdicionarUsuarioServico adicionarUsuarioServico;
 
     @Transactional
-    public MembroResponseDTO atualizarMembro(Long id, MembroRequestDTO membroRequestDTO) {
+    public MembroResponseDTO atualizarMembro(Long id, MembroRequestDTO membroRequestDTO, String hash) {
         Membro membro = membroRepositorio.findById(id).orElse(null);
         Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
 
         if (membro != null) {
             if (usuario == null) {
                 adicionarUsuarioServico
-                        .adicionar(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()));
+                        .adicionarPeloMembro(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()), hash);
                 usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
             } else {
                 usuario = membro.getUsuario();

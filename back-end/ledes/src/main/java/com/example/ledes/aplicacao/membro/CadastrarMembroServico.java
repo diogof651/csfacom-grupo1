@@ -26,18 +26,13 @@ public class CadastrarMembroServico {
     @Autowired
     private AdicionarUsuarioServico adicionarUsuarioServico;
 
-    public MembroResponseDTO adicionar(Long idProjeto, MembroRequestDTO membroRequestDTO) {
+    public MembroResponseDTO adicionar(Long idProjeto, MembroRequestDTO membroRequestDTO, String hash) {
         Projeto projeto = projetoRepositorio.findById(idProjeto).orElse(null);
-        if (projeto == null) {
-            // Trate o cenário em que o projeto não foi encontrado.
-            // Pode ser uma boa ideia lançar uma exceção ou tomar outra ação apropriada.
-            // Exemplo: throw new ProjetoNaoEncontradoException("Projeto não encontrado");
-        }
 
         Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
 
         if (usuario == null) {
-            adicionarUsuarioServico.adicionar(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()));
+            adicionarUsuarioServico.adicionarPeloMembro(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()), hash);
             usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
         }
 

@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
+import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServicoGerenciar;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorHashServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
+import com.example.ledes.aplicacao.usuario.ListagemPermissoesServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
 import com.example.ledes.dominio.Permissao;
@@ -34,7 +36,10 @@ import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.PermissaoResponseDTO;
+import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioGerenciarRequestDTO;
+import com.example.ledes.infraestrutura.dto.UsuarioGerenciarResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioResponseDTO;
 
@@ -61,16 +66,24 @@ public class UsuarioController {
     private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
     @Autowired
     private BuscarUsuarioPorHashServico buscarUsuarioPorHashServico;
-    private UsuarioRepositorio usuarioRepositorio; 
+    private UsuarioRepositorio usuarioRepositorio;
     @Autowired
     private PermissaoRepositorio permissaoRepositorio;
+    @Autowired
+    private AtualizarUsuarioServicoGerenciar atualizarPerfilUsuarioServicoGerenciar;
+    @Autowired
+    private ListagemPermissoesServico listagemPermissoesServico;
 
     @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioResponseDTO novoUsuario = usuarioServico.adicionar(usuarioDTO);
-        return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
+    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO,
+            @RequestHeader("usuarioLogado") String hash) {
+        if (hash != null) {
+            UsuarioResponseDTO novoUsuario = usuarioServico.adicionar(usuarioDTO, hash);
+            return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @Operation(summary = "Buscar usuário com noticia")
@@ -164,72 +177,34 @@ public class UsuarioController {
         }
         return ResponseEntity.notFound().build();
     }
-    @Operation(summary = "Adicionar permissão a um usuário")
-    @ApiResponse(responseCode = "200", description = "Permissão adicionada com sucesso")
-    @ApiResponse(responseCode = "400", description = "Requisição inválida")
-    @ApiResponse(responseCode = "404", description = "Usuário ou permissão não encontrados")
-    @PostMapping("/usuarios/{usuarioId}/permissoes/{permissaoNome}")
-    public ResponseEntity<String> adicionarPermissaoAoUsuario(
-            @PathVariable Long usuarioId,
-            @PathVariable String permissaoNome) {
 
-        Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(usuarioId);
-        Permissao permissao = permissaoRepositorio.findByNome(permissaoNome);
-
-        if (usuarioOptional.isPresent() && permissao != null) {
-            Usuario usuario = usuarioOptional.get();
-
-            if (usuario.getPermissoes().isEmpty()) {
-                usuario.getPermissoes().add(permissao);// olhar aqui
-                usuarioRepositorio.save(usuario);
-                return ResponseEntity.status(HttpStatus.OK).body("Permissão adicionada ao usuário.");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O usuário já possui uma permissão.");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário ou permissão não encontrados.");
-        }
-    }
-
-    @Operation(summary = "Remover permissão de um usuário")
-    @ApiResponse(responseCode = "200", description = "Permissão removida com sucesso")
-    @ApiResponse(responseCode = "400", description = "Requisição inválida")
-    @ApiResponse(responseCode = "404", description = "Usuário ou permissão não encontrados")
-    @DeleteMapping("/usuarios/{usuarioId}/permissoes/{permissaoNome}")
-    public ResponseEntity<String> removerPermissaoDoUsuario(
-            @PathVariable Long usuarioId,
-            @PathVariable String permissaoNome) {
-
-        Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(usuarioId);
-        Permissao permissao = permissaoRepositorio.findByNome(permissaoNome);
-
-        if (usuarioOptional.isPresent() && permissao != null) {
-            Usuario usuario = usuarioOptional.get();
-
-            if (usuario.getPermissoes().contains(permissao)) {
-                usuario.getPermissoes().remove(permissao);//olhar aqui se vai dar ruim
-                usuarioRepositorio.save(usuario);
-                return ResponseEntity.status(HttpStatus.OK).body("Permissão removida do usuário.");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O usuário não possui essa permissão.");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário ou permissão não encontrados.");
-        }
-    }
-
+    @Operation(summary = "Listar Permissões")
+    @ApiResponse(responseCode = "200", description = "Retorna a listagem de permissões")
     @GetMapping("/permissoes")
     public ResponseEntity<List<PermissaoResponseDTO>> listarPermissoes() {
-        List<Permissao> permissoes = (List<Permissao>) permissaoRepositorio.findAll(); 
-                                                                   
-        List<PermissaoResponseDTO> permissaoDTOs = permissoes.stream()
-        .map(permissao -> {
-            PermissaoResponseDTO dto = new PermissaoResponseDTO();
-            dto.setNome(permissao.getNome()); 
-            return dto;
-        })
-        .collect(Collectors.toList());
-        return ResponseEntity.ok(permissaoDTOs);
+
+        List<PermissaoResponseDTO> listagemPermissoes = listagemPermissoesServico.listarPermissoes();
+
+        if (listagemPermissoes != null) {
+            return ResponseEntity.ok(listagemPermissoes);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Atualização de dados do perfil de um usuario logado (Gerenciamento)")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
+    @PutMapping(path = "/{codigoUnico}/gerenciarUsuario", consumes = "application/json")
+    public ResponseEntity<UsuarioGerenciarResponseDTO> atualizarPerfilUsuarioGerenciar(
+            @PathVariable String codigoUnico, @RequestHeader("usuarioLogado") String hash,
+            @RequestBody UsuarioGerenciarRequestDTO usuarioGerenciarRequestDTO) {
+        if (hash != null) {
+            UsuarioGerenciarResponseDTO usuarioAtualizado = atualizarPerfilUsuarioServicoGerenciar
+                    .atualizarPerfilUsuarioGerenciar(codigoUnico,
+                            usuarioGerenciarRequestDTO, hash);
+            return ResponseEntity.ok(usuarioAtualizado);
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.ledes.dominio;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -58,6 +59,7 @@ public class Usuario {
         this.ativo = true;
         this.codigoUnico = codigoUnico;
     }
+
 
     public void logar() {
         this.dataAcesso = new Date();
