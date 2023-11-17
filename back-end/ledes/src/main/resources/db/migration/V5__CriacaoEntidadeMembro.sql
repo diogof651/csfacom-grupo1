@@ -2,7 +2,7 @@ DO $$
 Begin
     If NOT EXISTS (Select 1 from information_schema.tables WHERE table_name = 'membro') THEN
         CREATE TABLE membro (
-        id int PRIMARY KEY,
+        id SERIAL PRIMARY KEY,
         ativo boolean not null,
         data_ingresso date,
         data_termino date,

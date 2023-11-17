@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "membro")
 public class Membro {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date dataIngresso;
     private Date dataTermino;

@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ledes.dominio.Projeto;
+import com.example.ledes.dominio.TipoProjeto;
 import com.example.ledes.infraestrutura.ProjetoRepositorio;
+import com.example.ledes.infraestrutura.TipoProjetoRepositorio;
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 
@@ -14,10 +16,14 @@ public class AtualizarProjetoServico {
     @Autowired
     private ProjetoRepositorio projetoRepositorio;
 
+    @Autowired
+    private TipoProjetoRepositorio tipoProjetoRepositorio;
+
     @Transactional
     public ProjetoResponseDTO atualizar(Long id, ProjetoRequestDTO projetoRequest) {
         // Verificar se o projeto com o ID especificado existe
         Projeto projeto = projetoRepositorio.findById(id).orElse(null);
+        TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByTipo(projetoRequest.getTipoProjeto());
 
         if (projeto != null) {
             projeto.setNome(projetoRequest.getNome());
@@ -25,7 +31,7 @@ public class AtualizarProjetoServico {
             projeto.setInicio(projetoRequest.getInicio());
             projeto.setTermino(projetoRequest.getTermino());
             projeto.setStatus(projetoRequest.getStatus());
-            projeto.setTipoProjeto(projetoRequest.getTipoProjeto());
+            projeto.setTipoProjeto(tipoProjeto);
             projetoRepositorio.save(projeto);
 
             // Retornar o projeto atualizado como ProjetoResponseDTO

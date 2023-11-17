@@ -82,7 +82,7 @@ public class ProjetoController {
     @ApiResponse(responseCode = "200", description = "Retorna a listagem de projetos")
     @GetMapping("/listagem")
     public ResponseEntity<List<ProjetoResponseDTO>> buscarProjetosPorParametros(
-            @RequestParam(name = "tipo", required = false) Long tipo,
+            @RequestParam(name = "tipo", required = false) String tipo,
             @RequestParam(name = "status", required = false) String status,
             @RequestParam(name = "nome", required = false) String nome) {
 
