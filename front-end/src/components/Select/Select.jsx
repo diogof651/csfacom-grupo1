@@ -8,13 +8,13 @@ export function Select({
   optionDefault,
 }) {
   const opcaoPadrao = optionDefault ?? "Selecione";
-  function removerAcentos(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  }
+  // function removerAcentos(str) {
+  //   return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  // }
 
   return (
     <Form.Select
-      value={removerAcentos(selectedOption)}
+      value={selectedOption}
       onChange={handleOptionChange}
       style={{ marginRight: "10px", width: "100%" }}
     >
@@ -23,7 +23,7 @@ export function Select({
       </option>
 
       {options.map((option, index) => (
-        <option value={removerAcentos(option)} key={index}>
+        <option value={option} key={index}>
           {option}
         </option>
       ))}

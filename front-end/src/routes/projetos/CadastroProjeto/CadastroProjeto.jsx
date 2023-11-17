@@ -24,32 +24,40 @@ export function CadastroProjeto(props) {
 
   const [tipoSelectedOption, setTipoSelectedOption] = useState("");
   const [estadoSelectedOption, setEstadoSelectedOption] = useState("");
-  const optionsTipoProjeto = [
-    "Projeto de extensão",
-    "TCC",
-    "Mestrado",
-    "Doutorado",
-    "IC",
-    "Atividade Orientada de Ensino",
-    "Estágio",
-  ];
+  const [optionsTipoProjeto, setOptionsTipoProjeto] = useState([]);
 
   const optionsEstado = ["Em andamento", "Concluido", "Descontinuado"];
   useEffect(() => {
+    obterTiposDeProjeto();
     if (id) {
       fetch(`http://localhost:8080/api/v1/projetos/${id}`)
         .then((resposta) => resposta.json())
         .then((data) => {
           setValue("nome", data.nome);
-          setValue("tipo", data.tipo);
-          setValue("status", data.status);
           setValue("inicio", new Date(data.inicio));
           setValue("termino", new Date(data.termino));
           setValue("descricao", data.descricao);
+          setTipoSelectedOption(data.tipoProjeto.tipo);
+          setEstadoSelectedOption(data.status);
         })
         .catch((erro) => console.log(erro));
     }
   }, [id, setValue]);
+
+  function obterTiposDeProjeto() {
+    fetch("http://localhost:8080/api/v1/tipoProjeto/listagem/ativos", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        let mapeamento = data.map((tipoProjeto) => tipoProjeto.tipo);
+        setOptionsTipoProjeto(mapeamento);
+      })
+      .catch((erro) => console.log(erro));
+  }
 
   function cancelar() {
     navigate("/projetos");
@@ -59,7 +67,7 @@ export function CadastroProjeto(props) {
     data.inicio = data.inicio.toISOString().split("T")[0];
     data.termino = data.termino.toISOString().split("T")[0];
     data.status = estadoSelectedOption;
-    data.tipo = tipoSelectedOption;
+    data.tipoProjeto = tipoSelectedOption;
 
     if (id) {
       fetch(`http://localhost:8080/api/v1/projetos/${id}`, {
