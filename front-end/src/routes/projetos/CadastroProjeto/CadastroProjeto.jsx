@@ -26,7 +26,7 @@ export function CadastroProjeto(props) {
   const [estadoSelectedOption, setEstadoSelectedOption] = useState("");
   const [optionsTipoProjeto, setOptionsTipoProjeto] = useState([]);
 
-  const optionsEstado = ["Em andamento", "Concluido", "Descontinuado"];
+  const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
   useEffect(() => {
     obterTiposDeProjeto();
     if (id) {
