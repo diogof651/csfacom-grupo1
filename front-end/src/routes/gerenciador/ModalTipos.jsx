@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import { BotaoComFundo } from "../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../components/Botoes/BotaoOutline";
 import { Input } from "../../components/Input/Input";
+import Alert from "./../../components/Alert/Alert";
 import "./../../components/OpcoesMembroDropdown/OpcoesMembroDropdown.css";
 
 export function ModalTipos({
@@ -59,6 +60,11 @@ export function ModalTipos({
               placeholder={`Digite o ${titulo.toLowerCase()}`}
               tipo={"text"}
             ></Input>
+            {modoEdicao && (
+              <Alert type="erro">
+                Essa ação irá alterar todos que fazem uso desse tipo
+              </Alert>
+            )}
 
             <div className="d-flex justify-content-end gap-2 mt-4">
               <BotaoOutline color="var(--blue)" onClick={handleCloseModal}>

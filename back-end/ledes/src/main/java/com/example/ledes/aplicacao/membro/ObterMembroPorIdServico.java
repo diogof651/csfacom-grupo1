@@ -18,7 +18,11 @@ public class ObterMembroPorIdServico {
         Membro membro = membroRepositorio.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Membro não encontrado"));
 
-        return new MembroResponseDTO(membro.getId(), membro.getUsuario(), membro.getProjeto(), membro.getDataIngresso(),
-                membro.getDataTermino(), membro.isAtivo());
+        return new MembroResponseDTO(membro.getId(),
+                membro.getUsuario(),
+                membro.getProjeto(),
+                membro.getDataIngresso(),
+                membro.getDataTermino(),
+                membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
     }
 }

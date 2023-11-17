@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,50 +8,92 @@ import { useNavigate, useParams } from "react-router";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
+import { format } from "date-fns";
 
 export function CadastroMembro() {
   const navigate = useNavigate();
-  const { idProjeto } = useParams();
+  const { idProjeto, idMembro } = useParams();
   const { handleSubmit } = useForm();
   const [ativo, setAtivo] = useState(true);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [dataIngresso, setDataIngresso] = useState("");
   const [dataTermino, setDataTermino] = useState("");
+  const [tiposDePapel, setTiposDePapel] = useState([]);
+  const [tiposDeVinculo, setTiposDeVinculo] = useState([]);
+  const [papeisSelecionados, setPapeisSelecionados] = useState([]);
+  const [vinculosSelecionados, setVinculosSelecionados] = useState([]);
 
-  // Função para lidar com a mudança em uma lista de checkboxes com base no índice
-  const handleCheckboxChange = (index, lista, setLista) => {
-    const updatedList = [...lista];
-    updatedList[index].checked = !updatedList[index].checked;
-    setLista(updatedList);
+  useEffect(() => {
+    if (tiposDePapel.length === 0) {
+      obterTiposDeVinculo();
+    }
+    if (tiposDeVinculo.length === 0) {
+      obterTiposDePapel();
+    }
+
+    if (idMembro) {
+      fetch(`http://localhost:8080/api/v1/membros/${idMembro}/`, {
+        method: "GEt",
+        headers: {
+          "Content-type": "application/json",
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          setAtivo(data.ativo);
+          setNome(data.usuario.nome);
+          setEmail(data.usuario.email);
+          setDataIngresso(
+            new Date(data.dataIngresso).toISOString().split("T")[0]
+          );
+          if (data.dataTermino) {
+            setDataTermino(
+              new Date(data.dataTermino).toISOString().split("T")[0]
+            );
+          }
+          setPapeisSelecionados(data.papeis);
+          setVinculosSelecionados(data.vinculos);
+        })
+        .catch((erro) => console.log(erro));
+    }
+  }, [tiposDePapel, tiposDeVinculo, idMembro]);
+
+  const toggleSelecionado = (item, setListaSelecionada) => {
+    setListaSelecionada((listaSelecionada) =>
+      listaSelecionada.includes(item)
+        ? listaSelecionada.filter((i) => i !== item)
+        : [...listaSelecionada, item]
+    );
   };
 
-  // Função para obter os valores selecionados em uma lista de checkboxes
-  const getValoresSelecionados = (lista) => {
-    return lista
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.label);
-  };
+  function obterTiposDePapel() {
+    fetch("http://localhost:8080/api/v1/tipoPapel/listagem/", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        setTiposDePapel(data);
+      })
+      .catch((erro) => console.log(erro));
+  }
 
-  // const [tiposDeVinculos, setTiposDeVinculos] = useState([
-  //   { label: "Alunos de Atividades Orientada de Ensino", checked: false },
-  //   { label: "Alunos de Doutorado", checked: false },
-  //   { label: "Alunos de TCC", checked: false },
-  //   { label: "Alunos de Mestrado", checked: false },
-  //   { label: "Bolsistas", checked: false },
-  //   { label: "Estagiários", checked: false },
-  //   { label: "Pesquisador colaborador", checked: false },
-  //   { label: "Voluntários", checked: false },
-  //   { label: "Docente", checked: false },
-  //   { label: "Coordenador", checked: false },
-  // ]);
-
-  // const [tiposDePapeis, setTipoDePapeis] = useState([
-  //   { label: "Gerente", checked: false },
-  //   { label: "Designer", checked: false },
-  //   { label: "Desenvolvedor Back-end", checked: false },
-  //   { label: "Desenvolvedor Front-end", checked: false },
-  // ]);
+  function obterTiposDeVinculo() {
+    fetch("http://localhost:8080/api/v1/tipoVinculo/listagem/", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        setTiposDeVinculo(data);
+      })
+      .catch((erro) => console.log(erro));
+  }
 
   const onSubmit = () => {
     const data = {
@@ -60,39 +102,41 @@ export function CadastroMembro() {
       nome: nome,
       email: email,
       ativo: ativo,
+      papeis: papeisSelecionados,
+      vinculos: vinculosSelecionados,
     };
 
-    // if (id) {
-    //   fetch(`http://localhost:8080/api/v1/membros/projeto/${id_projeto}/cadastrar/`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   })
-    //     .then((resposta) => navigate("/projetos"))
-    //     .catch((erro) => console.log(erro));
-    // } else {
-    fetch(
-      `http://localhost:8080/api/v1/membros/projeto/${idProjeto}/cadastrar/`,
-      {
-        method: "POST",
+    if (idMembro) {
+      fetch(`http://localhost:8080/api/v1/membros/${idMembro}/`, {
+        method: "PUT",
         headers: {
           "Content-type": "application/json",
         },
         body: JSON.stringify(data),
-      }
-    )
-      .then((resposta) => navigate("/projeto/2"))
-      .catch((erro) => console.log(erro));
-    //}
+      })
+        .then((resposta) => navigate(`/projeto/${idProjeto}`))
+        .catch((erro) => console.log(erro));
+    } else {
+      fetch(
+        `http://localhost:8080/api/v1/membros/projeto/${idProjeto}/cadastrar/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      )
+        .then((resposta) => navigate(`/projeto/${idProjeto}`))
+        .catch((erro) => console.log(erro));
+    }
   };
 
   return (
     <>
       <Container
         className="d-flex flex-column"
-        style={{ width: "50vw", marginTop: "40px"}}
+        style={{ width: "50vw", marginTop: "40px" }}
       >
         <h1
           style={{
@@ -102,7 +146,7 @@ export function CadastroMembro() {
             paddingBottom: "5px",
           }}
         >
-          Adicionar novo membro
+          {idMembro ? "Editar " : "Adicionar"} novo membro
         </h1>
         <Form
           className={`d-flex justify-content-center flex-column form-container w-100`}
@@ -153,46 +197,48 @@ export function CadastroMembro() {
             }}
           />
 
-          {/* <Form.Label
+          <Form.Label
             style={{ fontWeight: "bold", fontSize: "18px" }}
             className="mt-3"
           >
             Tipo de vinculo
           </Form.Label>
 
-          {tiposDeVinculos.map((vinculo, index) => (
+          {tiposDeVinculo.map((vinculo, index) => (
             <Form.Check
               key={index}
               className="mt-3"
               type="checkbox"
               id="ativoCheckbox"
-              label={vinculo.label}
-              checked={vinculo.checked}
+              label={vinculo.nome}
+              checked={vinculosSelecionados.some(
+                (vinculoSelecionado) => vinculoSelecionado.id == vinculo.id
+              )}
               onChange={() =>
-                handleCheckboxChange(index, tiposDeVinculos, setTiposDeVinculos)
+                toggleSelecionado(vinculo, setVinculosSelecionados)
               }
             />
-          ))} */}
-          {/* <Form.Label
+          ))}
+          <Form.Label
             style={{ fontWeight: "bold", fontSize: "18px" }}
             className="mt-3"
           >
             Tipo de papel
           </Form.Label>
 
-          {tiposDePapeis.map((papel, index) => (
+          {tiposDePapel.map((papel, index) => (
             <Form.Check
               key={index}
               className="mt-3"
               type="checkbox"
               id="ativoCheckbox"
-              label={papel.label}
-              checked={papel.checked}
-              onChange={() =>
-                handleCheckboxChange(index, tiposDePapeis, setTipoDePapeis)
-              }
+              label={papel.nome}
+              checked={papeisSelecionados.some(
+                (papelSelecionado) => papelSelecionado.id === papel.id
+              )}
+              onChange={() => toggleSelecionado(papel, setPapeisSelecionados)}
             />
-          ))} */}
+          ))}
 
           <div className="d-flex justify-content-end gap-2 mt-4 mb-4">
             <BotaoOutline color="var(--blue)">Cancelar</BotaoOutline>

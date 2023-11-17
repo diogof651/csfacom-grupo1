@@ -47,6 +47,6 @@ public class CadastrarMembroServico {
                 membro.getProjeto(),
                 membro.getDataIngresso(),
                 membro.getDataTermino(),
-                membro.isAtivo());
+                membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
     }
 }

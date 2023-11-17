@@ -52,7 +52,7 @@ public class AtualizarMembroServico {
                     membro.getProjeto(),
                     membro.getDataIngresso(),
                     membro.getDataTermino(),
-                    membro.isAtivo());
+                    membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
 
         } else {
             return null;

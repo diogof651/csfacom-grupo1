@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
+import BadgeOutline from "./../../../components/BadgeOutline/BadgeOutline";
 
 export default function InformacoesMembroModal({ membro, show, onClose }) {
   const [fotoPerfil, setFotoPerfil] = useState("");
@@ -65,7 +66,7 @@ export default function InformacoesMembroModal({ membro, show, onClose }) {
             ? new Date(membro.dataTermino).toLocaleDateString()
             : "-"}
         </p>
-        {/* <div className="mt-3">
+        <div className="mt-3">
           <h4> Vinculo </h4>
           <div className="d-flex gap-2">
             {membro.vinculos.map((vinculo, index) => (
@@ -74,12 +75,12 @@ export default function InformacoesMembroModal({ membro, show, onClose }) {
                 borderColor={"var(--blue)"}
                 textColor={"var(--blue)"}
               >
-                {vinculo}
+                {vinculo.nome}
               </BadgeOutline>
             ))}
           </div>
-        </div> */}
-        {/* <div className="mt-3">
+        </div>
+        <div className="mt-3">
           <h4> Papeis </h4>
           <div className="d-flex gap-2">
             {membro.papeis.map((papel, index) => (
@@ -88,11 +89,11 @@ export default function InformacoesMembroModal({ membro, show, onClose }) {
                 borderColor={"var(--blue)"}
                 textColor={"var(--blue)"}
               >
-                {papel}
+                {papel.nome}
               </BadgeOutline>
             ))}
           </div>
-        </div> */}
+        </div>
         <div className="mt-3 mb-2">
           <h4> Contato </h4>
           <div className="d-flex gap-2">
