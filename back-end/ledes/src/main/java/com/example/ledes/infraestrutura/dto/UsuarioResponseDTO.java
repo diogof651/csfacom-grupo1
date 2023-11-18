@@ -17,6 +17,7 @@ public class UsuarioResponseDTO {
     private String github;
     @Nullable
     private String codigoUnico;
+    private String resposta;
 
     public UsuarioResponseDTO(Long id, String nome, String email, boolean ativo, String fotoPerfil, String linkedin,
             String github) {
@@ -38,5 +39,9 @@ public class UsuarioResponseDTO {
         this.foto = fotoPerfil;
         this.linkedin = linkedin;
         this.github = github;
+    }
+
+    public UsuarioResponseDTO(String resposta) {
+        this.resposta= resposta;
     }
 }

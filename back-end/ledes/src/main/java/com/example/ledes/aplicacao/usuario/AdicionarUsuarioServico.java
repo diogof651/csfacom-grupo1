@@ -17,6 +17,7 @@ public class AdicionarUsuarioServico {
     private UsuarioRepositorio usuarioRepositorio;
 
     public UsuarioResponseDTO adicionar(UsuarioDTO usuarioRequest, String hash) {
+        String resposta = "Usuário sem permissão para criação de outro usuário.";
         Optional<Usuario> usuarioHash = usuarioRepositorio.findByCodigoHash(hash);
         String codigoUnico = CodigoUnicoUtils.gerarCodigo(usuarioRepositorio);
         // adicionar verificação se o email já existe na base de dados
@@ -30,10 +31,11 @@ public class AdicionarUsuarioServico {
                 usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub());
             }
         }
-        return null;
+        return new UsuarioResponseDTO(resposta);
     }
 
     public UsuarioResponseDTO adicionarPeloMembro(UsuarioDTO usuarioRequest, String hash) {
+        String resposta = "Usuário sem permissão para criação de outro usuário.";
         Optional<Usuario> usuarioHash = usuarioRepositorio.findByCodigoHash(hash);
         String codigoUnico = CodigoUnicoUtils.gerarCodigo(usuarioRepositorio);
         // adicionar verificação se o email já existe na base de dados
@@ -47,7 +49,7 @@ public class AdicionarUsuarioServico {
                 usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub());
             }
         }
-        return null;
+        return new UsuarioResponseDTO(resposta);
     }
 
 }
