@@ -21,19 +21,19 @@ public class AtivarMembroServico {
         Membro membro = membroRepositorio.findById(id).orElse(null);
 
         if (membro != null) {
-            if(!membro.isAtivo()){
-            membro.setAtivo(true);
-            membro.setDataIngresso(new Date());
-            membro.setDataTermino(null);
-            membroRepositorio.save(membro);
+            if (!membro.isAtivo()) {
+                membro.setAtivo(true);
+                membro.setDataIngresso(new Date());
+                membro.setDataTermino(null);
+                membroRepositorio.save(membro);
 
-            return new MembroResponseDTO(membro.getId(),
-            membro.getUsuario(),
-            membro.getProjeto(),
-            membro.getDataIngresso(),
-            membro.getDataTermino(),
-            membro.isAtivo());
-            }else{
+                return new MembroResponseDTO(membro.getId(),
+                        membro.getUsuario(),
+                        membro.getProjeto(),
+                        membro.getDataIngresso(),
+                        membro.getDataTermino(),
+                        membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
+            } else {
                 return null;
             }
         } else {

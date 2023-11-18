@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Projeto {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
@@ -32,21 +33,22 @@ public class Projeto {
 
     private String status;
 
-    private String tipo;
-
     private Boolean ativo;
+
+    @ManyToOne
+    private TipoProjeto tipoProjeto;
 
     @JsonIgnore
     @OneToMany(mappedBy = "projeto")
     List<Membro> membros;
 
-    public Projeto(String nome, String descricao, Date inicio, Date termino, String status, String tipo) {
+    public Projeto(String nome, String descricao, Date inicio, Date termino, String status, TipoProjeto tipoProjeto) {
         this.nome = nome;
         this.descricao = descricao;
         this.inicio = inicio;
         this.termino = termino;
         this.status = status;
-        this.tipo = tipo;
+        this.tipoProjeto = tipoProjeto;
         this.ativo = true;
     }
 }

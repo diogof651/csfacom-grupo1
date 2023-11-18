@@ -24,7 +24,11 @@ public class ListarMembroServico {
     }
 
     private MembroResponseDTO mapToResponseDTO(Membro membro) {
-        return new MembroResponseDTO(membro.getId(), membro.getUsuario(), membro.getProjeto(), membro.getDataIngresso(),
-                membro.getDataTermino(), membro.isAtivo());
+        return new MembroResponseDTO(membro.getId(),
+                membro.getUsuario(),
+                membro.getProjeto(),
+                membro.getDataIngresso(),
+                membro.getDataTermino(),
+                membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
     }
 }

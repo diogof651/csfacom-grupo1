@@ -17,5 +17,5 @@ public class ProjetoRequestDTO {
 
     private String status;
 
-    private String tipo;
+    private String tipoProjeto;
 }

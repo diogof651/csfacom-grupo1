@@ -42,6 +42,8 @@ public class AtualizarMembroServico {
             membro.setDataTermino(membroRequestDTO.getDataTermino());
             membro.setUsuario(usuario);
             membro.setAtivo(membroRequestDTO.isAtivo());
+            membro.setPapeis(membroRequestDTO.getPapeis());
+            membro.setVinculos(membroRequestDTO.getVinculos());
 
             membroRepositorio.save(membro);
 
@@ -50,7 +52,7 @@ public class AtualizarMembroServico {
                     membro.getProjeto(),
                     membro.getDataIngresso(),
                     membro.getDataTermino(),
-                    membro.isAtivo());
+                    membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
 
         } else {
             return null;

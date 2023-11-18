@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.ledes.dominio.Projeto;
+import com.example.ledes.dominio.TipoProjeto;
 import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.ProjetoRepositorio;
+import com.example.ledes.infraestrutura.TipoProjetoRepositorio;
 import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.ProjetoRequestDTO;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
@@ -16,6 +18,9 @@ import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 public class AdicionarProjetoServico {
     @Autowired
     private ProjetoRepositorio projetoRepositorio;
+
+    @Autowired
+    private TipoProjetoRepositorio tipoProjetoRepositorio;
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 

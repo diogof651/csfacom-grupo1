@@ -2,7 +2,7 @@ DO $$
 Begin
     If NOT EXISTS (Select 1 from information_schema.tables WHERE table_name = 'noticia') THEN
         CREATE TABLE noticia (
-            id INT PRIMARY KEY,
+            id SERIAL PRIMARY KEY,
             titulo VARCHAR(255) NOT NULL,
             autor_id  BIGINT NOT NULL,
             conteudo TEXT NOT NULL,

@@ -14,21 +14,12 @@ export function ListagemProjetos() {
   const [estadoSelectedOption, setEstadoSelectedOption] = useState("");
   const [searchText, setSearchText] = useState("");
   const [cards, setCards] = useState([]);
-
-  const optionsTipoProjeto = [
-    "Projeto de extensão",
-    "TCC",
-    "Mestrado",
-    "Doutorado",
-    "IC",
-    "Atividade Orientada de Ensino",
-    "Estágio",
-  ];
-
-  const optionsEstado = ["Em andamento", "Concluido", "Descontinuado"];
+  const [optionsTipoProjeto, setOptionsTipoProjeto] = useState([]);
+  const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
 
   useEffect(() => {
     obterProjetos();
+    obterTiposDeProjeto();
     // Defina o título da página aqui
     document.title = "Projetos";
   }, []);
@@ -43,6 +34,21 @@ export function ListagemProjetos() {
       .then((resposta) => resposta.json())
       .then((data) => {
         setCards(data);
+      })
+      .catch((erro) => console.log(erro));
+  }
+
+  function obterTiposDeProjeto() {
+    fetch("http://localhost:8080/api/v1/tipoProjeto/listagem", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        let mapeamento = data.map((tipoProjeto) => tipoProjeto.nome);
+        setOptionsTipoProjeto(mapeamento);
       })
       .catch((erro) => console.log(erro));
   }
@@ -86,7 +92,7 @@ export function ListagemProjetos() {
   return (
     <Container
       className="d-flex flex-column"
-      style={{ height: "100vh", marginTop: "40px"}}
+      style={{ height: "100vh", marginTop: "40px" }}
     >
       <div
         className="d-flex justify-content-between align-items-center"
@@ -164,7 +170,6 @@ export function ListagemProjetos() {
               <BsPuzzle
                 style={{ fontSize: "2em", marginLeft: "8px", marginTop: "8px" }}
               />{" "}
-              {/* Aumente o tamanho do ícone */}
               <Link
                 to={`/projeto/${card.id}`}
                 style={{ color: "var(--black)", textDecoration: "none" }}
@@ -179,12 +184,12 @@ export function ListagemProjetos() {
                         card.termino
                       ).toLocaleDateString()}`}
                     </span>
-                    <span>{card.tipo}</span>
+                    <span>{card.tipoProjeto.nome}</span>
                     <span>
                       {card.status === "Em andamento" && (
                         <Badge bg="primary">Em andamento</Badge>
                       )}
-                      {card.status === "Concluido" && (
+                      {card.status === "Concluído" && (
                         <Badge bg="success">Concluído</Badge>
                       )}
                       {card.status === "Descontinuado" && (
