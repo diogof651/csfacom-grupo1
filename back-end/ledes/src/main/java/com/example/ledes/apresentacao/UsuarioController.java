@@ -1,14 +1,10 @@
 package com.example.ledes.apresentacao;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,14 +25,9 @@ import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
 import com.example.ledes.aplicacao.usuario.ListagemPermissoesServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
-import com.example.ledes.dominio.Permissao;
-import com.example.ledes.dominio.Usuario;
-import com.example.ledes.infraestrutura.PermissaoRepositorio;
-import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.PermissaoResponseDTO;
-import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioGerenciarRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioGerenciarResponseDTO;
@@ -66,9 +57,6 @@ public class UsuarioController {
     private AtualizarSenhaUsuarioServico atualizarSenhaUsuarioServico;
     @Autowired
     private BuscarUsuarioPorHashServico buscarUsuarioPorHashServico;
-    private UsuarioRepositorio usuarioRepositorio;
-    @Autowired
-    private PermissaoRepositorio permissaoRepositorio;
     @Autowired
     private AtualizarUsuarioServicoGerenciar atualizarPerfilUsuarioServicoGerenciar;
     @Autowired
