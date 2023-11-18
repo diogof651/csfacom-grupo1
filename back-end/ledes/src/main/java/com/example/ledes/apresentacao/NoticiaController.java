@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,8 +60,10 @@ public class NoticiaController {
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<NoticiaResponseDTO> editarNoticia(
+            @RequestHeader("usuarioLogado") String hash,
             @PathVariable Long id, @RequestBody NoticiaRequestDTO atualiacapDTO) {
-        NoticiaResponseDTO noticiaEditada = editarNoticia.editar(id, atualiacapDTO);
+
+        NoticiaResponseDTO noticiaEditada = editarNoticia.editar(id, atualiacapDTO, hash);
 
         if (noticiaEditada != null) {
             return ResponseEntity.ok(noticiaEditada);
@@ -73,8 +76,8 @@ public class NoticiaController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
     @PutMapping(path = "/{id}/arquivar", consumes = "application/json")
-    public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(@PathVariable Long id) {
-        NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id);
+    public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(@PathVariable Long id,@RequestHeader("usuarioLogado") String hash) {
+        NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id,hash);
 
         if (noticiaArquivada != null) {
             return ResponseEntity.ok(noticiaArquivada);
@@ -87,8 +90,9 @@ public class NoticiaController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
     @PutMapping(path = "/{id}/desarquivar", consumes = "application/json")
-    public ResponseEntity<NoticiaResponseDTO> desarquivarNoticia(@PathVariable Long id) {
-        NoticiaResponseDTO noticiaArquivada = desarquivarNoticia.desarquivar(id);
+    public ResponseEntity<NoticiaResponseDTO> desarquivarNoticia(@PathVariable Long id,
+            @RequestHeader("usuarioLogado") String hash) {
+        NoticiaResponseDTO noticiaArquivada = desarquivarNoticia.desarquivar(id, hash);
 
         if (noticiaArquivada != null) {
             return ResponseEntity.ok(noticiaArquivada);
@@ -101,8 +105,9 @@ public class NoticiaController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados.")
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
     @GetMapping("/{id}")
-    public ResponseEntity<NoticiaResponseDTO> obterNoticiaPorId(@PathVariable Long id) {
-        NoticiaResponseDTO noticia = obterNoticiaPorIdServico.obterNoticiaPorId(id);
+    public ResponseEntity<NoticiaResponseDTO> obterNoticiaPorId(@PathVariable Long id,
+            @RequestHeader("usuarioLogado") String hash) {
+        NoticiaResponseDTO noticia = obterNoticiaPorIdServico.obterNoticiaPorId(id, hash);
         if (noticia != null) {
             return ResponseEntity.ok(noticia);
         } else {
@@ -121,7 +126,7 @@ public class NoticiaController {
             @RequestParam(name = "estado", required = false) String estado) throws ParseException {
 
         List<NoticiaListagemResponseDTO> noticiasEncontradas = listagemNoticiaServico
-                .buscarNoticiasPorParametros(titulo, nomeAutor, dataPublicacao, estado);
+                .buscarNoticiasPorParametros(titulo, nomeAutor, dataPublicacao, estado, estado);
 
         if (noticiasEncontradas != null) {
             return ResponseEntity.ok(noticiasEncontradas);

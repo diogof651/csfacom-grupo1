@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,8 +54,8 @@ public class MembroController {
     @ApiResponse(responseCode = "201")
     @PostMapping(path = "projeto/{idProjeto}/cadastrar", consumes = "application/json")
     public ResponseEntity<MembroResponseDTO> cadastrarMembro(@PathVariable Long idProjeto,
-            @RequestBody MembroRequestDTO membrorequestDTO) {
-        MembroResponseDTO novoMembro = cadastrarMembroServico.adicionar(idProjeto, membrorequestDTO);
+            @RequestBody MembroRequestDTO membrorequestDTO,@RequestHeader("usuarioLogado") String hash) {
+        MembroResponseDTO novoMembro = cadastrarMembroServico.adicionar(idProjeto, membrorequestDTO, hash);
         return new ResponseEntity<>(novoMembro, HttpStatus.CREATED);
     }
 
@@ -63,8 +64,8 @@ public class MembroController {
     @ApiResponse(responseCode = "404", description = "Membro não encontrado")
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<MembroResponseDTO> atualizarMembroServico(
-            @PathVariable Long id, @RequestBody MembroRequestDTO atualizacaoDTO) {
-        MembroResponseDTO membroAtualizado = atualizarMembroServico.atualizarMembro(id, atualizacaoDTO);
+            @PathVariable Long id, @RequestBody MembroRequestDTO atualizacaoDTO,@RequestHeader("usuarioLogado") String hash) {
+        MembroResponseDTO membroAtualizado = atualizarMembroServico.atualizarMembro(id, atualizacaoDTO, hash);
         return ResponseEntity.ok(membroAtualizado);
     }
 
@@ -72,8 +73,8 @@ public class MembroController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro desativado")
     @ApiResponse(responseCode = "404", description = "membro não encontrado")
     @PostMapping(path = "/{id}/desativar")
-    public ResponseEntity<MembroResponseDTO> desativarMembro(@PathVariable Long id) {
-        MembroResponseDTO membroDesativado = desativarMembroServico.desativar(id);
+    public ResponseEntity<MembroResponseDTO> desativarMembro(@PathVariable Long id,@RequestHeader("usuarioLogado") String hash) {
+        MembroResponseDTO membroDesativado = desativarMembroServico.desativar(id,hash);
 
         if (membroDesativado != null) {
             return ResponseEntity.ok(membroDesativado);
@@ -86,8 +87,8 @@ public class MembroController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro removido")
     @ApiResponse(responseCode = "404", description = "Membro ou projeto não encontrado")
     @DeleteMapping("/{membroId}")
-    public ResponseEntity<Void> removerMembro(@PathVariable Long membroId) {
-        removerMembroProjetoServico.removerMembro(membroId);
+    public ResponseEntity<Void> removerMembro(@PathVariable Long membroId,@RequestHeader("usuarioLogado") String hash) {
+        removerMembroProjetoServico.removerMembro(membroId,hash);
         return ResponseEntity.noContent().build();
     }
 
@@ -111,8 +112,8 @@ public class MembroController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro ativado")
     @ApiResponse(responseCode = "404", description = "membro não encontrado")
     @PostMapping(path = "/{id}/ativar")
-    public ResponseEntity<MembroResponseDTO> ativarMembro(@PathVariable Long id) {
-        MembroResponseDTO membroAtivado = ativarMembroServico.ativar(id);
+    public ResponseEntity<MembroResponseDTO> ativarMembro(@PathVariable Long id,@RequestHeader("usuarioLogado") String hash) {
+        MembroResponseDTO membroAtivado = ativarMembroServico.ativar(id,hash);
         if (membroAtivado != null) {
             return ResponseEntity.ok(membroAtivado);
         } else {

@@ -12,14 +12,14 @@ import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 import java.util.stream.Stream;
 
 @Service
-public class BuscaProjetoPorParametroServico  {
+public class BuscaProjetoPorParametroServico {
 
     @Autowired
     private ProjetoRepositorio projetoRepositorio;
 
     public List<ProjetoResponseDTO> buscarProjetosPorParametros(String tipo, String status, String nome) {
         List<Projeto> projetos = (List<Projeto>) projetoRepositorio.buscarProjetosPorParametros(tipo, status, nome);
-        
+
         Stream<Projeto> projetoStream = projetos.stream();
 
         List<ProjetoResponseDTO> projetosFiltrados = projetoStream
@@ -39,7 +39,6 @@ public class BuscaProjetoPorParametroServico  {
                 projeto.getTermino(),
                 projeto.getStatus(),
                 projeto.getTipo(),
-                projeto.getAtivo()
-        );
+                projeto.getAtivo());
     }
 }

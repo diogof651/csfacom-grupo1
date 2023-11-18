@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,12 +27,13 @@ public class ListagemNoticiaServico {
     private UsuarioRepositorio usuarioRepositorio;
 
     public List<NoticiaListagemResponseDTO> buscarNoticiasPorParametros(
-            String titulo, String nomeAutor, String dataPublicacao, String estado) throws ParseException {
-        List<Noticia> noticiasFiltradasPorEstado = obterNoticiasFiltradasPorEstado(estado);
+            String titulo, String nomeAutor, String dataPublicacao, String estado, String hash) throws ParseException {
+
+        List<Noticia> noticiasFiltradasPorEstado = obterNoticiasFiltradasPorEstado(estado, hash);
         List<Noticia> noticiasFiltradasPorDataPublicacao;
         List<Noticia> noticiasFiltradasPorTitulo;
         List<Noticia> noticiasFiltradasPorAutor;
-        //verificar se o estado está vindo null se o usuário não tiver permissao deixar o estado como null
+
         if (nomeAutor != null && !nomeAutor.isEmpty() && !nomeAutor.isBlank()) {
             Usuario autor = usuarioRepositorio.findByNome(nomeAutor);
             noticiasFiltradasPorAutor = noticiaRepositorio.findByAutor(autor);
@@ -60,10 +62,15 @@ public class ListagemNoticiaServico {
         return noticiasListagemResponseDTO;
     }
 
-    private List<Noticia> obterNoticiasFiltradasPorEstado(String estado) {
+    private List<Noticia> obterNoticiasFiltradasPorEstado(String estado, String hash) {
+        Optional<Usuario> usuario = usuarioRepositorio.findByCodigoHash(hash);
+        if (usuario.isPresent()
+                && (!usuario.get().possuiPermissao("ADMIN") || !usuario.get().possuiPermissao("EDITORNOTICIA"))) {
+            estado = null;
+        }
+
         List<Noticia> noticiasFiltradasPorEstado = new ArrayList<Noticia>();
         Date dataAtual = new Date();
-
         if (estado != null && !estado.isEmpty() && !estado.isBlank()) {
             if ("Publicada".equals(estado)) {
                 List<Noticia> noticiasImediatas = noticiaRepositorio.findByEstado("Imediata");

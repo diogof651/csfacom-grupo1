@@ -1,5 +1,7 @@
 package com.example.ledes.aplicacao.membro;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,37 +25,42 @@ public class AtualizarMembroServico {
     private UsuarioRepositorio usuarioRepositorio;
     @Autowired
     private AdicionarUsuarioServico adicionarUsuarioServico;
+    
 
     @Transactional
-    public MembroResponseDTO atualizarMembro(Long id, MembroRequestDTO membroRequestDTO) {
+    public MembroResponseDTO atualizarMembro(Long id, MembroRequestDTO membroRequestDTO, String hash) {
         Membro membro = membroRepositorio.findById(id).orElse(null);
         Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+        Optional<Usuario> usuariopermissao = usuarioRepositorio.findByCodigoHash(hash);
+        
+        if (usuariopermissao.get().possuiPermissao("ADMIN")) {
+            if (membro != null) {
+                if (usuario == null) {
+                    adicionarUsuarioServico
+                            .adicionar(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()));
+                    usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+                } else {
+                    usuario = membro.getUsuario();
+                }
 
-        if (membro != null) {
-            if (usuario == null) {
-                adicionarUsuarioServico
-                        .adicionar(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()));
-                usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+                membro.setDataIngresso(membroRequestDTO.getDataIngresso());
+                membro.setDataTermino(membroRequestDTO.getDataTermino());
+                membro.setUsuario(usuario);
+                membro.setAtivo(membroRequestDTO.isAtivo());
+
+                membroRepositorio.save(membro);
+
+                return new MembroResponseDTO(membro.getId(),
+                        membro.getUsuario(),
+                        membro.getProjeto(),
+                        membro.getDataIngresso(),
+                        membro.getDataTermino(),
+                        membro.isAtivo());
+
             } else {
-                usuario = membro.getUsuario();
+                return null;
             }
-
-            membro.setDataIngresso(membroRequestDTO.getDataIngresso());
-            membro.setDataTermino(membroRequestDTO.getDataTermino());
-            membro.setUsuario(usuario);
-            membro.setAtivo(membroRequestDTO.isAtivo());
-
-            membroRepositorio.save(membro);
-
-            return new MembroResponseDTO(membro.getId(),
-                    membro.getUsuario(),
-                    membro.getProjeto(),
-                    membro.getDataIngresso(),
-                    membro.getDataTermino(),
-                    membro.isAtivo());
-
-        } else {
-            return null;
         }
+        return null;
     }
 }

@@ -18,6 +18,8 @@ public class AdicionarUsuarioServico {
         String codigoUnico = CodigoUnicoUtils.gerarCodigo(usuarioRepositorio);
         // adicionar verificação se o email já existe na base de dados
 
+        
+        
         Usuario usuario = new Usuario(usuarioRequest.getNome(), usuarioRequest.getEmail(), codigoUnico);
         usuarioRepositorio.save(usuario);
         return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
