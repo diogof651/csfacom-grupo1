@@ -28,13 +28,14 @@ public class AdicionarProjetoServico {
         Optional<Usuario> usuario = usuarioRepositorio.findByCodigoHash(hash);
         if (usuario.isPresent()) {
             if (usuario.get().possuiPermissao("Admin") || usuario.get().possuiPermissao("Editor")) {
+                TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByNome(projetoRequest.getTipoProjeto());
                 Projeto projeto = new Projeto(projetoRequest.getNome(), projetoRequest.getDescricao(),
                         projetoRequest.getInicio(), projetoRequest.getTermino(), projetoRequest.getStatus(),
-                        projetoRequest.getTipo());
+                        tipoProjeto);
                 projetoRepositorio.save(projeto);
                 return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(), projeto.getDescricao(),
                         projeto.getInicio(),
-                        projeto.getTermino(), projeto.getStatus(), projeto.getTipo(), projeto.getAtivo());
+                        projeto.getTermino(), projeto.getStatus(), projeto.getTipoProjeto(), projeto.getAtivo());
             }
         }
         return null;
