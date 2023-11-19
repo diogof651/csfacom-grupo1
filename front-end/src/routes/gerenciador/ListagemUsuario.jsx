@@ -147,7 +147,7 @@ export function ListagemUsuario() {
             <div
               style={{
                 display: "flex",
-                alignItems: "baseline",
+                alignItems: "center",
                 justifyContent: "space-between",
                 width: "100%",
                 marginRight: "10px",
@@ -156,7 +156,7 @@ export function ListagemUsuario() {
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "flex-start",
                 }}
               >
                 <div
@@ -180,7 +180,7 @@ export function ListagemUsuario() {
                 </div>
               </div>
               {/* Badges and three dots aligned vertically */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
                 <AdditionalBadge isAdmin={usuario.isAdmin} />
                 <Dropdown>
                   <Dropdown.Toggle variant="light" id="dropdown-basic">
