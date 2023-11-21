@@ -16,8 +16,8 @@ public class BuscaUsuarioPorFiltroServicoGerenciar {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    public List<UsuarioGerenciarResponseDTO> buscarUsuarioPorFiltro(String nome, String permissao) {
-        List<Usuario> usuarios = (List<Usuario>) usuarioRepositorio.buscarUsuarioPorFiltro(nome, permissao);
+    public List<UsuarioGerenciarResponseDTO> buscarUsuarioPorFiltro(String nome) {
+        List<Usuario> usuarios = (List<Usuario>) usuarioRepositorio.buscarUsuarioPorFiltro(nome);
 
         Stream<Usuario> usuarioStream = usuarios.stream();
 
@@ -32,7 +32,8 @@ public class BuscaUsuarioPorFiltroServicoGerenciar {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getFotoPerfil(),
-                usuario.isAtivo());
+                usuario.isAtivo(),
+                usuario.getPermissoes());
                 
         }
 }
