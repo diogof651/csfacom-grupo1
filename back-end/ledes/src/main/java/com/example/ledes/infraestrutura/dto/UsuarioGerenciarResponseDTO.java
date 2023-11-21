@@ -39,4 +39,11 @@ public class UsuarioGerenciarResponseDTO {
         this.linkedin = linkedin;
         this.github = github;
     }
+
+    public UsuarioGerenciarResponseDTO(Long id, String nome, String fotoPerfil, boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.foto = fotoPerfil;
+        this.ativo = ativo;
+    }
 }

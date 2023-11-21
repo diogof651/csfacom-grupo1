@@ -19,6 +19,7 @@ import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServicoGerenciar;
+import com.example.ledes.aplicacao.usuario.BuscaUsuarioPorFiltroServicoGerenciar;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorHashServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
@@ -61,6 +62,8 @@ public class UsuarioController {
     private AtualizarUsuarioServicoGerenciar atualizarPerfilUsuarioServicoGerenciar;
     @Autowired
     private ListagemPermissoesServico listagemPermissoesServico;
+    @Autowired
+    private BuscaUsuarioPorFiltroServicoGerenciar buscarUsuarioPorFiltro;
 
     @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
@@ -193,6 +196,20 @@ public class UsuarioController {
             return ResponseEntity.ok(usuarioAtualizado);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Buscar informações de usuários para a tela (Gerenciamento)")
+    @ApiResponse(responseCode = "200", description = "Retorna informações de usuários com base nos filtros")
+    @GetMapping("/gerenciar")
+    public ResponseEntity<List<UsuarioGerenciarResponseDTO>> buscarUsuarioGerenciar(
+            @RequestParam(name = "nome", required = false) String nome,
+            @RequestParam(name = "permissao", required = false) String permissao){
+                List<UsuarioGerenciarResponseDTO> usuariosEncontrados = BuscaUsuarioPorFiltroServicoGerenciar.
+                buscarUsuarioPorFiltro(nome, permissao);
+            if (usuariosEncontrados != null) {
+                return ResponseEntity.ok(usuariosEncontrados);
+        }
+            return ResponseEntity.notFound().build();
     }
 
 }
