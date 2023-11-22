@@ -185,13 +185,13 @@ public class UsuarioController {
     @Operation(summary = "Atualização de dados do perfil de um usuario logado (Gerenciamento)")
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
-    @PutMapping(path = "/{codigoUnico}/gerenciarUsuario", consumes = "application/json")
+    @PutMapping(path = "/{id}/gerenciarUsuario", consumes = "application/json")
     public ResponseEntity<UsuarioGerenciarResponseDTO> atualizarPerfilUsuarioGerenciar(
-            @PathVariable String codigoUnico, @RequestHeader("usuarioLogado") String hash,
+            @PathVariable Long id, @RequestHeader("usuarioLogado") String hash,
             @RequestBody UsuarioGerenciarRequestDTO usuarioGerenciarRequestDTO) {
         if (hash != null) {
             UsuarioGerenciarResponseDTO usuarioAtualizado = atualizarPerfilUsuarioServicoGerenciar
-                    .atualizarPerfilUsuarioGerenciar(codigoUnico,
+                    .atualizarPerfilUsuarioGerenciar(id,
                             usuarioGerenciarRequestDTO, hash);
             return ResponseEntity.ok(usuarioAtualizado);
         }

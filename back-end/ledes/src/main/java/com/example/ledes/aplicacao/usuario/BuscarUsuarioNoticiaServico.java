@@ -15,7 +15,7 @@ public class BuscarUsuarioNoticiaServico {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    public List<UsuarioResponseDTO> buscarUsuariosNoticia() {        
+    public List<UsuarioResponseDTO> buscarUsuariosNoticia() {
         List<Usuario> usuarios = (List<Usuario>) usuarioRepositorio.encontrarAutoresDeNoticias();
         return usuarios.stream()
                 .map(this::converterParaDTO)
@@ -31,7 +31,6 @@ public class BuscarUsuarioNoticiaServico {
                 usuario.isAtivo(),
                 usuario.getFotoPerfil(),
                 usuario.getLinkedin(),
-                usuario.getGithub()
-        );
+                usuario.getGithub(), usuario.getPermissoes());
     }
 }

@@ -29,7 +29,7 @@ public class DesativarUsuarioServico {
                         usuario.getEmail(),
                         usuario.isAtivo(),
                         usuario.getFotoPerfil(),
-                        usuario.getLinkedin(), usuario.getGithub());
+                        usuario.getLinkedin(), usuario.getGithub(), usuario.getPermissoes());
             } else {
                 return null;
             }

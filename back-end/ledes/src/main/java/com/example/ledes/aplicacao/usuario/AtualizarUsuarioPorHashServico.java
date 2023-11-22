@@ -29,7 +29,7 @@ public class AtualizarUsuarioPorHashServico {
 
             usuarioRepositorio.save(usuario);
             return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
-                    usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub());
+                    usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(), usuario.getPermissoes());
         } else {
             return null;
         }

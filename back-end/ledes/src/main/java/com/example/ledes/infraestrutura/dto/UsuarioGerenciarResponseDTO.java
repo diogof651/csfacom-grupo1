@@ -24,7 +24,8 @@ public class UsuarioGerenciarResponseDTO {
     private String codigoUnico;
     private Set<Permissao> permissoes = new HashSet<>();
 
-    public UsuarioGerenciarResponseDTO(Long id, String nome, String email, boolean ativo, String fotoPerfil, String linkedin,
+    public UsuarioGerenciarResponseDTO(Long id, String nome, String email, boolean ativo, String fotoPerfil,
+            String linkedin,
             String github) {
         this.id = id;
         this.nome = nome;
@@ -46,19 +47,12 @@ public class UsuarioGerenciarResponseDTO {
         this.github = github;
     }
 
-    public UsuarioGerenciarResponseDTO(Long id, String nome, String fotoPerfil, boolean ativo) {
+    public UsuarioGerenciarResponseDTO(Long id, String nome, String fotoPerfil, boolean ativo,
+            Set<Permissao> permissoes) {
         this.id = id;
         this.nome = nome;
         this.foto = fotoPerfil;
         this.ativo = ativo;
-    }
-
-    public UsuarioGerenciarResponseDTO(Long id, String nome, String fotoPerfil, boolean ativo,
-            Set<Permissao> permissoes) {
-            this.id = id;
-            this.nome = nome;
-            this.foto = fotoPerfil;
-            this.ativo = ativo;
-            this.permissoes = permissoes;
+        this.permissoes = permissoes;
     }
 }

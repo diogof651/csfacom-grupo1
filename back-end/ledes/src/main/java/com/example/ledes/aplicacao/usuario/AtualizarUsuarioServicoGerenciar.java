@@ -18,18 +18,19 @@ public class AtualizarUsuarioServicoGerenciar {
     private UsuarioRepositorio usuarioRepositorio;
 
     @Transactional
-    public UsuarioGerenciarResponseDTO atualizarPerfilUsuarioGerenciar(String codigoUnico, UsuarioGerenciarRequestDTO usuarioGerenciarRequestDTO, String hash) {
-        Usuario usuario = usuarioRepositorio.findByCodigoUnico(codigoUnico);
+    public UsuarioGerenciarResponseDTO atualizarPerfilUsuarioGerenciar(Long id,
+            UsuarioGerenciarRequestDTO usuarioGerenciarRequestDTO, String hash) {
+        Usuario usuario = usuarioRepositorio.findById(id).get();
         Optional<Usuario> usuarioHash = usuarioRepositorio.findByCodigoHash(hash);
-        
+
         if (usuarioHash.isPresent() && usuario != null) {
-            if(usuarioHash.get().possuiPermissao("ADMIN")){
+            if (usuarioHash.get().possuiPermissao("ADMIN")) {
                 usuario.setNome(usuarioGerenciarRequestDTO.getNome());
                 usuario.setEmail(usuarioGerenciarRequestDTO.getEmail());
                 usuario.setAtivo(usuarioGerenciarRequestDTO.getAtivo());
                 usuario.setPermissoes(usuarioGerenciarRequestDTO.getPermissoes());
             }
-            
+
             usuarioRepositorio.save(usuario);
             return new UsuarioGerenciarResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
                     usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(),

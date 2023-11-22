@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useAuth } from "../../../AutorizacaoServico";
 import Alert from "../../../components/Alert/Alert";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
@@ -9,20 +9,37 @@ import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
 
 export function CadastroUsuario() {
+  const navigate = useNavigate();
+  const { idUsuario } = useParams();
+
   const { hashUsuarioLogado } = useAuth();
+
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [ativo, setAtivo] = useState(true);
   const [permissoes, setPermissoes] = useState([]);
   const [permissoesSelecionadas, setPermissoesSelecionadas] = useState([]);
   const [mensagemErro, setMensagemErro] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (permissoes.length === 0) {
       obterPermissoes();
     }
   }, [permissoes]);
+
+  useEffect(() => {
+    if (idUsuario) {
+      fetch(`http://localhost:8080/api/v1/usuarios/${idUsuario}`)
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          setNome(data.nome);
+          setEmail(data.email);
+          setAtivo(data.ativo);
+          setPermissoesSelecionadas(data.permissoes);
+        })
+        .catch((erro) => console.log(erro));
+    }
+  }, [idUsuario]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -31,29 +48,46 @@ export function CadastroUsuario() {
       nome: nome,
       email: email,
       permissoes: permissoesSelecionadas,
+      ativo: ativo,
     };
 
-    fetch("http://localhost:8080/api/v1/usuarios", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        usuarioLogado: hashUsuarioLogado(),
-      },
-      body: JSON.stringify(data),
-    })
-      .then((resposta) => {
-        resposta.json().then((dados) => {
-          if (
-            dados.resposta ===
-            "Usuário sem permissão para criação de outro usuário."
-          ) {
-            setMensagemErro(dados.resposta);
-          } else {
-            navigate("/gerenciar");
-          }
-        });
+    if (idUsuario) {
+      fetch(
+        `http://localhost:8080/api/v1/usuarios/${idUsuario}/gerenciarUsuario`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+            usuarioLogado: hashUsuarioLogado(),
+          },
+          body: JSON.stringify(data),
+        }
+      )
+        .then((resposta) => navigate("/gerenciar"))
+        .catch((erro) => console.log(erro));
+    } else {
+      fetch("http://localhost:8080/api/v1/usuarios", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+        body: JSON.stringify(data),
       })
-      .catch((erro) => console.log(erro));
+        .then((resposta) => {
+          resposta.json().then((dados) => {
+            if (
+              dados.resposta ===
+              "Usuário sem permissão para criação de outro usuário."
+            ) {
+              setMensagemErro(dados.resposta);
+            } else {
+              navigate("/gerenciar");
+            }
+          });
+        })
+        .catch((erro) => console.log(erro));
+    }
   };
 
   function obterPermissoes() {

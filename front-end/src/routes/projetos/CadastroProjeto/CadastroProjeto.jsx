@@ -18,7 +18,7 @@ import { Select } from "../../../components/Select/Select";
 import "./CadastroProjeto.module.css";
 import { ModalTipos } from "../../gerenciador/ModalTipos";
 
-export function CadastroProjeto(props) {
+export function CadastroProjeto() {
   const { id } = useParams();
   const { handleSubmit, control, setValue } = useForm();
   const navigate = useNavigate();

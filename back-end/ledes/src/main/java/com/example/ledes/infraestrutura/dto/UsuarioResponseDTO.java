@@ -1,6 +1,10 @@
 package com.example.ledes.infraestrutura.dto;
 
+import java.util.Set;
+
 import org.springframework.lang.Nullable;
+
+import com.example.ledes.dominio.Permissao;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,9 +22,10 @@ public class UsuarioResponseDTO {
     @Nullable
     private String codigoUnico;
     private String resposta;
+    private Set<Permissao> permissoes;
 
     public UsuarioResponseDTO(Long id, String nome, String email, boolean ativo, String fotoPerfil, String linkedin,
-            String github) {
+            String github, Set<Permissao> permissoes) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -28,6 +33,7 @@ public class UsuarioResponseDTO {
         this.foto = fotoPerfil;
         this.linkedin = linkedin;
         this.github = github;
+        this.permissoes = permissoes;
     }
 
     public UsuarioResponseDTO(Long id, String nome, String email, String fotoPerfil, String linkedin,
@@ -42,6 +48,6 @@ public class UsuarioResponseDTO {
     }
 
     public UsuarioResponseDTO(String resposta) {
-        this.resposta= resposta;
+        this.resposta = resposta;
     }
 }
