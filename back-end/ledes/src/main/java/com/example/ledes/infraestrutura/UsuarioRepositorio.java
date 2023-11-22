@@ -23,7 +23,7 @@ public interface UsuarioRepositorio extends CrudRepository<Usuario, Long> {
     @Query("SELECT DISTINCT n.autor FROM Noticia n")
     List<Usuario> encontrarAutoresDeNoticias();
 
-    @Query("SELECT DISTINCT u FROM Usuario u WHERE (:nome IS NULL OR u.nome LIKE CONCAT('%', :nome, '%') OR :nome = '') AND u.ativo = true ORDER BY u.nome")
+    @Query("SELECT DISTINCT u FROM Usuario u WHERE (:nome IS NULL OR u.nome LIKE CONCAT('%', :nome, '%') OR :nome = '') ORDER BY u.nome")
     Collection<Usuario> buscarUsuarioPorFiltro(@Param("nome") String nome);
 
     /*

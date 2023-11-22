@@ -8,7 +8,6 @@ import { Link, useParams } from "react-router-dom";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import Membro from "../../../components/Membro/Membro.jsx";
-import InformacoesMembroModal from "../membro/InformacoesMembroModal";
 
 export function PaginaProjeto() {
   const navigate = useNavigate();

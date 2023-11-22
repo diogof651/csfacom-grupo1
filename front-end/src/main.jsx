@@ -68,6 +68,10 @@ const router = createBrowserRouter([
         element: <CadastroUsuario />,
       },
       {
+        path: "/cadastroUsuario/:idUsuario",
+        element: <CadastroUsuario />,
+      },
+      {
         path: "/perfil",
         element: <Perfil />,
       },

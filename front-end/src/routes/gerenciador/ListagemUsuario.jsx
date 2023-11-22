@@ -5,8 +5,9 @@ import {
   BsEye,
   BsFillPersonPlusFill,
   BsPersonGear,
-  BsThreeDots,
+  BsThreeDotsVertical,
 } from "react-icons/bs";
+import { useNavigate } from "react-router";
 import { useAuth } from "../../AutorizacaoServico";
 import { BarraDePesquisa } from "../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../components/Botoes/BotaoOutline";
@@ -75,6 +76,7 @@ const AdditionalBadge = ({ isAdmin }) => {
 };
 
 export function ListagemUsuario() {
+  const navigate = useNavigate();
   const { hashUsuarioLogado } = useAuth();
   const [permissaoOption, setPermissaoOption] = useState([]);
   const [permissaoSelecionada, setPermissaoSelecionada] = useState("");
@@ -82,6 +84,10 @@ export function ListagemUsuario() {
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
+    obterUsuarios();
+  }, []);
+
+  function obterUsuarios() {
     fetch(`http://localhost:8080/api/v1/usuarios/gerenciar`, {
       method: "GET",
       headers: {
@@ -94,7 +100,7 @@ export function ListagemUsuario() {
         setUsuarios(data);
       })
       .catch((erro) => console.log(erro));
-  }, []);
+  }
 
   useEffect(() => {
     if (permissaoOption.length === 0) {
@@ -143,6 +149,32 @@ export function ListagemUsuario() {
       .catch((erro) => console.log(erro));
   }
 
+  function desativar(id) {
+    fetch(`http://localhost:8080/api/v1/usuarios/${id}/desativar`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => obterUsuarios())
+      .catch((erro) => console.log(erro));
+  }
+
+  function ativar(id) {
+    fetch(`http://localhost:8080/api/v1/usuarios/${id}/ativar`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => obterUsuarios())
+      .catch((erro) => console.log(erro));
+  }
+
+  function editar(idUsuario) {
+    navigate(`/cadastroUsuario/${idUsuario}`);
+  }
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mt-3">
@@ -153,6 +185,7 @@ export function ListagemUsuario() {
             fontSize: "0.8em",
             padding: "5px 8px",
           }}
+          onClick={() => navigate(`/cadastroUsuario/`)}
         >
           <BsFillPersonPlusFill style={{ marginRight: "-3px" }} /> Adicionar
         </BotaoOutline>
@@ -244,16 +277,27 @@ export function ListagemUsuario() {
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <AdditionalBadge isAdmin={usuario.permissoes} />
-                <Dropdown>
-                  <Dropdown.Toggle variant="light" id="dropdown-basic">
-                    <BsThreeDots />
-                  </Dropdown.Toggle>
-
-                  <Dropdown.Menu>
-                    <Dropdown.Item>Editar</Dropdown.Item>
-                    <Dropdown.Item>Remover</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                <div className="d-flex align-items-center gap-1">
+                  <Dropdown align={{ lg: "end" }} drop="start">
+                    <Dropdown.Toggle variant="light" id="dropdown-basic">
+                      <BsThreeDotsVertical />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => editar(usuario.id)}>
+                        Editar
+                      </Dropdown.Item>
+                      {usuario.ativo ? (
+                        <Dropdown.Item onClick={() => desativar(usuario.id)}>
+                          Desativar
+                        </Dropdown.Item>
+                      ) : (
+                        <Dropdown.Item onClick={() => ativar(usuario.id)}>
+                          Ativar
+                        </Dropdown.Item>
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
               </div>
             </div>
           </div>
