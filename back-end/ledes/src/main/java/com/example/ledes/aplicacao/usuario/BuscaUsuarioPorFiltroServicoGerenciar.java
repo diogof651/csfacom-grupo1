@@ -16,24 +16,24 @@ public class BuscaUsuarioPorFiltroServicoGerenciar {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    public List<UsuarioGerenciarResponseDTO> buscarUsuarioPorFiltro(String nome) {
+    public List<UsuarioGerenciarResponseDTO> buscarUsuarioPorFiltro(String nome, String permissao) {
         List<Usuario> usuarios = (List<Usuario>) usuarioRepositorio.buscarUsuarioPorFiltro(nome);
 
         Stream<Usuario> usuarioStream = usuarios.stream();
 
-        List<UsuarioGerenciarResponseDTO> usuarioFiltrado = 
-        usuarioStream.map(this::converterParaDTO).collect(Collectors.toList());
-        
+        List<UsuarioGerenciarResponseDTO> usuarioFiltrado = usuarioStream.map(this::converterParaDTO)
+                .collect(Collectors.toList());
+
         return usuarioFiltrado;
     }
 
-        private UsuarioGerenciarResponseDTO converterParaDTO(Usuario usuario) {
+    private UsuarioGerenciarResponseDTO converterParaDTO(Usuario usuario) {
         return new UsuarioGerenciarResponseDTO(
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getFotoPerfil(),
                 usuario.isAtivo(),
                 usuario.getPermissoes());
-                
-        }
+
+    }
 }

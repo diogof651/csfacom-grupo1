@@ -9,7 +9,7 @@ import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
 
 export function CadastroUsuario() {
-  const { usuarioLogado, hashUsuarioLogado } = useAuth();
+  const { hashUsuarioLogado } = useAuth();
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [ativo, setAtivo] = useState(true);
@@ -33,7 +33,6 @@ export function CadastroUsuario() {
       permissoes: permissoesSelecionadas,
     };
 
-    console.log(hashUsuarioLogado());
     fetch("http://localhost:8080/api/v1/usuarios", {
       method: "POST",
       headers: {

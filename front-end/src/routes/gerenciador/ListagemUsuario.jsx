@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
-import { BsFillPersonPlusFill, BsThreeDots, BsPersonGear, BsEye } from "react-icons/bs";
+import {
+  BsEye,
+  BsFillPersonPlusFill,
+  BsPersonGear,
+  BsThreeDots,
+} from "react-icons/bs";
+import { useAuth } from "../../AutorizacaoServico";
 import { BarraDePesquisa } from "../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../components/Botoes/BotaoOutline";
 import { Select } from "../../components/Select/Select";
-import * as faker from "faker";
-import Dropdown from "react-bootstrap/Dropdown";
 
 const CustomBadge = ({ status }) => {
   const badgeStyle = {
@@ -55,7 +60,11 @@ const AdditionalBadge = ({ isAdmin }) => {
     marginRight: "5px",
   };
 
-  const icon = isAdmin ? <BsPersonGear style={iconStyle} /> : <BsEye style={iconStyle} />;
+  const icon = isAdmin ? (
+    <BsPersonGear style={iconStyle} />
+  ) : (
+    <BsEye style={iconStyle} />
+  );
 
   return (
     <span style={badgeStyle}>
@@ -66,33 +75,73 @@ const AdditionalBadge = ({ isAdmin }) => {
 };
 
 export function ListagemUsuario() {
+  const { hashUsuarioLogado } = useAuth();
   const [permissaoOption, setPermissaoOption] = useState([]);
+  const [permissaoSelecionada, setPermissaoSelecionada] = useState("");
   const [usuarios, setUsuarios] = useState([]);
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    // Generating random user data for demonstration
-    const randomUsers = Array.from({ length: 5 }, (_, index) => ({
-      id: index + 1,
-      nome: faker.name.findName(),
-      ativo: Math.random() < 0.5, // Randomly setting active or inactive
-      isAdmin: Math.random() < 0.5, // Randomly setting isAdmin
-    }));
-    setUsuarios(randomUsers);
+    fetch(`http://localhost:8080/api/v1/usuarios/gerenciar`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        setUsuarios(data);
+      })
+      .catch((erro) => console.log(erro));
   }, []);
 
-  const tipoHandleOptionChange = (e) => {
-    setPermissaoOption(e.target.value);
-  };
+  useEffect(() => {
+    if (permissaoOption.length === 0) {
+      obterPermissoes();
+    }
+  }, [permissaoOption]);
 
   const handleApplyFilter = () => {
-    // Fetch logic here if needed
+    fetch(
+      `http://localhost:8080/api/v1/usuarios/gerenciar?nome=${searchText}&permissao=${permissaoSelecionada}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    )
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        setUsuarios(data);
+      })
+      .catch((erro) => console.log(erro));
+  };
+
+  const handlePermissaoChange = (e) => {
+    setPermissaoSelecionada(e.target.value);
   };
 
   const handleClearFilters = () => {
     setSearchText("");
+    setPermissaoSelecionada("");
     handleApplyFilter();
   };
+
+  function obterPermissoes() {
+    fetch("http://localhost:8080/api/v1/usuarios/permissoes", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((resposta) => resposta.json())
+      .then((data) => {
+        setPermissaoOption(data);
+      })
+      .catch((erro) => console.log(erro));
+  }
 
   return (
     <>
@@ -116,7 +165,13 @@ export function ListagemUsuario() {
             <BarraDePesquisa />
           </div>
           <div className="col-md-3 col-6 mb-2">
-            <Select options={permissaoOption} />
+            <Select
+              optionDefault="Permissão"
+              options={permissaoOption.map((permissao) => permissao.nome)}
+              handleOptionChange={handlePermissaoChange}
+              selectedOption={permissaoSelecionada}
+              placeholder="Permissao"
+            />
           </div>
 
           <div className="col-md-2 col-12">
@@ -141,7 +196,7 @@ export function ListagemUsuario() {
         </div>
       </Form>
 
-      <div className="d-flex flex-column mt-4">
+      <div className="d-flex flex-column mt-4" style={{ marginBottom: "20px" }}>
         {usuarios.map((usuario) => (
           <div key={usuario.id} className="d-flex align-items-center mt-3">
             <div
@@ -151,6 +206,7 @@ export function ListagemUsuario() {
                 justifyContent: "space-between",
                 width: "100%",
                 marginRight: "10px",
+                marginBottom: "15px",
               }}
             >
               <div
@@ -169,19 +225,25 @@ export function ListagemUsuario() {
                   }}
                 >
                   <img
-                    src={faker.image.avatar()}
+                    src={usuario.foto}
                     alt={`Foto de ${usuario.nome}`}
-                    style={{ width: "100%", height: "auto", borderRadius: "50%" }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "50%",
+                    }}
                   />
                 </div>
-                <div className="d-flex flex-column" style={{ marginLeft: "10px" }}>
+                <div
+                  className="d-flex flex-column"
+                  style={{ marginLeft: "10px" }}
+                >
                   <p>{usuario.nome}</p>
                   <CustomBadge status={usuario.ativo ? "Ativo" : "Inativo"} />
                 </div>
               </div>
-              {/* Badges and three dots aligned vertically */}
               <div style={{ display: "flex", alignItems: "center" }}>
-                <AdditionalBadge isAdmin={usuario.isAdmin} />
+                <AdditionalBadge isAdmin={usuario.permissoes} />
                 <Dropdown>
                   <Dropdown.Toggle variant="light" id="dropdown-basic">
                     <BsThreeDots />

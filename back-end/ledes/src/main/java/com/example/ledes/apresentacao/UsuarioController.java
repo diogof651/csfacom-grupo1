@@ -202,12 +202,14 @@ public class UsuarioController {
     @ApiResponse(responseCode = "200", description = "Retorna informações de usuários com base nos filtros")
     @GetMapping("/gerenciar")
     public ResponseEntity<List<UsuarioGerenciarResponseDTO>> buscarUsuarioGerenciar(
-            @RequestParam(name = "nome", required = false) String nome){
-                List<UsuarioGerenciarResponseDTO> usuariosEncontrados = buscarUsuarioPorFiltro.buscarUsuarioPorFiltro(nome);
-            if (usuariosEncontrados != null) {
-                return ResponseEntity.ok(usuariosEncontrados);
+            @RequestParam(name = "nome", required = false) String nome,
+            @RequestParam(name = "permissao", required = false) String permissao) {
+        List<UsuarioGerenciarResponseDTO> usuariosEncontrados = buscarUsuarioPorFiltro.buscarUsuarioPorFiltro(nome,
+                permissao);
+        if (usuariosEncontrados != null) {
+            return ResponseEntity.ok(usuariosEncontrados);
         }
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
 }
