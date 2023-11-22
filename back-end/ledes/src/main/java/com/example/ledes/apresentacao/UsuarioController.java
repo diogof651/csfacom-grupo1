@@ -1,6 +1,7 @@
 package com.example.ledes.apresentacao;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,6 @@ import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
 import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.PermissaoResponseDTO;
-import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioGerenciarRequestDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioGerenciarResponseDTO;
 import com.example.ledes.infraestrutura.dto.UsuarioLoginResponseDTO;
@@ -65,7 +65,7 @@ public class UsuarioController {
     @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDTO,
+    public ResponseEntity<UsuarioResponseDTO> cadastrarUsuario(@RequestBody UsuarioGerenciarRequestDTO usuarioDTO,
             @RequestHeader("usuarioLogado") String hash) {
         if (hash != null) {
             UsuarioResponseDTO novoUsuario = usuarioServico.adicionar(usuarioDTO, hash);

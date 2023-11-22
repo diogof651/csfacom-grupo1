@@ -1,18 +1,13 @@
 package com.example.ledes.infraestrutura.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class PermissaoResponseDTO {
+    private Long id;
     private String nome;
-
-    public PermissaoResponseDTO(String nome) {
-        this.nome = nome;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 }
-

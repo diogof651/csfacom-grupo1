@@ -10,7 +10,6 @@ import com.example.ledes.dominio.Permissao;
 import com.example.ledes.infraestrutura.PermissaoRepositorio;
 import com.example.ledes.infraestrutura.dto.PermissaoResponseDTO;
 
-
 @Service
 public class ListagemPermissoesServico {
 
@@ -18,16 +17,15 @@ public class ListagemPermissoesServico {
     private PermissaoRepositorio permissaoRepositorio;
 
     public List<PermissaoResponseDTO> listarPermissoes() {
-    List<Permissao> permissoes = (List<Permissao>) permissaoRepositorio.findAll();
+        List<Permissao> permissoes = (List<Permissao>) permissaoRepositorio.findAll();
         return permissoes.stream()
                 .map(this::converterParaDTO)
                 .collect(Collectors.toList());
     }
 
-    private PermissaoResponseDTO converterParaDTO(Permissao permissao){
-        return new PermissaoResponseDTO(
-            permissao.getNome()
-        );
+    private PermissaoResponseDTO converterParaDTO(Permissao permissao) {
+        return new PermissaoResponseDTO(permissao.getId(),
+                permissao.getNome());
     }
 
 }

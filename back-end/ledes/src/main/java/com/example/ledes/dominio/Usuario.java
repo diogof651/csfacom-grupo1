@@ -40,16 +40,16 @@ public class Usuario {
     private String codigoUnico;
     private Date dataAcesso;
     private String codigoHash;
+    @ManyToMany
+    @JoinTable(name = "usuario_permissoes", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "permissao_id"))
+    private Set<Permissao> permissoes = new HashSet<>();
 
-    public Usuario(String nome, String email, String senha, boolean ativo, String fotoPerfil, String linkedin,
-            String github) {
+    public Usuario(String nome, String email, String codigoUnico, Set<Permissao> permissoes) {
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
-        this.ativo = ativo;
-        this.fotoPerfil = fotoPerfil;
-        this.linkedin = linkedin;
-        this.github = github;
+        this.ativo = true;
+        this.codigoUnico = codigoUnico;
+        this.permissoes = permissoes;
     }
 
     public Usuario(String nome, String email, String codigoUnico) {
@@ -59,15 +59,10 @@ public class Usuario {
         this.codigoUnico = codigoUnico;
     }
 
-
     public void logar() {
         this.dataAcesso = new Date();
         this.codigoHash = HashUtils.gerarHash(this.nome, this.dataAcesso);
     }
-
-    @ManyToMany
-    @JoinTable(name = "usuario_permissoes", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "permissao_id"))
-    private Set<Permissao> permissoes = new HashSet<>();
 
     public boolean possuiPermissao(String nomePermissao) {
         if (permissoes.isEmpty()) {

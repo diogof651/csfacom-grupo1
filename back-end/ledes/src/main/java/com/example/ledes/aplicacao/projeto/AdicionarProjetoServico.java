@@ -27,7 +27,7 @@ public class AdicionarProjetoServico {
     public ProjetoResponseDTO adicionar(ProjetoRequestDTO projetoRequest, String hash) {
         Optional<Usuario> usuario = usuarioRepositorio.findByCodigoHash(hash);
         if (usuario.isPresent()) {
-            if (usuario.get().possuiPermissao("Admin") || usuario.get().possuiPermissao("Editor")) {
+            if (usuario.get().possuiPermissao("Admin") || usuario.get().possuiPermissao("EDITORPROJETO")) {
                 TipoProjeto tipoProjeto = tipoProjetoRepositorio.findByNome(projetoRequest.getTipoProjeto());
                 Projeto projeto = new Projeto(projetoRequest.getNome(), projetoRequest.getDescricao(),
                         projetoRequest.getInicio(), projetoRequest.getTermino(), projetoRequest.getStatus(),

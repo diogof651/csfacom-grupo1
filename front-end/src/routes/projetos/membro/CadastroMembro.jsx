@@ -46,10 +46,10 @@ export function CadastroMembro() {
 
   useEffect(() => {
     if (tiposDePapel.length === 0) {
-      obterTiposDeVinculo();
+      obterTiposDePapel();
     }
     if (tiposDeVinculo.length === 0) {
-      obterTiposDePapel();
+      obterTiposDeVinculo();
     }
 
     if (idMembro) {

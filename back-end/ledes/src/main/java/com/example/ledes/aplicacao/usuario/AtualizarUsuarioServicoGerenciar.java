@@ -23,7 +23,7 @@ public class AtualizarUsuarioServicoGerenciar {
         Optional<Usuario> usuarioHash = usuarioRepositorio.findByCodigoHash(hash);
         
         if (usuarioHash.isPresent() && usuario != null) {
-            if(usuarioHash.get().possuiPermissao("Admin")){
+            if(usuarioHash.get().possuiPermissao("ADMIN")){
                 usuario.setNome(usuarioGerenciarRequestDTO.getNome());
                 usuario.setEmail(usuarioGerenciarRequestDTO.getEmail());
                 usuario.setAtivo(usuarioGerenciarRequestDTO.getAtivo());
