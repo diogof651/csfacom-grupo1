@@ -1,6 +1,11 @@
 package com.example.ledes.infraestrutura.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.lang.Nullable;
+
+import com.example.ledes.dominio.Permissao;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +22,7 @@ public class UsuarioGerenciarResponseDTO {
     private String github;
     @Nullable
     private String codigoUnico;
+    private Set<Permissao> permissoes = new HashSet<>();
 
     public UsuarioGerenciarResponseDTO(Long id, String nome, String email, boolean ativo, String fotoPerfil, String linkedin,
             String github) {
@@ -38,5 +44,21 @@ public class UsuarioGerenciarResponseDTO {
         this.foto = fotoPerfil;
         this.linkedin = linkedin;
         this.github = github;
+    }
+
+    public UsuarioGerenciarResponseDTO(Long id, String nome, String fotoPerfil, boolean ativo) {
+        this.id = id;
+        this.nome = nome;
+        this.foto = fotoPerfil;
+        this.ativo = ativo;
+    }
+
+    public UsuarioGerenciarResponseDTO(Long id, String nome, String fotoPerfil, boolean ativo,
+            Set<Permissao> permissoes) {
+            this.id = id;
+            this.nome = nome;
+            this.foto = fotoPerfil;
+            this.ativo = ativo;
+            this.permissoes = permissoes;
     }
 }
