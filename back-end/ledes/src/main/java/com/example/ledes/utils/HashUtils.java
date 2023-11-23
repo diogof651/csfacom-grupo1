@@ -12,6 +12,10 @@ public class HashUtils {
 
         String sha256Hash = DigestUtils.sha256Hex(nome + dataFormatada);
 
+        if (sha256Hash.length() > 255) {
+            sha256Hash = sha256Hash.substring(0, 255);
+        }
+
         return sha256Hash;
     }
 }

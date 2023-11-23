@@ -102,6 +102,10 @@ export function ListagemUsuario() {
       .catch((erro) => console.log(erro));
   }
 
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
+
   useEffect(() => {
     if (permissaoOption.length === 0) {
       obterPermissoes();
@@ -115,6 +119,7 @@ export function ListagemUsuario() {
         method: "GET",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
       }
     )
@@ -195,7 +200,7 @@ export function ListagemUsuario() {
       <Form className="mt-2">
         <div className="row">
           <div className="col-md-5 col-12 mb-2">
-            <BarraDePesquisa />
+            <BarraDePesquisa handleSearchChange={handleSearchChange} />
           </div>
           <div className="col-md-3 col-6 mb-2">
             <Select
@@ -230,78 +235,82 @@ export function ListagemUsuario() {
       </Form>
 
       <div className="d-flex flex-column mt-4" style={{ marginBottom: "20px" }}>
-        {usuarios.map((usuario) => (
-          <div key={usuario.id} className="d-flex align-items-center mt-3">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                marginRight: "10px",
-                marginBottom: "15px",
-              }}
-            >
+        {usuarios.length > 0 ? (
+          usuarios.map((usuario) => (
+            <div key={usuario.id} className="d-flex align-items-center mt-3">
               <div
                 style={{
                   display: "flex",
-                  alignItems: "flex-start",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  marginRight: "10px",
+                  marginBottom: "15px",
                 }}
               >
                 <div
                   style={{
-                    borderRadius: "50%",
-                    width: "50px",
-                    height: "50px",
-                    backgroundColor: "#D9D9D9",
-                    overflow: "hidden",
+                    display: "flex",
+                    alignItems: "flex-start",
                   }}
                 >
-                  <img
-                    src={usuario.foto}
-                    alt={`Foto de ${usuario.nome}`}
+                  <div
                     style={{
-                      width: "100%",
-                      height: "auto",
                       borderRadius: "50%",
+                      width: "50px",
+                      height: "50px",
+                      backgroundColor: "#D9D9D9",
+                      overflow: "hidden",
                     }}
-                  />
+                  >
+                    <img
+                      src={usuario.foto}
+                      alt={`Foto de ${usuario.nome}`}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="d-flex flex-column"
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <p>{usuario.nome}</p>
+                    <CustomBadge status={usuario.ativo ? "Ativo" : "Inativo"} />
+                  </div>
                 </div>
-                <div
-                  className="d-flex flex-column"
-                  style={{ marginLeft: "10px" }}
-                >
-                  <p>{usuario.nome}</p>
-                  <CustomBadge status={usuario.ativo ? "Ativo" : "Inativo"} />
-                </div>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <AdditionalBadge isAdmin={usuario.permissoes} />
-                <div className="d-flex align-items-center gap-1">
-                  <Dropdown align={{ lg: "end" }} drop="start">
-                    <Dropdown.Toggle variant="light" id="dropdown-basic">
-                      <BsThreeDotsVertical />
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => editar(usuario.id)}>
-                        Editar
-                      </Dropdown.Item>
-                      {usuario.ativo ? (
-                        <Dropdown.Item onClick={() => desativar(usuario.id)}>
-                          Desativar
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <AdditionalBadge isAdmin={usuario.permissoes} />
+                  <div className="d-flex align-items-center gap-1">
+                    <Dropdown align={{ lg: "end" }} drop="start">
+                      <Dropdown.Toggle variant="light" id="dropdown-basic">
+                        <BsThreeDotsVertical />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => editar(usuario.id)}>
+                          Editar
                         </Dropdown.Item>
-                      ) : (
-                        <Dropdown.Item onClick={() => ativar(usuario.id)}>
-                          Ativar
-                        </Dropdown.Item>
-                      )}
-                    </Dropdown.Menu>
-                  </Dropdown>
+                        {usuario.ativo ? (
+                          <Dropdown.Item onClick={() => desativar(usuario.id)}>
+                            Desativar
+                          </Dropdown.Item>
+                        ) : (
+                          <Dropdown.Item onClick={() => ativar(usuario.id)}>
+                            Ativar
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>Nenhum usuário encontrado.</p>
+        )}
       </div>
     </>
   );

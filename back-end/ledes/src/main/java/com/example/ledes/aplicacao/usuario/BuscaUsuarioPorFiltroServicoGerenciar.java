@@ -17,7 +17,7 @@ public class BuscaUsuarioPorFiltroServicoGerenciar {
     private UsuarioRepositorio usuarioRepositorio;
 
     public List<UsuarioGerenciarResponseDTO> buscarUsuarioPorFiltro(String nome, String permissao) {
-        List<Usuario> usuarios = (List<Usuario>) usuarioRepositorio.buscarUsuarioPorFiltro(nome);
+        List<Usuario> usuarios = (List<Usuario>) usuarioRepositorio.buscarUsuarioPorFiltro(nome, permissao);
 
         Stream<Usuario> usuarioStream = usuarios.stream();
 
