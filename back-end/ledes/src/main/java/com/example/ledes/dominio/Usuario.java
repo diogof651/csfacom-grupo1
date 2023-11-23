@@ -73,5 +73,4 @@ public class Usuario {
                     .anyMatch(permissao -> permissao.getNome().equals(nomePermissao));
         }
     }
-
 }

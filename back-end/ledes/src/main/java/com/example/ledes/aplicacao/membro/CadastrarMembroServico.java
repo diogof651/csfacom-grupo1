@@ -1,5 +1,7 @@
 package com.example.ledes.aplicacao.membro;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,36 +19,41 @@ import com.example.ledes.infraestrutura.dto.UsuarioDTO;
 @Service
 public class CadastrarMembroServico {
 
-    @Autowired
-    public MembroRepositorio membroRepositorio;
-    @Autowired
-    public ProjetoRepositorio projetoRepositorio;
-    @Autowired
-    private UsuarioRepositorio usuarioRepositorio;
-    @Autowired
-    private AdicionarUsuarioServico adicionarUsuarioServico;
+        @Autowired
+        public MembroRepositorio membroRepositorio;
+        @Autowired
+        public ProjetoRepositorio projetoRepositorio;
+        @Autowired
+        private UsuarioRepositorio usuarioRepositorio;
+        @Autowired
+        private AdicionarUsuarioServico adicionarUsuarioServico;
 
-    public MembroResponseDTO adicionar(Long idProjeto, MembroRequestDTO membroRequestDTO, String hash) {
-        Projeto projeto = projetoRepositorio.findById(idProjeto).orElse(null);
+        public MembroResponseDTO adicionar(Long idProjeto, MembroRequestDTO membroRequestDTO, String hash) {
+                Projeto projeto = projetoRepositorio.findById(idProjeto).orElse(null);
+                Optional<Usuario> usuariopermissao = usuarioRepositorio.findByCodigoHash(hash);
+                Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
 
-        Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+                if (usuariopermissao.get().possuiPermissao("ADMIN")) {
 
-        if (usuario == null) {
-            adicionarUsuarioServico.adicionarPeloMembro(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()), hash);
-            usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+                        if (usuario == null) {
+                                adicionarUsuarioServico.adicionarPeloMembro(
+                                                new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()),
+                                                hash);
+                                usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+                        }
+
+                        Membro membro = new Membro(membroRequestDTO.getDataIngresso(),
+                                        membroRequestDTO.getDataTermino(),
+                                        membroRequestDTO.isAtivo(), usuario, projeto, membroRequestDTO.getPapeis(),
+                                        membroRequestDTO.getVinculos());
+
+                        return new MembroResponseDTO(membro.getId(),
+                                        membro.getUsuario(),
+                                        membro.getProjeto(),
+                                        membro.getDataIngresso(),
+                                        membro.getDataTermino(),
+                                        membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
+                }
+                return null;
         }
-
-        Membro membro = new Membro(membroRequestDTO.getDataIngresso(), membroRequestDTO.getDataTermino(),
-                membroRequestDTO.isAtivo(), usuario, projeto, membroRequestDTO.getPapeis(),
-                membroRequestDTO.getVinculos());
-
-        membroRepositorio.save(membro);
-
-        return new MembroResponseDTO(membro.getId(),
-                membro.getUsuario(),
-                membro.getProjeto(),
-                membro.getDataIngresso(),
-                membro.getDataTermino(),
-                membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
-    }
 }

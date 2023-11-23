@@ -30,7 +30,8 @@ public class AdicionarUsuarioServico {
                         usuarioRequest.getPermissoes());
                 usuarioRepositorio.save(usuario);
                 return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
-                        usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(), usuario.getPermissoes());
+                        usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(),
+                        usuario.getPermissoes());
             }
         }
         return new UsuarioResponseDTO(resposta);
@@ -48,10 +49,10 @@ public class AdicionarUsuarioServico {
                 Usuario usuario = new Usuario(usuarioRequest.getNome(), usuarioRequest.getEmail(), codigoUnico);
                 usuarioRepositorio.save(usuario);
                 return new UsuarioResponseDTO(usuario.getId(), usuario.getNome(), usuario.getEmail(),
-                        usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(), usuario.getPermissoes());
+                        usuario.isAtivo(), usuario.getFotoPerfil(), usuario.getLinkedin(), usuario.getGithub(),
+                        usuario.getPermissoes());
             }
         }
         return new UsuarioResponseDTO(resposta);
     }
-
 }

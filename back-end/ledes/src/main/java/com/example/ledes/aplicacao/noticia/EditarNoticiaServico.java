@@ -2,6 +2,7 @@ package com.example.ledes.aplicacao.noticia;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.ledes.dominio.Anexo;
 import com.example.ledes.dominio.Noticia;
+import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.AnexoRepositorio;
 import com.example.ledes.infraestrutura.NoticiaRepositorio;
+import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.AnexoDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaRequestDTO;
 import com.example.ledes.infraestrutura.dto.NoticiaResponseDTO;
@@ -22,37 +25,41 @@ public class EditarNoticiaServico {
 
     @Autowired
     private AnexoRepositorio anexoRepositorio;
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
 
-    public NoticiaResponseDTO editar(Long id, NoticiaRequestDTO noticiaRequest) {
-
+    public NoticiaResponseDTO editar(Long id, NoticiaRequestDTO noticiaRequest, String hash) {
+        Optional<Usuario> usuario = usuarioRepositorio.findByCodigoHash(hash);
         Noticia noticia = noticiaRepositorio.findById(id).orElse(null);
+        if (usuario.isPresent()
+                && (usuario.get().possuiPermissao("ADMIN") || usuario.get().possuiPermissao("EDITORNOTICIA"))) {
+            if (noticia != null) {
+                noticia.definirDataDePublicacao(noticiaRequest.getEstado(), noticiaRequest.getDataPublicacao());
+                noticia.setTitulo(noticiaRequest.getTitulo());
+                noticia.setConteudo(noticiaRequest.getConteudo());
+                noticia.setEstado(noticiaRequest.getEstado());
+                noticia.setThumbnail(noticiaRequest.getThumbnail());
+                noticia.setEmDestaque(noticiaRequest.getEmDestaque());
+                noticiaRepositorio.save(noticia);
 
-        if (noticia != null) {
-            noticia.definirDataDePublicacao(noticiaRequest.getEstado(), noticiaRequest.getDataPublicacao());
-            noticia.setTitulo(noticiaRequest.getTitulo());
-            noticia.setConteudo(noticiaRequest.getConteudo());
-            noticia.setEstado(noticiaRequest.getEstado());
-            noticia.setThumbnail(noticiaRequest.getThumbnail());
-            noticia.setEmDestaque(noticiaRequest.getEmDestaque());
-            noticiaRepositorio.save(noticia);
+                if (!noticiaRequest.getAnexos().isEmpty() || noticiaRequest.getAnexos() != null) {
+                    vincularAnexos(noticia, noticiaRequest.getAnexos());
+                }
 
-            if (!noticiaRequest.getAnexos().isEmpty() || noticiaRequest.getAnexos() != null) {
-                vincularAnexos(noticia, noticiaRequest.getAnexos());
+                Collection<Anexo> anexosVinculados = anexoRepositorio.findByNoticia(noticia);
+                Collection<AnexoDTO> anexosDto = new ArrayList<AnexoDTO>();
+                for (Anexo anexo : anexosVinculados) {
+                    anexosDto.add(new AnexoDTO(anexo.getId(), anexo.getTitulo(), anexo.getConteudo()));
+                }
+
+                return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(),
+                        noticia.getAutor(),
+                        noticia.getConteudo(), noticia.getEstado(), noticia.getThumbnail(),
+                        noticia.getDataPublicacao(),
+                        noticia.getEmDestaque(), anexosDto);
             }
-
-            Collection<Anexo> anexosVinculados = anexoRepositorio.findByNoticia(noticia);
-            Collection<AnexoDTO> anexosDto = new ArrayList<AnexoDTO>();
-            for (Anexo anexo : anexosVinculados) {
-                anexosDto.add(new AnexoDTO(anexo.getId(), anexo.getTitulo(), anexo.getConteudo()));
-            }
-
-            return new NoticiaResponseDTO(noticia.getId(), noticia.getTitulo(),
-                    noticia.getAutor(),
-                    noticia.getConteudo(), noticia.getEstado(), noticia.getThumbnail(), noticia.getDataPublicacao(),
-                    noticia.getEmDestaque(), anexosDto);
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Transactional

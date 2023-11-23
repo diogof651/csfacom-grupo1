@@ -63,7 +63,7 @@ public class ProjetoController {
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<ProjetoResponseDTO> atualizarProjeto(
             @RequestBody ProjetoRequestDTO projetoRequestDTO, @PathVariable Long id) {
-        ProjetoResponseDTO projetoAtualizado = atualizarProjetoServico.atualizar(id, projetoRequestDTO);
+        ProjetoResponseDTO projetoAtualizado = atualizarProjetoServico.atualizar(id, projetoRequestDTO, null);
 
         if (projetoAtualizado != null) {
             return ResponseEntity.ok(projetoAtualizado);
@@ -77,7 +77,7 @@ public class ProjetoController {
     @ApiResponse(responseCode = "404", description = "Projeto não encontrado")
     @PostMapping(path = "/{id}/desativar", consumes = "application/json")
     public ResponseEntity<ProjetoResponseDTO> desativarProjeto(@PathVariable Long id) {
-        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id);
+        ProjetoResponseDTO projetoDesativado = desativarProjetoServico.desativar(id, null);
 
         if (projetoDesativado != null) {
             return ResponseEntity.ok(projetoDesativado);
@@ -108,7 +108,7 @@ public class ProjetoController {
     @ApiResponse(responseCode = "404", description = "Id não encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<ProjetoResponseDTO> obterProjetoId(@PathVariable Long id) {
-        ProjetoResponseDTO projetoEncontrado = listagemProjetoIdServico.buscarPorId(id);
+        ProjetoResponseDTO projetoEncontrado = listagemProjetoIdServico.buscarPorId(id, null);
 
         if (projetoEncontrado != null) {
             return ResponseEntity.ok(projetoEncontrado);

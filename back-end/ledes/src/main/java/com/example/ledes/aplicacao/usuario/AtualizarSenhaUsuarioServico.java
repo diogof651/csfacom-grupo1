@@ -18,6 +18,7 @@ public class AtualizarSenhaUsuarioServico {
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
+    
 
     @Transactional
     public UsuarioLoginResponseDTO alterarSenha(DefinirSenhaRequestDTO definirSenhaRequestDTO) {

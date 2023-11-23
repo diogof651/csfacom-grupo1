@@ -1,5 +1,7 @@
 package com.example.ledes.aplicacao.membro;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,34 +30,40 @@ public class AtualizarMembroServico {
     public MembroResponseDTO atualizarMembro(Long id, MembroRequestDTO membroRequestDTO, String hash) {
         Membro membro = membroRepositorio.findById(id).orElse(null);
         Usuario usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+        Optional<Usuario> usuariopermissao = usuarioRepositorio.findByCodigoHash(hash);
 
-        if (membro != null) {
-            if (usuario == null) {
-                adicionarUsuarioServico
-                        .adicionarPeloMembro(new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()), hash);
-                usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+        if (usuariopermissao.get().possuiPermissao("ADMIN")) {
+
+            if (membro != null) {
+                if (usuario == null) {
+                    adicionarUsuarioServico
+                            .adicionarPeloMembro(
+                                    new UsuarioDTO(membroRequestDTO.getNome(), membroRequestDTO.getEmail()), hash);
+                    usuario = usuarioRepositorio.findByEmail(membroRequestDTO.getEmail());
+                } else {
+                    usuario = membro.getUsuario();
+                }
+
+                membro.setDataIngresso(membroRequestDTO.getDataIngresso());
+                membro.setDataTermino(membroRequestDTO.getDataTermino());
+                membro.setUsuario(usuario);
+                membro.setAtivo(membroRequestDTO.isAtivo());
+                membro.setPapeis(membroRequestDTO.getPapeis());
+                membro.setVinculos(membroRequestDTO.getVinculos());
+
+                membroRepositorio.save(membro);
+
+                return new MembroResponseDTO(membro.getId(),
+                        membro.getUsuario(),
+                        membro.getProjeto(),
+                        membro.getDataIngresso(),
+                        membro.getDataTermino(),
+                        membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
+
             } else {
-                usuario = membro.getUsuario();
+                return null;
             }
-
-            membro.setDataIngresso(membroRequestDTO.getDataIngresso());
-            membro.setDataTermino(membroRequestDTO.getDataTermino());
-            membro.setUsuario(usuario);
-            membro.setAtivo(membroRequestDTO.isAtivo());
-            membro.setPapeis(membroRequestDTO.getPapeis());
-            membro.setVinculos(membroRequestDTO.getVinculos());
-
-            membroRepositorio.save(membro);
-
-            return new MembroResponseDTO(membro.getId(),
-                    membro.getUsuario(),
-                    membro.getProjeto(),
-                    membro.getDataIngresso(),
-                    membro.getDataTermino(),
-                    membro.isAtivo(), membro.getPapeis(), membro.getVinculos());
-
-        } else {
-            return null;
         }
+        return null;
     }
 }

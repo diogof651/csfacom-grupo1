@@ -55,7 +55,7 @@ public class MembroController {
     @PostMapping(path = "projeto/{idProjeto}/cadastrar", consumes = "application/json")
     public ResponseEntity<MembroResponseDTO> cadastrarMembro(@PathVariable Long idProjeto,
             @RequestBody MembroRequestDTO membrorequestDTO, @RequestHeader("usuarioLogado") String hash) {
-        if(hash != null){
+        if (hash != null) {
             MembroResponseDTO novoMembro = cadastrarMembroServico.adicionar(idProjeto, membrorequestDTO, hash);
             return new ResponseEntity<>(novoMembro, HttpStatus.CREATED);
         }
@@ -67,7 +67,8 @@ public class MembroController {
     @ApiResponse(responseCode = "404", description = "Membro não encontrado")
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<MembroResponseDTO> atualizarMembroServico(
-            @PathVariable Long id, @RequestBody MembroRequestDTO atualizacaoDTO, @RequestHeader("usuarioLogado") String hash) {
+            @PathVariable Long id, @RequestBody MembroRequestDTO atualizacaoDTO,
+            @RequestHeader("usuarioLogado") String hash) {
         MembroResponseDTO membroAtualizado = atualizarMembroServico.atualizarMembro(id, atualizacaoDTO, hash);
         return ResponseEntity.ok(membroAtualizado);
     }
@@ -76,8 +77,9 @@ public class MembroController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro desativado")
     @ApiResponse(responseCode = "404", description = "membro não encontrado")
     @PostMapping(path = "/{id}/desativar")
-    public ResponseEntity<MembroResponseDTO> desativarMembro(@PathVariable Long id) {
-        MembroResponseDTO membroDesativado = desativarMembroServico.desativar(id);
+    public ResponseEntity<MembroResponseDTO> desativarMembro(@PathVariable Long id,
+            @RequestHeader("usuarioLogado") String hash) {
+        MembroResponseDTO membroDesativado = desativarMembroServico.desativar(id, hash);
 
         if (membroDesativado != null) {
             return ResponseEntity.ok(membroDesativado);
@@ -90,8 +92,9 @@ public class MembroController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro removido")
     @ApiResponse(responseCode = "404", description = "Membro ou projeto não encontrado")
     @DeleteMapping("/{membroId}")
-    public ResponseEntity<Void> removerMembro(@PathVariable Long membroId) {
-        removerMembroProjetoServico.removerMembro(membroId);
+    public ResponseEntity<Void> removerMembro(@PathVariable Long membroId,
+            @RequestHeader("usuarioLogado") String hash) {
+        removerMembroProjetoServico.removerMembro(membroId, hash);
         return ResponseEntity.noContent().build();
     }
 
@@ -115,8 +118,9 @@ public class MembroController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados do membro ativado")
     @ApiResponse(responseCode = "404", description = "membro não encontrado")
     @PostMapping(path = "/{id}/ativar")
-    public ResponseEntity<MembroResponseDTO> ativarMembro(@PathVariable Long id) {
-        MembroResponseDTO membroAtivado = ativarMembroServico.ativar(id);
+    public ResponseEntity<MembroResponseDTO> ativarMembro(@PathVariable Long id,
+            @RequestHeader("usuarioLogado") String hash) {
+        MembroResponseDTO membroAtivado = ativarMembroServico.ativar(id, hash);
         if (membroAtivado != null) {
             return ResponseEntity.ok(membroAtivado);
         } else {

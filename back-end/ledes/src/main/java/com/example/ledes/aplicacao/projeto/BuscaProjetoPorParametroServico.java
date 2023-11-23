@@ -2,6 +2,7 @@ package com.example.ledes.aplicacao.projeto;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.ledes.dominio.Projeto;
 import com.example.ledes.infraestrutura.ProjetoRepositorio;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
-import java.util.stream.Stream;
 
 @Service
 public class BuscaProjetoPorParametroServico {
