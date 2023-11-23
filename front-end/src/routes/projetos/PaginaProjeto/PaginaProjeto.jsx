@@ -9,6 +9,7 @@ import { useAuth } from "../../../AutorizacaoServico.jsx";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import Membro from "../../../components/Membro/Membro.jsx";
+import InformacoesMembroModal from "./../Membro/InformacoesMembroModal";
 
 export function PaginaProjeto() {
   const navigate = useNavigate();

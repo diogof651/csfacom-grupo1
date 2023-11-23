@@ -1,12 +1,42 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import BadgeOutline from "../BadgeOutline/BadgeOutline";
 
+import { useAuth } from "../../AutorizacaoServico";
 import { OpcoesMembroDropdown } from "../OpcoesMembroDropdown/OpcoesMembroDropdown";
 
 export default function Membro({ membro, selecionar, idProjeto }) {
   const fotoPerfil = membro.usuario.fotoPerfil;
+
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some(
+              (permissao) =>
+                permissao.nome === "ADMIN" || permissao.nome === "EDITORPROJETO"
+            )
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
+
   return (
     <Container className="mt-4">
       <div className="d-flex align-items-center w-100 justify-content-between">
@@ -56,13 +86,19 @@ export default function Membro({ membro, selecionar, idProjeto }) {
             </div>
           </div>
         </section>
-        <div className="col-md-1 col-2 mb-2 p-0 text-end">
-          <OpcoesMembroDropdown
-            idProjeto={idProjeto}
-            idMembro={membro.id}
-            ativo={membro.ativo}
-          ></OpcoesMembroDropdown>
-        </div>
+        <>
+          {temPermissao ? (
+            <div className="col-md-1 col-2 mb-2 p-0 text-end">
+              <OpcoesMembroDropdown
+                idProjeto={idProjeto}
+                idMembro={membro.id}
+                ativo={membro.ativo}
+              ></OpcoesMembroDropdown>
+            </div>
+          ) : (
+            <></>
+          )}
+        </>
       </div>
     </Container>
   );

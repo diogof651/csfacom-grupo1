@@ -20,14 +20,24 @@ public class ListagemProjetoIdServico {
 
     public ProjetoResponseDTO buscarPorId(Long id, String hash) {
         Projeto projeto = projetoRepositorio.findById(id).orElse(null);
-        Optional<Usuario> usuario = usuarioRepositorio.findByCodigoHash(hash);
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findByCodigoHash(hash);
 
-        if (projeto != null && (usuario.get().possuiPermissao("ADMIN") || usuario.get().possuiPermissao("EDITORPROJETO"))) {
-            return new ProjetoResponseDTO(projeto.getId(), projeto.getNome(),
-                    projeto.getDescricao(), projeto.getInicio(), projeto.getTermino(),
-                    projeto.getStatus(), projeto.getTipoProjeto(), projeto.getAtivo());
-        } else {
-            return null;
+        if (projeto != null && usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            if (usuario.possuiPermissao("ADMIN") || usuario.possuiPermissao("EDITORPROJETO")) {
+                return new ProjetoResponseDTO(
+                        projeto.getId(),
+                        projeto.getNome(),
+                        projeto.getDescricao(),
+                        projeto.getInicio(),
+                        projeto.getTermino(),
+                        projeto.getStatus(),
+                        projeto.getTipoProjeto(),
+                        projeto.getAtivo());
+            }
         }
+
+        return null;
     }
+
 }
