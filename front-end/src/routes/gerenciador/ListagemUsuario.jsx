@@ -159,6 +159,7 @@ export function ListagemUsuario() {
       method: "POST",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => obterUsuarios())
@@ -170,6 +171,7 @@ export function ListagemUsuario() {
       method: "POST",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => obterUsuarios())

@@ -16,12 +16,16 @@ public class DesativarUsuarioServico {
     private UsuarioRepositorio usuarioRepositorio;
 
     @Transactional
-    public UsuarioResponseDTO ativar(Long id) {
-        Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
+    public UsuarioResponseDTO desativar(Long id, String hash) {
 
-        if (usuario != null) {
-            if (!usuario.isAtivo()) {
-                usuario.setAtivo(true);
+        Usuario usuarioHash = usuarioRepositorio.findByCodigoHash(hash).get();
+
+        if (usuarioHash.possuiPermissao("ADMIN")) {
+
+            Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
+
+            if (usuario != null) {
+                usuario.setAtivo(false);
                 usuarioRepositorio.save(usuario);
 
                 return new UsuarioResponseDTO(usuario.getId(),
@@ -30,11 +34,9 @@ public class DesativarUsuarioServico {
                         usuario.isAtivo(),
                         usuario.getFotoPerfil(),
                         usuario.getLinkedin(), usuario.getGithub(), usuario.getPermissoes());
-            } else {
-                return null;
             }
-        } else {
-            return null;
         }
+
+        return null;
     }
 }

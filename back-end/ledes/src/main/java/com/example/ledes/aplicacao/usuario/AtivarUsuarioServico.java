@@ -16,11 +16,15 @@ public class AtivarUsuarioServico {
     private UsuarioRepositorio usuarioRepositorio;
 
     @Transactional
-    public UsuarioResponseDTO ativar(Long id) {
-        Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
+    public UsuarioResponseDTO ativar(Long id, String hash) {
 
-        if (usuario != null) {
-            if (!usuario.isAtivo()) {
+        Usuario usuarioHash = usuarioRepositorio.findByCodigoHash(hash).get();
+
+        if (usuarioHash.possuiPermissao("ADMIN")) {
+
+            Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
+
+            if (usuario != null) {
                 usuario.setAtivo(true);
                 usuarioRepositorio.save(usuario);
 
@@ -30,11 +34,9 @@ public class AtivarUsuarioServico {
                         usuario.isAtivo(),
                         usuario.getFotoPerfil(),
                         usuario.getLinkedin(), usuario.getGithub(), usuario.getPermissoes());
-            } else {
-                return null;
             }
-        } else {
-            return null;
         }
+
+        return null;
     }
 }

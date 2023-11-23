@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ledes.aplicacao.usuario.AdicionarUsuarioServico;
+import com.example.ledes.aplicacao.usuario.AtivarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarSenhaUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.AtualizarUsuarioServicoGerenciar;
@@ -25,6 +26,7 @@ import com.example.ledes.aplicacao.usuario.BuscaUsuarioPorFiltroServicoGerenciar
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorHashServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
+import com.example.ledes.aplicacao.usuario.DesativarUsuarioServico;
 import com.example.ledes.aplicacao.usuario.ListagemPermissoesServico;
 import com.example.ledes.aplicacao.usuario.ObterPermissoesUsuarioLogado;
 import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
@@ -69,6 +71,10 @@ public class UsuarioController {
     private BuscaUsuarioPorFiltroServicoGerenciar buscarUsuarioPorFiltro;
     @Autowired
     private ObterPermissoesUsuarioLogado obterPermissoesUsuarioLogado;
+    @Autowired
+    private AtivarUsuarioServico ativarUsuarioServico;
+    @Autowired
+    private DesativarUsuarioServico desativarUsuarioServico;
 
     @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
@@ -228,6 +234,32 @@ public class UsuarioController {
             return ResponseEntity.ok(permissoes);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Ativar um usuario")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuario ativado")
+    @PostMapping(path = "/{id}/ativar")
+    public ResponseEntity<UsuarioResponseDTO> ativar(@PathVariable Long id,
+            @RequestHeader("usuarioLogado") String hash) {
+        UsuarioResponseDTO usuario = ativarUsuarioServico.ativar(id, hash);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Desativar um usuario")
+    @ApiResponse(responseCode = "200", description = "Retorna os dados do usuario ativado")
+    @PostMapping(path = "/{id}/desativar")
+    public ResponseEntity<UsuarioResponseDTO> desativar(@PathVariable Long id,
+            @RequestHeader("usuarioLogado") String hash) {
+        UsuarioResponseDTO usuario = desativarUsuarioServico.desativar(id, hash);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
