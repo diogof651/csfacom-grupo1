@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { Container } from "react-bootstrap";
+import BadgeOutline from "../BadgeOutline/BadgeOutline";
 
 import { OpcoesMembroDropdown } from "../OpcoesMembroDropdown/OpcoesMembroDropdown";
 
@@ -42,17 +43,17 @@ export default function Membro({ membro, selecionar, idProjeto }) {
           </div>
           <div className="col-md-10 col-8 mb-2 p-0">
             <strong>{membro.usuario.nome}</strong>
-            {/* <div className="d-flex gap-1 flex-wrap">
-            {membro.papeis.map((papel, index) => (
-              <BadgeOutline
-                key={index}
-                borderColor={"var(--blue)"}
-                textColor={"var(--blue)"}
-              >
-                {papel}
-              </BadgeOutline>
-            ))}
-          </div> */}
+            <div className="d-flex gap-1 flex-wrap">
+              {membro.papeis.map((papel, index) => (
+                <BadgeOutline
+                  key={index}
+                  borderColor={"var(--blue)"}
+                  textColor={"var(--blue)"}
+                >
+                  {papel.nome}
+                </BadgeOutline>
+              ))}
+            </div>
           </div>
         </section>
         <div className="col-md-1 col-2 mb-2 p-0 text-end">

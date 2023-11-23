@@ -3,9 +3,9 @@ import Nav from "react-bootstrap/Nav";
 import {
   BsBoxArrowInRight,
   BsFillPuzzleFill,
+  BsGear,
   BsMegaphoneFill,
   BsPersonCircle,
-  BsGear,
 } from "react-icons/bs";
 import ledesLogo from "../../assets/ledes-logo.svg";
 import { useAuth } from "./../../AutorizacaoServico";
@@ -44,12 +44,18 @@ export function Header({ mostrarNavLinkGerenciar }) {
             </Nav.Link>
           </Nav.Item>
           <Nav.Item as="li">
-        <Nav.Link href="/gerenciar" className="font-weight-bold text-white">
-          <BsGear style={iconStyle} />
-          Gerenciar
-        </Nav.Link>
-      </Nav.Item>
-
+            {usuarioLogado() || isAuthenticated ? (
+              <Nav.Link
+                href="/gerenciar"
+                className="font-weight-bold text-white"
+              >
+                <BsGear style={iconStyle} />
+                Gerenciar
+              </Nav.Link>
+            ) : (
+              <></>
+            )}
+          </Nav.Item>
         </Nav>
       </div>
       <Nav.Item as="lu" className="ml-auto ml-5">
