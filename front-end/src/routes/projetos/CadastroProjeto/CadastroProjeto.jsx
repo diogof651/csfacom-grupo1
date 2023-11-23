@@ -12,11 +12,12 @@ import "react-quill/dist/quill.snow.css";
 import styles from "./CadastroProjeto.module.css";
 
 import { useNavigate, useParams } from "react-router";
+import { useAuth } from "../../../AutorizacaoServico";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Select } from "../../../components/Select/Select";
-import "./CadastroProjeto.module.css";
 import { ModalTipos } from "../../gerenciador/ModalTipos";
+import "./CadastroProjeto.module.css";
 
 export function CadastroProjeto() {
   const { id } = useParams();
@@ -29,6 +30,34 @@ export function CadastroProjeto() {
 
   const [showModal, setShowModal] = useState(false);
   const [modoEdicao, setModoEdicao] = useState(false);
+
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some(
+              (permissao) =>
+                permissao.nome === "ADMIN" || permissao.nome === "EDITORPROJETO"
+            )
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
 
   const handleOpenAdicionarModal = () => {
     setModoEdicao(false);
@@ -115,151 +144,162 @@ export function CadastroProjeto() {
 
   return (
     <>
-      <Form
-        className={`d-flex justify-content-center flex-column form-container`}
-        style={{ width: "70vw", margin: "40px auto", padding: "30px" }}
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="mb-3">
-          <h1 style={{ fontFamily: "Inter", fontWeight: "bold" }}>Sobre</h1>
-          <br></br>
-          <Form.Label className="inter-bold">Título do Projeto</Form.Label>
-          <Controller
-            name="nome"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Form.Control {...field} className="inter-bold" />
-            )}
-          />
-        </div>
-        <div className="mb-3 row">
-          <Form.Label className="inter-bold">Tipo do Projeto</Form.Label>
-          <div className="col-md-10 col-12 mb-2">
-            <Select
-              options={optionsTipoProjeto}
-              handleOptionChange={(e) => {
-                setTipoSelectedOption(e.target.value);
-              }}
-              selectedOption={tipoSelectedOption}
-            />
-          </div>
-          <div className="col-md-2 col-12 mb-2">
-            <BotaoOutline
-              color="var(--blue)"
-              style={{
-                fontSize: "0.8em", // Ajuste de tamanho
-                padding: "5px 8px", // Ajuste de padding
-              }}
-              onClick={handleOpenAdicionarModal}
-            >
-              <BsPlusCircle style={{ marginRight: "-3px" }} /> Adicionar
-            </BotaoOutline>
-          </div>
-        </div>
-        <div className="mb-3">
-          <Form.Label className="inter-bold">Estado do Projeto</Form.Label>
-          <Select
-            options={optionsEstado}
-            handleOptionChange={(e) => {
-              setEstadoSelectedOption(e.target.value);
-            }}
-            selectedOption={estadoSelectedOption}
-          />
-        </div>
-        <div className="mb-3 d-flex justify-content-between">
-          <div className="col">
-            <Form.Label className="inter-bold">Data Início</Form.Label>
-            <div className="input-group">
+      {temPermissao ? (
+        <>
+          <Form
+            className={`d-flex justify-content-center flex-column form-container`}
+            style={{ width: "70vw", margin: "40px auto", padding: "30px" }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="mb-3">
+              <h1 style={{ fontFamily: "Inter", fontWeight: "bold" }}>Sobre</h1>
+              <br></br>
+              <Form.Label className="inter-bold">Título do Projeto</Form.Label>
               <Controller
-                name="inicio"
+                name="nome"
                 control={control}
-                defaultValue={null}
+                defaultValue=""
                 render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    dateFormat="dd/MM/yyyy"
-                    className="form-control inter-bold"
-                    selected={field.value || null}
-                    onChange={(date) => field.onChange(date)}
-                  />
+                  <Form.Control {...field} className="inter-bold" />
                 )}
               />
-              <span className="input-group-text inter-bold">
-                <FontAwesomeIcon icon={faCalendar} />
-              </span>
             </div>
-          </div>
-          <div className="col">
-            <div className={styles["align-right"]}>
-              <Form.Label className="inter-bold">Data Fim</Form.Label>
+            <div className="mb-3 row">
+              <Form.Label className="inter-bold">Tipo do Projeto</Form.Label>
+              <div className="col-md-10 col-12 mb-2">
+                <Select
+                  options={optionsTipoProjeto}
+                  handleOptionChange={(e) => {
+                    setTipoSelectedOption(e.target.value);
+                  }}
+                  selectedOption={tipoSelectedOption}
+                />
+              </div>
+              <div className="col-md-2 col-12 mb-2">
+                <BotaoOutline
+                  color="var(--blue)"
+                  style={{
+                    fontSize: "0.8em", // Ajuste de tamanho
+                    padding: "5px 8px", // Ajuste de padding
+                  }}
+                  onClick={handleOpenAdicionarModal}
+                >
+                  <BsPlusCircle style={{ marginRight: "-3px" }} /> Adicionar
+                </BotaoOutline>
+              </div>
             </div>
-            <div className={`input-group ${styles["align-right"]}`}>
-              <Controller
-                name="termino"
-                control={control}
-                defaultValue={null}
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    dateFormat="dd/MM/yyyy"
-                    className="form-control inter-bold"
-                    selected={field.value || null}
-                    onChange={(date) => field.onChange(date)}
-                  />
-                )}
-              />
-              <span className="input-group-text inter-bold">
-                <FontAwesomeIcon icon={faCalendar} />
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="mb-3" style={{ maxHeight: "150px", overflowY: "auto" }}>
-          <Form.Label className="inter-bold">Descrição do Projeto</Form.Label>
-          <Controller
-            name="descricao"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <ReactQuill
-                {...field}
-                modules={{
-                  toolbar: {
-                    container: [
-                      [{ header: "1" }, { header: "2" }, { font: [] }],
-                      [{ list: "ordered" }, { list: "bullet" }],
-                      ["bold", "italic", "underline"],
-                      ["link", "image"],
-                      [{ align: [] }],
-                      ["clean"],
-                      ["imageUploader"],
-                    ],
-                  },
+            <div className="mb-3">
+              <Form.Label className="inter-bold">Estado do Projeto</Form.Label>
+              <Select
+                options={optionsEstado}
+                handleOptionChange={(e) => {
+                  setEstadoSelectedOption(e.target.value);
                 }}
+                selectedOption={estadoSelectedOption}
               />
-            )}
+            </div>
+            <div className="mb-3 d-flex justify-content-between">
+              <div className="col">
+                <Form.Label className="inter-bold">Data Início</Form.Label>
+                <div className="input-group">
+                  <Controller
+                    name="inicio"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        dateFormat="dd/MM/yyyy"
+                        className="form-control inter-bold"
+                        selected={field.value || null}
+                        onChange={(date) => field.onChange(date)}
+                      />
+                    )}
+                  />
+                  <span className="input-group-text inter-bold">
+                    <FontAwesomeIcon icon={faCalendar} />
+                  </span>
+                </div>
+              </div>
+              <div className="col">
+                <div className={styles["align-right"]}>
+                  <Form.Label className="inter-bold">Data Fim</Form.Label>
+                </div>
+                <div className={`input-group ${styles["align-right"]}`}>
+                  <Controller
+                    name="termino"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <DatePicker
+                        {...field}
+                        dateFormat="dd/MM/yyyy"
+                        className="form-control inter-bold"
+                        selected={field.value || null}
+                        onChange={(date) => field.onChange(date)}
+                      />
+                    )}
+                  />
+                  <span className="input-group-text inter-bold">
+                    <FontAwesomeIcon icon={faCalendar} />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              className="mb-3"
+              style={{ maxHeight: "150px", overflowY: "auto" }}
+            >
+              <Form.Label className="inter-bold">
+                Descrição do Projeto
+              </Form.Label>
+              <Controller
+                name="descricao"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <ReactQuill
+                    {...field}
+                    modules={{
+                      toolbar: {
+                        container: [
+                          [{ header: "1" }, { header: "2" }, { font: [] }],
+                          [{ list: "ordered" }, { list: "bullet" }],
+                          ["bold", "italic", "underline"],
+                          ["link", "image"],
+                          [{ align: [] }],
+                          ["clean"],
+                          ["imageUploader"],
+                        ],
+                      },
+                    }}
+                  />
+                )}
+              />
+            </div>
+
+            <div className="d-flex justify-content-end gap-2 mt-4">
+              <BotaoOutline color="var(--blue)" onClick={cancelar}>
+                Cancelar
+              </BotaoOutline>
+              <BotaoComFundo type="submit" color="var(--blue)">
+                Salvar
+              </BotaoComFundo>
+            </div>
+          </Form>
+
+          <ModalTipos
+            titulo={"Tipo de Projeto"}
+            salvar={salvarTipoProjeto}
+            showModal={showModal}
+            setShowModal={setShowModal}
+            modoEdicao={modoEdicao}
+            itemSelecionado={null}
           />
-        </div>
-
-        <div className="d-flex justify-content-end gap-2 mt-4">
-          <BotaoOutline color="var(--blue)" onClick={cancelar}>
-            Cancelar
-          </BotaoOutline>
-          <BotaoComFundo type="submit" color="var(--blue)">
-            Salvar
-          </BotaoComFundo>
-        </div>
-      </Form>
-
-      <ModalTipos
-        titulo={"Tipo de Projeto"}
-        salvar={salvarTipoProjeto}
-        showModal={showModal}
-        setShowModal={setShowModal}
-        modoEdicao={modoEdicao}
-        itemSelecionado={null}
-      />
+        </>
+      ) : (
+        <h1>Você não tem permissão para acessar esta página.</h1>
+      )}
     </>
   );
 }

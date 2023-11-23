@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { BsPuzzle } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../AutorizacaoServico.jsx";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
 import { Select } from "../../../components/Select/Select";
@@ -16,6 +17,34 @@ export function ListagemProjetos() {
   const [cards, setCards] = useState([]);
   const [optionsTipoProjeto, setOptionsTipoProjeto] = useState([]);
   const optionsEstado = ["Em andamento", "Concluído", "Descontinuado"];
+
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some(
+              (permissao) =>
+                permissao.nome === "ADMIN" || permissao.nome === "EDITORPROJETO"
+            )
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
 
   useEffect(() => {
     obterProjetos();
@@ -111,10 +140,15 @@ export function ListagemProjetos() {
         >
           Projetos
         </h1>
-
-        <Link to="/cadastroProjeto" className="text-decoration-none">
-          <BotaoOutline color="var(--blue)"> Novo Projeto </BotaoOutline>
-        </Link>
+        <>
+          {temPermissao ? (
+            <Link to="/cadastroProjeto" className="text-decoration-none">
+              <BotaoOutline color="var(--blue)"> Novo Projeto </BotaoOutline>
+            </Link>
+          ) : (
+            <></>
+          )}
+        </>
       </div>
       <Form className="mt-2">
         <div className="row">

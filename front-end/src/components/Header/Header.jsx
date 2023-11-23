@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import {
   BsBoxArrowInRight,
@@ -24,6 +24,31 @@ export function Header({ mostrarNavLinkGerenciar }) {
     logout();
   };
 
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some((permissao) => permissao.nome === "ADMIN")
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
+
   return (
     <header
       className={`${styles.header} d-flex align-items-center justify-content-between`}
@@ -43,19 +68,21 @@ export function Header({ mostrarNavLinkGerenciar }) {
               Projetos
             </Nav.Link>
           </Nav.Item>
-          <Nav.Item as="li">
-            {usuarioLogado() || isAuthenticated ? (
-              <Nav.Link
-                href="/gerenciar"
-                className="font-weight-bold text-white"
-              >
-                <BsGear style={iconStyle} />
-                Gerenciar
-              </Nav.Link>
+          <>
+            {temPermissao ? (
+              <Nav.Item as="li">
+                <Nav.Link
+                  href="/gerenciar"
+                  className="font-weight-bold text-white"
+                >
+                  <BsGear style={iconStyle} />
+                  Gerenciar
+                </Nav.Link>
+              </Nav.Item>
             ) : (
               <></>
             )}
-          </Nav.Item>
+          </>
         </Nav>
       </div>
       <Nav.Item as="lu" className="ml-auto ml-5">

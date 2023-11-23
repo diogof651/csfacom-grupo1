@@ -12,6 +12,7 @@ import { BsTrash3 } from "react-icons/bs";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router";
+import { useAuth } from "../../../AutorizacaoServico";
 import { BotaoComFundo } from "../../../components/Botoes/BotaoComFundo";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import { Input } from "../../../components/Input/Input";
@@ -32,6 +33,34 @@ export function CadastroNoticia() {
   const [thumbnail, setThumbnail] = useState(null);
   const [hasSelectedAnexo, setHasSelectedAnexo] = useState(false);
   const [hasSelectedThumbnail, setHasSelectedThumbnail] = useState(false);
+
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some(
+              (permissao) =>
+                permissao.nome === "ADMIN" || permissao.nome === "EDITORNOTICIA"
+            )
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -174,270 +203,282 @@ export function CadastroNoticia() {
   }
 
   return (
-    <Form
-      className={`d-flex justify-content-center flex-column form-container`}
-      style={{ width: "70vw", margin: "40px auto", padding: "30px" }}
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div className="mb-3 d-flex justify-content-between align-items-center">
-        <div>
-          <h1 style={{ fontFamily: "Inter", fontWeight: "bold" }}>
-            Editar Notícia
-          </h1>
-        </div>
-        <div className="d-flex align-items-center">
-          <FormCheck
-            type="switch"
-            id="custom-switch"
-            style={{ marginLeft: "10px" }}
-            label="Em destaque"
-            checked={emDestaque}
-            onChange={() => setEmDestaque(!emDestaque)}
-          />
-        </div>
-      </div>
-      <div className="mb-3">
-        <Form.Label style={{ fontWeight: "bold", fontSize: "18px" }}>
-          Título*
-        </Form.Label>
-        <Controller
-          name="titulo"
-          control={control}
-          defaultValue=""
-          render={({ field }) => <Form.Control {...field} />}
-        />
-      </div>
-      <div className="mb-3">
-        <Form.Label style={{ fontWeight: "bold", fontSize: "18px" }}>
-          Conteúdo*
-        </Form.Label>
-
-        <Controller
-          name="conteudo"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <ReactQuill
-              {...field}
-              modules={{
-                toolbar: {
-                  container: [
-                    [{ header: "1" }, { header: "2" }, { font: [] }],
-                    [{ list: "ordered" }, { list: "bullet" }],
-                    ["bold", "italic", "underline"],
-                    ["link", "image"],
-                    [{ align: [] }],
-                    ["clean"],
-                    ["imageUploader"],
-                  ],
-                },
-              }}
-            />
-          )}
-        />
-      </div>
-      <div className="mb-3">
-        <Form.Label style={{ fontWeight: "bold", fontSize: "18px" }}>
-          Publicação*
-        </Form.Label>
-        <div key={`default-radio-1`} className="mb-3">
-          <FormCheck
-            type="radio"
-            id={`default-radio-1`}
-            label={`Imediata`}
-            checked={estadoSelecionado === "Imediata"}
-            onChange={() => handleRadioChange("Imediata")}
-          />
-        </div>
-        <div key={`default-radio-2`} className="mb-3">
-          <FormCheck
-            type="radio"
-            id={`default-radio-2`}
-            label={`Rascunho`}
-            checked={estadoSelecionado === "Rascunho"}
-            onChange={() => handleRadioChange("Rascunho")}
-          />
-        </div>
-        <div key={`default-radio-3`} className="mb-3">
-          <FormCheck
-            type="radio"
-            id={`default-radio-3`}
-            label={`Agendada`}
-            checked={estadoSelecionado === "Agendada"}
-            onChange={() => handleRadioChange("Agendada")}
-          />
-        </div>
-      </div>
-
-      {showDatePicker && (
-        <div className="mb-3">
-          <Input
-            value={dataPublicacao}
-            onChange={(e) => setDataPublicacao(e.target.value)}
-            label={"Data para publicação"}
-            required={true}
-            placeholder={""}
-            tipo={"date"}
-          ></Input>
-        </div>
-      )}
-
-      <div className="mb-3 d-flex justify-content-between align-items-center">
-        <Form.Label style={{ fontWeight: "bold", fontSize: "20px" }}>
-          Anexos
-        </Form.Label>
-        <label
-          className="btn btn-primary inter-bold"
-          style={{
-            backgroundColor: "transparent",
-            color: "var(--blue)",
-            border: "1px solid var(--blue)",
-            padding: "5px",
-            height: "40px",
-            display: "flex",
-            alignItems: "center",
-          }}
+    <>
+      {temPermissao ? (
+        <Form
+          className={`d-flex justify-content-center flex-column form-container`}
+          style={{ width: "70vw", margin: "40px auto", padding: "30px" }}
+          onSubmit={handleSubmit(onSubmit)}
         >
-          Escolher Arquivo
-          <input
-            type="file"
-            name="anexos"
-            multiple
-            className="d-none"
-            onChange={handleFileInputChange}
-          />
-        </label>
-      </div>
-
-      <ul className="list-unstyled">
-        {anexos.map((anexo, index) => (
-          <li
-            key={index}
-            className="d-flex align-items-center mb-2"
-            style={{
-              backgroundColor: "#f2f2f2",
-              padding: "8px",
-              marginBottom: "8px",
-              borderRadius: "7px",
-            }}
-          >
-            <span className="file-icon">
-              <FontAwesomeIcon icon={faPaperclip} />
-            </span>{" "}
-            <span style={{ marginRight: "8px" }}></span>
-            <span>{anexo.titulo}</span>
-            <div className="ms-auto">
-              <button
-                type="button"
-                className="btn btn-link text-reset"
-                onClick={() => handleRemoveAnexo(index)}
-              >
-                <BsTrash3 className="icon" style={{ color: "var(--red)" }} />
-              </button>
+          <div className="mb-3 d-flex justify-content-between align-items-center">
+            <div>
+              <h1 style={{ fontFamily: "Inter", fontWeight: "bold" }}>
+                Editar Notícia
+              </h1>
             </div>
-          </li>
-        ))}
-      </ul>
-
-      {!hasSelectedAnexo && (
-        <div
-          className="mb-2 d-flex align-items-center"
-          style={{
-            backgroundColor: "#f2f2f2",
-            padding: "8px",
-            marginTop: "-30px",
-            borderRadius: "7px",
-          }}
-        >
-          <FontAwesomeIcon icon={faPaperclip} className="me-2" />
-          Nenhum anexo selecionado
-        </div>
-      )}
-
-      <div className="mb-3 d-flex justify-content-between align-items-center">
-        <Form.Label style={{ fontWeight: "bold", fontSize: "20px" }}>
-          Thumbnail
-        </Form.Label>
-        <label
-          className="btn btn-primary inter-bold"
-          style={{
-            backgroundColor: "transparent",
-            color: "var(--blue)",
-            border: "1px solid var(--blue)",
-            padding: "5px",
-            height: "40px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          Escolher Imagem
-          <input
-            type="file"
-            name="thumbnail"
-            accept=".png,.jpeg,.jpg"
-            className="d-none"
-            onChange={handleThumbnailInputChange}
-          />
-        </label>
-      </div>
-
-      {thumbnail && (
-        <ul className="list-unstyled">
-          <li
-            style={{
-              backgroundColor: "#f2f2f2",
-              padding: "8px",
-              marginBottom: "8px",
-              borderRadius: "7px",
-            }}
-          >
-            <div className="d-flex justify-content-between">
-              <span className="file-icon">
-                <FontAwesomeIcon icon={faImage} /> {thumbnail.titulo}
-              </span>
-
-              <button
-                type="button"
-                className="btn btn-link text-reset"
-                onClick={handleRemoveThumbnail}
-              >
-                <BsTrash3 className="icon" style={{ color: "var(--red)" }} />
-              </button>
-            </div>
-            <div className="mt-2">
-              <img
-                src={`data:image/jpeg;base64,${thumbnail.conteudo}`} // Certifique-se de que o tipo da imagem esteja correto
-                alt={thumbnail.titulo}
-                style={{ maxWidth: "200px", maxHeight: "200px" }} // Ajuste o tamanho conforme necessário
+            <div className="d-flex align-items-center">
+              <FormCheck
+                type="switch"
+                id="custom-switch"
+                style={{ marginLeft: "10px" }}
+                label="Em destaque"
+                checked={emDestaque}
+                onChange={() => setEmDestaque(!emDestaque)}
               />
             </div>
-          </li>
-        </ul>
-      )}
+          </div>
+          <div className="mb-3">
+            <Form.Label style={{ fontWeight: "bold", fontSize: "18px" }}>
+              Título*
+            </Form.Label>
+            <Controller
+              name="titulo"
+              control={control}
+              defaultValue=""
+              render={({ field }) => <Form.Control {...field} />}
+            />
+          </div>
+          <div className="mb-3">
+            <Form.Label style={{ fontWeight: "bold", fontSize: "18px" }}>
+              Conteúdo*
+            </Form.Label>
 
-      {!hasSelectedThumbnail && (
-        <div
-          className="mb-2 d-flex align-items-center"
-          style={{
-            backgroundColor: "#f2f2f2",
-            padding: "8px",
-            marginTop: "-15px",
-            borderRadius: "7px",
-          }}
-        >
-          <FontAwesomeIcon icon={faImage} className="me-2" />
-          Nenhuma imagem selecionada
-        </div>
-      )}
+            <Controller
+              name="conteudo"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <ReactQuill
+                  {...field}
+                  modules={{
+                    toolbar: {
+                      container: [
+                        [{ header: "1" }, { header: "2" }, { font: [] }],
+                        [{ list: "ordered" }, { list: "bullet" }],
+                        ["bold", "italic", "underline"],
+                        ["link", "image"],
+                        [{ align: [] }],
+                        ["clean"],
+                        ["imageUploader"],
+                      ],
+                    },
+                  }}
+                />
+              )}
+            />
+          </div>
+          <div className="mb-3">
+            <Form.Label style={{ fontWeight: "bold", fontSize: "18px" }}>
+              Publicação*
+            </Form.Label>
+            <div key={`default-radio-1`} className="mb-3">
+              <FormCheck
+                type="radio"
+                id={`default-radio-1`}
+                label={`Imediata`}
+                checked={estadoSelecionado === "Imediata"}
+                onChange={() => handleRadioChange("Imediata")}
+              />
+            </div>
+            <div key={`default-radio-2`} className="mb-3">
+              <FormCheck
+                type="radio"
+                id={`default-radio-2`}
+                label={`Rascunho`}
+                checked={estadoSelecionado === "Rascunho"}
+                onChange={() => handleRadioChange("Rascunho")}
+              />
+            </div>
+            <div key={`default-radio-3`} className="mb-3">
+              <FormCheck
+                type="radio"
+                id={`default-radio-3`}
+                label={`Agendada`}
+                checked={estadoSelecionado === "Agendada"}
+                onChange={() => handleRadioChange("Agendada")}
+              />
+            </div>
+          </div>
 
-      <div className="d-flex justify-content-end gap-2 mt-4">
-        <BotaoOutline color="var(--blue)" onClick={cancelar}>
-          Cancelar
-        </BotaoOutline>
-        <BotaoComFundo type="submit" color="var(--blue)">
-          Salvar
-        </BotaoComFundo>
-      </div>
-    </Form>
+          {showDatePicker && (
+            <div className="mb-3">
+              <Input
+                value={dataPublicacao}
+                onChange={(e) => setDataPublicacao(e.target.value)}
+                label={"Data para publicação"}
+                required={true}
+                placeholder={""}
+                tipo={"date"}
+              ></Input>
+            </div>
+          )}
+
+          <div className="mb-3 d-flex justify-content-between align-items-center">
+            <Form.Label style={{ fontWeight: "bold", fontSize: "20px" }}>
+              Anexos
+            </Form.Label>
+            <label
+              className="btn btn-primary inter-bold"
+              style={{
+                backgroundColor: "transparent",
+                color: "var(--blue)",
+                border: "1px solid var(--blue)",
+                padding: "5px",
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              Escolher Arquivo
+              <input
+                type="file"
+                name="anexos"
+                multiple
+                className="d-none"
+                onChange={handleFileInputChange}
+              />
+            </label>
+          </div>
+
+          <ul className="list-unstyled">
+            {anexos.map((anexo, index) => (
+              <li
+                key={index}
+                className="d-flex align-items-center mb-2"
+                style={{
+                  backgroundColor: "#f2f2f2",
+                  padding: "8px",
+                  marginBottom: "8px",
+                  borderRadius: "7px",
+                }}
+              >
+                <span className="file-icon">
+                  <FontAwesomeIcon icon={faPaperclip} />
+                </span>{" "}
+                <span style={{ marginRight: "8px" }}></span>
+                <span>{anexo.titulo}</span>
+                <div className="ms-auto">
+                  <button
+                    type="button"
+                    className="btn btn-link text-reset"
+                    onClick={() => handleRemoveAnexo(index)}
+                  >
+                    <BsTrash3
+                      className="icon"
+                      style={{ color: "var(--red)" }}
+                    />
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {!hasSelectedAnexo && (
+            <div
+              className="mb-2 d-flex align-items-center"
+              style={{
+                backgroundColor: "#f2f2f2",
+                padding: "8px",
+                marginTop: "-30px",
+                borderRadius: "7px",
+              }}
+            >
+              <FontAwesomeIcon icon={faPaperclip} className="me-2" />
+              Nenhum anexo selecionado
+            </div>
+          )}
+
+          <div className="mb-3 d-flex justify-content-between align-items-center">
+            <Form.Label style={{ fontWeight: "bold", fontSize: "20px" }}>
+              Thumbnail
+            </Form.Label>
+            <label
+              className="btn btn-primary inter-bold"
+              style={{
+                backgroundColor: "transparent",
+                color: "var(--blue)",
+                border: "1px solid var(--blue)",
+                padding: "5px",
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              Escolher Imagem
+              <input
+                type="file"
+                name="thumbnail"
+                accept=".png,.jpeg,.jpg"
+                className="d-none"
+                onChange={handleThumbnailInputChange}
+              />
+            </label>
+          </div>
+
+          {thumbnail && (
+            <ul className="list-unstyled">
+              <li
+                style={{
+                  backgroundColor: "#f2f2f2",
+                  padding: "8px",
+                  marginBottom: "8px",
+                  borderRadius: "7px",
+                }}
+              >
+                <div className="d-flex justify-content-between">
+                  <span className="file-icon">
+                    <FontAwesomeIcon icon={faImage} /> {thumbnail.titulo}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="btn btn-link text-reset"
+                    onClick={handleRemoveThumbnail}
+                  >
+                    <BsTrash3
+                      className="icon"
+                      style={{ color: "var(--red)" }}
+                    />
+                  </button>
+                </div>
+                <div className="mt-2">
+                  <img
+                    src={`data:image/jpeg;base64,${thumbnail.conteudo}`} // Certifique-se de que o tipo da imagem esteja correto
+                    alt={thumbnail.titulo}
+                    style={{ maxWidth: "200px", maxHeight: "200px" }} // Ajuste o tamanho conforme necessário
+                  />
+                </div>
+              </li>
+            </ul>
+          )}
+
+          {!hasSelectedThumbnail && (
+            <div
+              className="mb-2 d-flex align-items-center"
+              style={{
+                backgroundColor: "#f2f2f2",
+                padding: "8px",
+                marginTop: "-15px",
+                borderRadius: "7px",
+              }}
+            >
+              <FontAwesomeIcon icon={faImage} className="me-2" />
+              Nenhuma imagem selecionada
+            </div>
+          )}
+
+          <div className="d-flex justify-content-end gap-2 mt-4">
+            <BotaoOutline color="var(--blue)" onClick={cancelar}>
+              Cancelar
+            </BotaoOutline>
+            <BotaoComFundo type="submit" color="var(--blue)">
+              Salvar
+            </BotaoComFundo>
+          </div>
+        </Form>
+      ) : (
+        <h1>Você não tem permissão para acessar esta página.</h1>
+      )}
+    </>
   );
 }

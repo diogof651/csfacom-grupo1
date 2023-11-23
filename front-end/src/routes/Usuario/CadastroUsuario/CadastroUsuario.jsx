@@ -12,14 +12,38 @@ export function CadastroUsuario() {
   const navigate = useNavigate();
   const { idUsuario } = useParams();
 
-  const { hashUsuarioLogado } = useAuth();
-
+  
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [ativo, setAtivo] = useState(true);
   const [permissoes, setPermissoes] = useState([]);
   const [permissoesSelecionadas, setPermissoesSelecionadas] = useState([]);
   const [mensagemErro, setMensagemErro] = useState("");
+  
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some((permissao) => permissao.nome === "ADMIN")
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
 
   useEffect(() => {
     if (permissoes.length === 0) {
@@ -142,86 +166,92 @@ export function CadastroUsuario() {
 
   return (
     <>
-      <Container
-        className="d-flex flex-column"
-        style={{ width: "50vw", marginTop: "40px" }}
-      >
-        {mensagemErro && <Alert type="erro">{mensagemErro}</Alert>}
-        <h1
-          style={{
-            borderBottom: "1px solid #ccc",
-            marginBottom: "10px",
-            fontWeight: "bold",
-            paddingBottom: "5px",
-          }}
-        >
-          Dados Pessoais
-        </h1>
-        <Form
-          className={`d-flex justify-content-center flex-column form-container w-100`}
-          onSubmit={onSubmit}
-        >
-          <Input
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            label={"Nome"}
-            required={true}
-            placeholder={"Digite seu nome"}
-            tipo={"text"}
-          ></Input>
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            label={"Email"}
-            required={true}
-            placeholder={"Digite seu email"}
-            tipo={"email"}
-          ></Input>
-          <Form.Check
-            className="mt-3"
-            type="checkbox"
-            id="ativoCheckbox"
-            checked={ativo}
-            onChange={(e) => setAtivo(e.target.value)}
-            label="Ativo"
-          />
-          <h1
-            style={{
-              borderBottom: "1px solid #ccc",
-              marginBottom: "10px",
-              fontWeight: "bold",
-              paddingBottom: "5px",
-            }}
+      {temPermissao ? (
+        <>
+          <Container
+            className="d-flex flex-column"
+            style={{ width: "50vw", marginTop: "40px" }}
           >
-            Permissões
-          </h1>
-          <div className="row">
-            {permissoes.map((permissao, index) => (
+            {mensagemErro && <Alert type="erro">{mensagemErro}</Alert>}
+            <h1
+              style={{
+                borderBottom: "1px solid #ccc",
+                marginBottom: "10px",
+                fontWeight: "bold",
+                paddingBottom: "5px",
+              }}
+            >
+              Dados Pessoais
+            </h1>
+            <Form
+              className={`d-flex justify-content-center flex-column form-container w-100`}
+              onSubmit={onSubmit}
+            >
+              <Input
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                label={"Nome"}
+                required={true}
+                placeholder={"Digite seu nome"}
+                tipo={"text"}
+              ></Input>
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                label={"Email"}
+                required={true}
+                placeholder={"Digite seu email"}
+                tipo={"email"}
+              ></Input>
               <Form.Check
-                key={index}
-                className="checkbox-container"
+                className="mt-3"
                 type="checkbox"
-                id={`checkbox-${index}`}
-                label={permissao.nome}
-                checked={permissoesSelecionadas.some(
-                  (permissaoSelecionada) =>
-                    permissaoSelecionada.nome === permissao.nome
-                )}
-                onChange={() => toggleSelecionado(permissao)}
-                disabled={isDisabled(permissao)}
+                id="ativoCheckbox"
+                checked={ativo}
+                onChange={(e) => setAtivo(e.target.value)}
+                label="Ativo"
               />
-            ))}
-          </div>
-          <div className="d-flex justify-content-end gap-2 mt-4">
-            <BotaoOutline color="var(--blue)" onClick={cancelar}>
-              Cancelar
-            </BotaoOutline>
-            <BotaoComFundo type="submit" color="var(--blue)">
-              Cadastrar
-            </BotaoComFundo>
-          </div>
-        </Form>
-      </Container>
+              <h1
+                style={{
+                  borderBottom: "1px solid #ccc",
+                  marginBottom: "10px",
+                  fontWeight: "bold",
+                  paddingBottom: "5px",
+                }}
+              >
+                Permissões
+              </h1>
+              <div className="row">
+                {permissoes.map((permissao, index) => (
+                  <Form.Check
+                    key={index}
+                    className="checkbox-container"
+                    type="checkbox"
+                    id={`checkbox-${index}`}
+                    label={permissao.nome}
+                    checked={permissoesSelecionadas.some(
+                      (permissaoSelecionada) =>
+                        permissaoSelecionada.nome === permissao.nome
+                    )}
+                    onChange={() => toggleSelecionado(permissao)}
+                    disabled={isDisabled(permissao)}
+                  />
+                ))}
+              </div>
+              <div className="d-flex justify-content-end gap-2 mt-4">
+                <BotaoOutline color="var(--blue)" onClick={cancelar}>
+                  Cancelar
+                </BotaoOutline>
+                <BotaoComFundo type="submit" color="var(--blue)">
+                  Cadastrar
+                </BotaoComFundo>
+              </div>
+            </Form>
+          </Container>
+        </>
+      ) : (
+        <h1>Você não tem permissão para acessar esta página.</h1>
+      )}
     </>
   );
 }

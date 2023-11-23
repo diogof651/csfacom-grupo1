@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { Link, useParams } from "react-router-dom";
+import { useAuth } from "../../../AutorizacaoServico.jsx";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline";
 import Membro from "../../../components/Membro/Membro.jsx";
@@ -30,6 +31,34 @@ export function PaginaProjeto() {
   const [projeto, setProjeto] = useState({});
   const [membros, setMembros] = useState([]);
   const [membroSelecionado, setMembroSelecionado] = useState(null);
+
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some(
+              (permissao) =>
+                permissao.nome === "ADMIN" || permissao.nome === "EDITORPROJETO"
+            )
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
 
   const handleOpenModal = (user) => {
     setMembroSelecionado(user);
@@ -123,16 +152,25 @@ export function PaginaProjeto() {
             <Badge bg="danger">{projeto.status}</Badge>
           </div>
         </div>
-        <div className="d-flex gap-2">
-          <Link to={`/editarProjeto/${id}`} className="text-decoration-none">
-            <BotaoComIcone color="var(--black)">
-              <BsPencilSquare style={iconStyle} /> Editar
-            </BotaoComIcone>
-          </Link>
-          <BotaoComIcone color="var(--black)" onClick={remover}>
-            <BsTrash style={iconStyle} /> Remover
-          </BotaoComIcone>
-        </div>
+        <>
+          {temPermissao ? (
+            <div className="d-flex gap-2">
+              <Link
+                to={`/editarProjeto/${id}`}
+                className="text-decoration-none"
+              >
+                <BotaoComIcone color="var(--black)">
+                  <BsPencilSquare style={iconStyle} /> Editar
+                </BotaoComIcone>
+              </Link>
+              <BotaoComIcone color="var(--black)" onClick={remover}>
+                <BsTrash style={iconStyle} /> Remover
+              </BotaoComIcone>
+            </div>
+          ) : (
+            <></>
+          )}
+        </>
       </div>
       <div dangerouslySetInnerHTML={{ __html: projeto.descricao }} />
       <h1
@@ -169,12 +207,18 @@ export function PaginaProjeto() {
             </Nav.Link>
           </Nav.Item>
         </Nav>
-        <Link
-          to={`/cadastroMembro/projeto/${id}`}
-          className="text-decoration-none"
-        >
-          <BotaoOutline color="var(--blue)"> Novo Membro </BotaoOutline>
-        </Link>
+        <>
+          {temPermissao ? (
+            <Link
+              to={`/cadastroMembro/projeto/${id}`}
+              className="text-decoration-none"
+            >
+              <BotaoOutline color="var(--blue)"> Novo Membro </BotaoOutline>
+            </Link>
+          ) : (
+            <></>
+          )}
+        </>
       </div>
       <div style={{ marginBottom: "120px", display: "block" }}>
         {membros.length === 0 ? (

@@ -12,6 +12,7 @@ import {
   BsStickies,
 } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../AutorizacaoServico.jsx";
 import { BarraDePesquisa } from "../../../components/BarraDePesquisa/BarraDePesquisa";
 import { BotaoOutline } from "../../../components/Botoes/BotaoOutline.jsx";
 import NoticiaCard from "../../../components/NoticiaCard/NoticiaCard";
@@ -24,6 +25,34 @@ export function ListagemNoticias() {
   const [searchText, setSearchText] = useState("");
   const [cards, setCards] = useState([]);
   const [activeTab, setActiveTab] = useState("Publicada"); // Aba ativa
+
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some(
+              (permissao) =>
+                permissao.nome === "ADMIN" || permissao.nome === "EDITORNOTICIA"
+            )
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
 
   useEffect(() => {
     function fetchAutores() {
@@ -107,7 +136,6 @@ export function ListagemNoticias() {
 
   useEffect(() => {
     handleApplyFilter();
-    // Defina o título da página aqui
     document.title = "Notícias";
   }, [activeTab]);
 
@@ -134,9 +162,15 @@ export function ListagemNoticias() {
           Notícias
         </h1>
 
-        <Link to="/cadastroNoticia" className="text-decoration-none">
-          <BotaoOutline color="var(--blue)"> Nova Notícia </BotaoOutline>
-        </Link>
+        <>
+          {temPermissao ? (
+            <Link to="/cadastroNoticia" className="text-decoration-none">
+              <BotaoOutline color="var(--blue)"> Nova Notícia </BotaoOutline>
+            </Link>
+          ) : (
+            <></>
+          )}
+        </>
       </div>
       <Form className="mt-2">
         <div className="row">
@@ -184,38 +218,43 @@ export function ListagemNoticias() {
           </div>
         </div>
       </Form>
-
-      <Nav
-        variant="tabs"
-        defaultActiveKey={activeTab}
-        onSelect={handleTabSelect}
-      >
-        <Nav.Item>
-          <Nav.Link eventKey="Publicada" style={{ color: "var(--blue)" }}>
-            <BsNewspaper /> Publicada
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="Agendada" style={{ color: "var(--blue)" }}>
-            <BsClock /> Agendada
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="Arquivada" style={{ color: "var(--blue)" }}>
-            <BsArchive /> Arquivada
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="Rascunho" style={{ color: "var(--blue)" }}>
-            <BsPen /> Rascunho
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="Destaque" style={{ color: "var(--blue)" }}>
-            <BsStickies /> Destaque
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
+      <>
+        {temPermissao ? (
+          <Nav
+            variant="tabs"
+            defaultActiveKey={activeTab}
+            onSelect={handleTabSelect}
+          >
+            <Nav.Item>
+              <Nav.Link eventKey="Publicada" style={{ color: "var(--blue)" }}>
+                <BsNewspaper /> Publicada
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="Agendada" style={{ color: "var(--blue)" }}>
+                <BsClock /> Agendada
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="Arquivada" style={{ color: "var(--blue)" }}>
+                <BsArchive /> Arquivada
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="Rascunho" style={{ color: "var(--blue)" }}>
+                <BsPen /> Rascunho
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="Destaque" style={{ color: "var(--blue)" }}>
+                <BsStickies /> Destaque
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        ) : (
+          <></>
+        )}
+      </>
 
       <NoticiaCard cards={cards} />
     </Container>

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import org.springframework.lang.Nullable;
 
 import com.example.ledes.utils.HashUtils;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

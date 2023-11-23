@@ -1,6 +1,7 @@
 package com.example.ledes.apresentacao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,10 @@ import com.example.ledes.aplicacao.usuario.BuscarUsuarioNoticiaServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorHashServico;
 import com.example.ledes.aplicacao.usuario.BuscarUsuarioPorIdServico;
 import com.example.ledes.aplicacao.usuario.ListagemPermissoesServico;
+import com.example.ledes.aplicacao.usuario.ObterPermissoesUsuarioLogado;
 import com.example.ledes.aplicacao.usuario.ValidarEmailECodigoUnicoServico;
 import com.example.ledes.aplicacao.usuario.ValidarEmailESenhaServico;
+import com.example.ledes.dominio.Permissao;
 import com.example.ledes.infraestrutura.dto.DefinirSenhaRequestDTO;
 import com.example.ledes.infraestrutura.dto.PerfilUsuarioRequestDTO;
 import com.example.ledes.infraestrutura.dto.PermissaoResponseDTO;
@@ -64,6 +67,8 @@ public class UsuarioController {
     private ListagemPermissoesServico listagemPermissoesServico;
     @Autowired
     private BuscaUsuarioPorFiltroServicoGerenciar buscarUsuarioPorFiltro;
+    @Autowired
+    private ObterPermissoesUsuarioLogado obterPermissoesUsuarioLogado;
 
     @Operation(summary = "Criar um novo usuário, restritos apenas para administradores")
     @ApiResponse(responseCode = "201")
@@ -208,6 +213,19 @@ public class UsuarioController {
                 permissao);
         if (usuariosEncontrados != null) {
             return ResponseEntity.ok(usuariosEncontrados);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "Buscar permissoes do usuário logado")
+    @ApiResponse(responseCode = "200", description = "Retorna informações de usuário logado")
+    @GetMapping("/obterPermissoes")
+    public ResponseEntity<Set<Permissao>> obterPermissoesUsuarioLogado(
+            @RequestHeader("usuarioLogado") String hash) {
+
+        Set<Permissao> permissoes = obterPermissoesUsuarioLogado.obterPermissoesUsuarioLogado(hash);
+        if (permissoes != null) {
+            return ResponseEntity.ok(permissoes);
         }
         return ResponseEntity.notFound().build();
     }

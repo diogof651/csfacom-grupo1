@@ -8,6 +8,7 @@ import {
 } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { Link, useParams } from "react-router-dom";
+import { useAuth } from "../../../AutorizacaoServico";
 import { BotaoComIcone } from "../../../components/Botoes/BotaoComIcone";
 import NoticiaCard from "../../../components/NoticiaCard/NoticiaCard";
 import styles from "./PaginaNoticia.module.css";
@@ -22,6 +23,34 @@ export function PaginaNoticia() {
 
   const [noticia, setNoticia] = useState({});
   const [noticiasEmDestaque, setNoticiaEmDestaque] = useState([]);
+
+  const [temPermissao, setTemPermissao] = useState(false);
+  const { hashUsuarioLogado } = useAuth();
+
+  useEffect(() => {
+    function obterPermissoesUsuario() {
+      fetch("http://localhost:8080/api/v1/usuarios/obterPermissoes", {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
+        .then((resposta) => resposta.json())
+        .then((data) => {
+          const permissoes = data;
+          setTemPermissao(
+            permissoes.some(
+              (permissao) =>
+                permissao.nome === "ADMIN" || permissao.nome === "EDITORNOTICIA"
+            )
+          );
+        })
+        .catch((erro) => console.log(erro));
+    }
+
+    obterPermissoesUsuario();
+  }, []);
 
   useEffect(() => {
     obterNoticia();
@@ -116,24 +145,28 @@ export function PaginaNoticia() {
               {noticia.autor ? noticia.autor.nome : ""}
             </p>
           </div>
-          {noticia.estado === "Arquivada" ? (
-            <BotaoComIcone color="var(--black)" onClick={desarquivar}>
-              <BsArchive style={iconStyle} /> Desarquivar
-            </BotaoComIcone>
-          ) : (
-            <div className="d-flex gap-2">
-              <Link
-                to={`/editarNoticia/${id}`}
-                className="text-decoration-none"
-              >
-                <BotaoComIcone color="var(--black)">
-                  <BsPencilSquare style={iconStyle} /> Editar
-                </BotaoComIcone>
-              </Link>
-              <BotaoComIcone color="var(--black)" onClick={arquivar}>
-                <BsArchive style={iconStyle} /> Arquivar
+          {temPermissao ? (
+            noticia.estado === "Arquivada" ? (
+              <BotaoComIcone color="var(--black)" onClick={desarquivar}>
+                <BsArchive style={iconStyle} /> Desarquivar
               </BotaoComIcone>
-            </div>
+            ) : (
+              <div className="d-flex gap-2">
+                <Link
+                  to={`/editarNoticia/${id}`}
+                  className="text-decoration-none"
+                >
+                  <BotaoComIcone color="var(--black)">
+                    <BsPencilSquare style={iconStyle} /> Editar
+                  </BotaoComIcone>
+                </Link>
+                <BotaoComIcone color="var(--black)" onClick={arquivar}>
+                  <BsArchive style={iconStyle} /> Arquivar
+                </BotaoComIcone>
+              </div>
+            )
+          ) : (
+            <></>
           )}
         </div>
         <div
