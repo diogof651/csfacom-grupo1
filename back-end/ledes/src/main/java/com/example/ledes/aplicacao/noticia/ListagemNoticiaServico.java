@@ -65,7 +65,7 @@ public class ListagemNoticiaServico {
     private List<Noticia> obterNoticiasFiltradasPorEstado(String estado, String hash) {
         Optional<Usuario> usuario = usuarioRepositorio.findByCodigoHash(hash);
         if (usuario.isPresent()
-                && (!usuario.get().possuiPermissao("ADMIN") || !usuario.get().possuiPermissao("EDITORNOTICIA"))) {
+                && !usuario.get().possuiPermissao("ADMIN") && !usuario.get().possuiPermissao("EDITORNOTICIA")) {
             estado = null;
         }
 

@@ -4,12 +4,12 @@ import java.util.Set;
 
 import com.example.ledes.dominio.Permissao;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class UsuarioGerenciarRequestDTO {
     private String nome;
     private String email;
-    private Boolean ativo;
+    private boolean ativo;
     private Set<Permissao> permissoes;
 }

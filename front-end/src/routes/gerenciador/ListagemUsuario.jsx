@@ -258,23 +258,30 @@ export function ListagemUsuario() {
                 >
                   <div
                     style={{
-                      borderRadius: "50%",
                       width: "50px",
                       height: "50px",
-                      backgroundColor: "#D9D9D9",
-                      overflow: "hidden",
+                      borderRadius: "50%",
+                      backgroundColor: "#ccc",
                     }}
                   >
-                    <img
-                      src={usuario.foto}
-                      alt={`Foto de ${usuario.nome}`}
-                      style={{
-                        width: "100%",
-                        height: "auto",
-                        borderRadius: "50%",
-                      }}
-                    />
+                    {usuario.foto && (
+                      <img
+                        src={
+                          usuario.foto != null && usuario.foto
+                            ? `data:image/jpeg;base64,${usuario.foto}`
+                            : ""
+                        }
+                        alt="Foto de perfil"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    )}
                   </div>
+
                   <div
                     className="d-flex flex-column"
                     style={{ marginLeft: "10px" }}

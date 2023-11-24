@@ -27,7 +27,7 @@ public class AtualizarUsuarioServicoGerenciar {
             if (usuarioHash.get().possuiPermissao("ADMIN")) {
                 usuario.setNome(usuarioGerenciarRequestDTO.getNome());
                 usuario.setEmail(usuarioGerenciarRequestDTO.getEmail());
-                usuario.setAtivo(usuarioGerenciarRequestDTO.getAtivo());
+                usuario.setAtivo(usuarioGerenciarRequestDTO.isAtivo());
                 usuario.setPermissoes(usuarioGerenciarRequestDTO.getPermissoes());
             }
 

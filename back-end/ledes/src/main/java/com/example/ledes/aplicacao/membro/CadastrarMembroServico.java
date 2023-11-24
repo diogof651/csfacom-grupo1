@@ -47,6 +47,7 @@ public class CadastrarMembroServico {
                                         membroRequestDTO.isAtivo(), usuario, projeto, membroRequestDTO.getPapeis(),
                                         membroRequestDTO.getVinculos());
 
+                        membroRepositorio.save(membro);
                         return new MembroResponseDTO(membro.getId(),
                                         membro.getUsuario(),
                                         membro.getProjeto(),

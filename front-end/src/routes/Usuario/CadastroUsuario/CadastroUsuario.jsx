@@ -67,7 +67,7 @@ export function CadastroUsuario() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-
+    console.log(typeof(ativo));
     const data = {
       nome: nome,
       email: email,
@@ -161,7 +161,7 @@ export function CadastroUsuario() {
   };
 
   function cancelar() {
-    navigate("/");
+    navigate("/gerenciar");
   }
 
   return (
@@ -207,10 +207,12 @@ export function CadastroUsuario() {
                 className="mt-3"
                 type="checkbox"
                 id="ativoCheckbox"
-                checked={ativo}
-                onChange={(e) => setAtivo(e.target.value)}
+                onChange={(e) => setAtivo(e.target.checked)}
                 label="Ativo"
+                defaultChecked={ativo}
+                checked={ativo}
               />
+              
               <h1
                 style={{
                   borderBottom: "1px solid #ccc",
