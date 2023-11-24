@@ -6,6 +6,8 @@ import {
   BsFillPersonPlusFill,
   BsPersonGear,
   BsThreeDotsVertical,
+  BsPuzzle,
+  BsMegaphone,
 } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../AutorizacaoServico";
@@ -42,7 +44,12 @@ const CustomBadge = ({ status }) => {
   );
 };
 
-const AdditionalBadge = ({ isAdmin }) => {
+const AdditionalBadge = ({ permissao }) => {
+  const isAdmin = permissao.nome === "ADMIN";
+  const isEditorNoticia = permissao.nome === "EDITORNOTICIA";
+  const isEditorProjeto = permissao.nome === "EDITORPROJETO";
+  const isSomenteLeitura = permissao.nome === "SOMENTELEITURA";
+
   const badgeStyle = {
     display: "flex",
     alignItems: "center",
@@ -61,18 +68,38 @@ const AdditionalBadge = ({ isAdmin }) => {
     marginRight: "5px",
   };
 
-  const icon = isAdmin ? (
-    <BsPersonGear style={iconStyle} />
-  ) : (
-    <BsEye style={iconStyle} />
-  );
+  let badgeContent;
+  if (isAdmin) {
+    badgeContent = (
+      <>
+        <BsPersonGear style={iconStyle} />
+        Administrador
+      </>
+    );
+  } else if (isEditorNoticia) {
+    badgeContent = (
+      <>
+        <BsMegaphone style={iconStyle} />
+        Editor de Notícias
+      </>
+    );
+  } else if (isEditorProjeto) {
+    badgeContent = (
+      <>
+        <BsPuzzle style={iconStyle} />
+        Editor de Projetos
+      </>
+    );
+  } else if (isSomenteLeitura) {
+    badgeContent = (
+      <>
+        <BsEye style={iconStyle} />
+        Somente Leitura
+      </>
+    );
+  }
 
-  return (
-    <span style={badgeStyle}>
-      {icon}
-      {isAdmin ? "Administrador" : "Somente Leitura"}
-    </span>
-  );
+  return <span style={badgeStyle}>{badgeContent}</span>;
 };
 
 export function ListagemUsuario() {
@@ -98,6 +125,7 @@ export function ListagemUsuario() {
       .then((resposta) => resposta.json())
       .then((data) => {
         setUsuarios(data);
+        console.log(data);
       })
       .catch((erro) => console.log(erro));
   }
@@ -291,7 +319,9 @@ export function ListagemUsuario() {
                   </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  <AdditionalBadge isAdmin={usuario.permissoes} />
+                  {usuario.permissoes.map((permissao) => (
+                    <AdditionalBadge permissao={permissao} />
+                  ))}
                   <div className="d-flex align-items-center gap-1">
                     <Dropdown align={{ lg: "end" }} drop="start">
                       <Dropdown.Toggle variant="light" id="dropdown-basic">
