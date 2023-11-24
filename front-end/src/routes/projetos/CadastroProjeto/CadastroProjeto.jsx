@@ -75,7 +75,7 @@ export function CadastroProjeto() {
           setValue("inicio", new Date(data.inicio));
           setValue("termino", new Date(data.termino));
           setValue("descricao", data.descricao);
-          setTipoSelectedOption(data.tipoProjeto.tipo);
+          setTipoSelectedOption(data.tipoProjeto.nome);
           setEstadoSelectedOption(data.status);
         })
         .catch((erro) => console.log(erro));
