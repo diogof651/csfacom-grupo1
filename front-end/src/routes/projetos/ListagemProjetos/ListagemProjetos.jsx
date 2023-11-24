@@ -58,6 +58,7 @@ export function ListagemProjetos() {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => resposta.json())
@@ -72,6 +73,7 @@ export function ListagemProjetos() {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => resposta.json())
@@ -101,6 +103,7 @@ export function ListagemProjetos() {
         method: "GET",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
       }
     )

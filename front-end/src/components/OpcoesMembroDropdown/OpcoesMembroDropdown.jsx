@@ -3,9 +3,11 @@ import { Dropdown } from "react-bootstrap";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import "./OpcoesMembroDropdown.css";
+import { useAuth } from "../../AutorizacaoServico";
 
 export function OpcoesMembroDropdown({ idProjeto, idMembro, ativo }) {
   const navigate = useNavigate();
+  const { hashUsuarioLogado } = useAuth();
 
   const editar = () => {
     navigate(`/editarMembro/projeto/${idProjeto}/membro/${idMembro}`);
@@ -17,6 +19,7 @@ export function OpcoesMembroDropdown({ idProjeto, idMembro, ativo }) {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
       })
         .then(() => {
@@ -29,6 +32,7 @@ export function OpcoesMembroDropdown({ idProjeto, idMembro, ativo }) {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
       })
         .then(() => {
@@ -44,6 +48,7 @@ export function OpcoesMembroDropdown({ idProjeto, idMembro, ativo }) {
       method: "DELETE",
       headers: {
         "Content-type": "application.json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then(() => {

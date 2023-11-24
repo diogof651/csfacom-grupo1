@@ -62,6 +62,7 @@ export function PaginaNoticia() {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => resposta.json())
@@ -76,6 +77,7 @@ export function PaginaNoticia() {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => resposta.json())
@@ -91,6 +93,7 @@ export function PaginaNoticia() {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then(() => navigate("/noticias"))
@@ -102,6 +105,7 @@ export function PaginaNoticia() {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then(() => navigate("/noticias"))

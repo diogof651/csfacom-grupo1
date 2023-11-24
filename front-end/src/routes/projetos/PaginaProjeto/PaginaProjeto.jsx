@@ -102,6 +102,7 @@ export function PaginaProjeto() {
         method: "GET",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
       }
     )
@@ -117,6 +118,7 @@ export function PaginaProjeto() {
       method: "POST",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then(() => navigate("/"))

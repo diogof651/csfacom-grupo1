@@ -87,6 +87,7 @@ export function CadastroProjeto() {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => resposta.json())
@@ -112,6 +113,7 @@ export function CadastroProjeto() {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
         body: JSON.stringify(data),
       })
@@ -122,6 +124,7 @@ export function CadastroProjeto() {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
         body: JSON.stringify(data),
       })
@@ -135,6 +138,7 @@ export function CadastroProjeto() {
       method: "POST",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
       body: JSON.stringify(tipoProjeto),
     })

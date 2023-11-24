@@ -64,7 +64,11 @@ export function CadastroNoticia() {
 
   useEffect(() => {
     if (id) {
-      fetch(`http://localhost:8080/api/v1/noticias/${id}`)
+      fetch(`http://localhost:8080/api/v1/noticias/${id}`, {
+        headers: {
+          usuarioLogado: hashUsuarioLogado(),
+        },
+      })
         .then((resposta) => resposta.json())
         .then((data) => {
           setValue("titulo", data.titulo);
@@ -115,6 +119,7 @@ export function CadastroNoticia() {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
         body: JSON.stringify(data),
       })
@@ -125,6 +130,7 @@ export function CadastroNoticia() {
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
         body: JSON.stringify(data),
       })

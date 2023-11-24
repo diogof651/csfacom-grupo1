@@ -1,5 +1,6 @@
 package com.example.ledes.aplicacao.usuario;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,12 @@ public class ObterPermissoesUsuarioLogado {
     private UsuarioRepositorio usuarioRepositorio;
 
     public Set<Permissao> obterPermissoesUsuarioLogado(String hash) {
-        Usuario usuario = usuarioRepositorio.findByCodigoHash(hash).get();
-        return usuario.getPermissoes();
+        Optional<Usuario> usuario = usuarioRepositorio.findByCodigoHash(hash);
+        if (usuario.isPresent()) {
+            return usuario.get().getPermissoes();
+        } else {
+            return null;
+        }
     }
 
 }

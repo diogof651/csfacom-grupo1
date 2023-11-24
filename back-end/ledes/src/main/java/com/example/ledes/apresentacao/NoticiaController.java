@@ -51,6 +51,7 @@ public class NoticiaController {
     @ApiResponse(responseCode = "201")
     @PostMapping(consumes = "application/json")
     public ResponseEntity<NoticiaResponseDTO> adicionarNoticia(@RequestBody NoticiaRequestDTO noticiaDTO) {
+        // inserir verificação pelo hash para ver se tem permissao
         NoticiaResponseDTO novaNoticia = adicionarNoticia.adicionar(noticiaDTO);
         return new ResponseEntity<NoticiaResponseDTO>(novaNoticia, HttpStatus.CREATED);
     }
@@ -76,8 +77,9 @@ public class NoticiaController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados atualizados")
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
     @PutMapping(path = "/{id}/arquivar", consumes = "application/json")
-    public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(@PathVariable Long id,@RequestHeader("usuarioLogado") String hash) {
-        NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id,hash);
+    public ResponseEntity<NoticiaResponseDTO> arquivarNoticia(@PathVariable Long id,
+            @RequestHeader("usuarioLogado") String hash) {
+        NoticiaResponseDTO noticiaArquivada = arquivarNoticia.arquivar(id, hash);
 
         if (noticiaArquivada != null) {
             return ResponseEntity.ok(noticiaArquivada);
@@ -122,10 +124,12 @@ public class NoticiaController {
             @RequestParam(name = "titulo", required = false) String titulo,
             @RequestParam(name = "autor", required = false) String nomeAutor,
             @RequestParam(name = "dataPublicacao", required = false) String dataPublicacao,
-            @RequestParam(name = "estado", required = false) String estado) throws ParseException {
+            @RequestParam(name = "estado", required = false) String estado,
+            @RequestHeader("usuarioLogado") String hash)
+            throws ParseException {
 
         List<NoticiaListagemResponseDTO> noticiasEncontradas = listagemNoticiaServico
-                .buscarNoticiasPorParametros(titulo, nomeAutor, dataPublicacao, estado, estado);
+                .buscarNoticiasPorParametros(titulo, nomeAutor, dataPublicacao, estado, hash);
 
         if (noticiasEncontradas != null) {
             return ResponseEntity.ok(noticiasEncontradas);
@@ -133,5 +137,4 @@ public class NoticiaController {
         return ResponseEntity.notFound().build();
 
     }
-
 }

@@ -86,6 +86,7 @@ export function CadastroMembro() {
         method: "GEt",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
       })
         .then((resposta) => resposta.json())
@@ -121,6 +122,7 @@ export function CadastroMembro() {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => resposta.json())
@@ -135,6 +137,7 @@ export function CadastroMembro() {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        usuarioLogado: hashUsuarioLogado(),
       },
     })
       .then((resposta) => resposta.json())
@@ -186,6 +189,7 @@ export function CadastroMembro() {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
         body: JSON.stringify(data),
       })
@@ -198,6 +202,7 @@ export function CadastroMembro() {
           method: "POST",
           headers: {
             "Content-type": "application/json",
+            usuarioLogado: hashUsuarioLogado(),
           },
           body: JSON.stringify(data),
         }

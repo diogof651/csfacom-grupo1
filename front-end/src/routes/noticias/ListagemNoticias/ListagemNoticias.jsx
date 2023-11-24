@@ -78,6 +78,7 @@ export function ListagemNoticias() {
         method: "GET",
         headers: {
           "Content-type": "application/json",
+          usuarioLogado: hashUsuarioLogado(),
         },
       })
         .then((resposta) => resposta.json())
