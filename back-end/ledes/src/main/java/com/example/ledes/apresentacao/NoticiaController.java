@@ -105,9 +105,8 @@ public class NoticiaController {
     @ApiResponse(responseCode = "200", description = "Retorna os dados.")
     @ApiResponse(responseCode = "404", description = "Noticia não encontrada")
     @GetMapping("/{id}")
-    public ResponseEntity<NoticiaResponseDTO> obterNoticiaPorId(@PathVariable Long id,
-            @RequestHeader("usuarioLogado") String hash) {
-        NoticiaResponseDTO noticia = obterNoticiaPorIdServico.obterNoticiaPorId(id, hash);
+    public ResponseEntity<NoticiaResponseDTO> obterNoticiaPorId(@PathVariable Long id) {
+        NoticiaResponseDTO noticia = obterNoticiaPorIdServico.obterNoticiaPorId(id);
         if (noticia != null) {
             return ResponseEntity.ok(noticia);
         } else {

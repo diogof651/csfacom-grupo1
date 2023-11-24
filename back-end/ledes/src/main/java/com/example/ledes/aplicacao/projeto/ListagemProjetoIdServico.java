@@ -1,31 +1,26 @@
 package com.example.ledes.aplicacao.projeto;
 
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.ledes.dominio.Projeto;
-import com.example.ledes.dominio.Usuario;
 import com.example.ledes.infraestrutura.ProjetoRepositorio;
-import com.example.ledes.infraestrutura.UsuarioRepositorio;
 import com.example.ledes.infraestrutura.dto.ProjetoResponseDTO;
 
 @Service
 public class ListagemProjetoIdServico {
     @Autowired
     private ProjetoRepositorio projetoRepositorio;
-    @Autowired
-    private UsuarioRepositorio usuarioRepositorio;
+    
 
-    public ProjetoResponseDTO buscarPorId(Long id, String hash) {
-        Projeto projeto = projetoRepositorio.findById(id).orElse(null);
-        Optional<Usuario> usuarioOptional = usuarioRepositorio.findByCodigoHash(hash);
+    public ProjetoResponseDTO buscarPorId(Long id) {
+        Projeto projeto = projetoRepositorio.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                                "Projeto não encontrado"));
 
-        if (projeto != null && usuarioOptional.isPresent()) {
-            Usuario usuario = usuarioOptional.get();
-            if (usuario.possuiPermissao("ADMIN") || usuario.possuiPermissao("EDITORPROJETO")) {
-                return new ProjetoResponseDTO(
+        return new ProjetoResponseDTO(
                         projeto.getId(),
                         projeto.getNome(),
                         projeto.getDescricao(),
@@ -34,10 +29,6 @@ public class ListagemProjetoIdServico {
                         projeto.getStatus(),
                         projeto.getTipoProjeto(),
                         projeto.getAtivo());
-            }
-        }
-
-        return null;
     }
 
 }

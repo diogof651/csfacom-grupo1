@@ -108,7 +108,7 @@ public class ProjetoController {
     @ApiResponse(responseCode = "404", description = "Id não encontrado")
     @GetMapping("/{id}")
     public ResponseEntity<ProjetoResponseDTO> obterProjetoId(@PathVariable Long id) {
-        ProjetoResponseDTO projetoEncontrado = listagemProjetoIdServico.buscarPorId(id, null);
+        ProjetoResponseDTO projetoEncontrado = listagemProjetoIdServico.buscarPorId(id);
 
         if (projetoEncontrado != null) {
             return ResponseEntity.ok(projetoEncontrado);
